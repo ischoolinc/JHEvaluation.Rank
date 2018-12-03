@@ -29,6 +29,8 @@ namespace JHEvaluation.Rank
             lbRankType.Text = RankType;
         }
 
+        BackgroundWorker _backgroundWorker = new BackgroundWorker();
+
         private void MatrixRankSelect_Load(object sender, EventArgs e)
         {
             QueryHelper queryHelper = new QueryHelper();
@@ -54,62 +56,94 @@ From
 Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
 "And semester = " + Convert.ToInt32(lbSemester.Text) +
 "And score_type = '" + lbScoreType.Text + "'" +
-"And score_category = '" + lbScoreCategory.Text + "'";
+"And score_category = '" + lbScoreCategory.Text + "'" +
+"And exam_name = '" + lbExamName.Text + "'" +
+"And item_name = '" + lbItemName.Text + "'" +
+"And rank_type = '" + lbRankType.Text + "'";
             #endregion
 
-            //try
-            //{
-            DataTable dataTable = new DataTable();
-            dataTable = queryHelper.Select(queryTable);
-
-            List<DataRow> rowList = new List<DataRow>();
-
-            foreach (DataRow row in dataTable.Rows)
+            try
             {
-                bool show = true;
-                if (lbExamName.Text != "全部" && ("" + row[3]) != lbExamName.Text)
-                {
-                    show = show & false;
-                }
-                if (lbItemName.Text != "全部" && ("" + row[4]) != lbItemName.Text)
-                {
-                    show = show & false;
-                }
-                if (lbRankType.Text != "全部" && ("" + row[5]) != lbRankType.Text)
-                {
-                    show = show & false;
-                }
-                if (show)
-                {
-                    rowList.Add(row);
-                }
-            }
+                DataTable dataTable = new DataTable();
+                dataTable = queryHelper.Select(queryTable);
 
-            #region 填入編號的ComboBox
-            foreach (DataRow row in rowList)
-            {
-                if (!cboMatrixId.Items.Contains("" + row["rank_matrix_id"]))
+                #region 填入編號的ComboBox
+                foreach (DataRow row in dataTable.Rows)
                 {
-                    string isAlive = "";
-                    if (row["is_alive"] != null)
+                    if (!cboMatrixId.Items.Contains("" + row["rank_matrix_id"]))
                     {
-                        if (Convert.ToBoolean(row["is_alive"]) == false)
+                        string isAlive = "";
+                        if (row["is_alive"] != null)
                         {
-                            isAlive = "★";
+                            if (Convert.ToBoolean(row["is_alive"]) == true)
+                            {
+                                isAlive = "*";
+                            }
                         }
+                        cboMatrixId.Items.Add(isAlive + row["rank_matrix_id"]);
                     }
-                    cboMatrixId.Items.Add(isAlive + row["rank_matrix_id"]);
                 }
+                #endregion
+                cboMatrixId.SelectedIndex = 0;
             }
-            #endregion
-            cboMatrixId.SelectedIndex = 0;
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.StackTrace.ToString());
-            //}
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.StackTrace.ToString());
+            }
 
 
+        }
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string query = (string)e.Argument;
+
+            try
+            {
+                DataTable dt = new DataTable();
+
+                QueryHelper queryHelper = new QueryHelper();
+                dt = queryHelper.Select(query);
+
+                e.Result = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("資料讀取失敗：" + ex.Message);
+            }
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            DataTable dt = (DataTable)e.Result;
+
+            try
+            {
+                #region 塞資料進dataGridView
+                List<DataGridViewRow> gridViewRowList = new List<DataGridViewRow>();
+                dgvScoreRank.Rows.Clear();
+                dgvScoreRank.SuspendLayout();
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    DataGridViewRow gridViewRow = new DataGridViewRow();
+                    gridViewRow.CreateCells(dgvScoreRank);
+                    for (int col = 0; col < dt.Columns.Count - 2; col++)
+                    {
+                        gridViewRow.Cells[col].Value = "" + dt.Rows[row][col];
+                    }
+                    gridViewRowList.Add(gridViewRow);
+                }
+                dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
+                dgvScoreRank.ResumeLayout();
+                #endregion
+
+                lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
+                lbMemo.Text = "" + dt.Rows[0]["memo"];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -180,10 +214,9 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
             }
         }
 
-        private void cboMatrixId_SelectedIndexChanged(object sender, EventArgs e)
+        private void LoadRowData(object sender, EventArgs e)
         {
-            QueryHelper queryHelper = new QueryHelper();
-
+            string MatrixID = cboMatrixId.Text.Trim('*');
             #region 要顯示的資料的sql字串
             string queryTable = @"
 Select *
@@ -220,32 +253,12 @@ From
 		student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
 		class ON class.id = student.ref_class_id LEFT OUTER JOIN 
 		exam ON exam.id=rank_matrix.ref_exam_id) as Rank_Table
-Where rank_matrix_id = " + Convert.ToInt32(cboMatrixId.Text);
+Where rank_matrix_id = " + Convert.ToInt32(MatrixID);
             #endregion
 
-            DataTable dataTable = new DataTable();
-            dataTable = queryHelper.Select(queryTable);
-
-            #region 塞資料進dataGridView
-            List<DataGridViewRow> gridViewRowList = new List<DataGridViewRow>();
-            dgvScoreRank.Rows.Clear();
-            dgvScoreRank.SuspendLayout();
-            for (int row = 0; row < dataTable.Rows.Count; row++)
-            {
-                DataGridViewRow gridViewRow = new DataGridViewRow();
-                gridViewRow.CreateCells(dgvScoreRank);
-                for (int col = 0; col < dataTable.Columns.Count - 2; col++)
-                {
-                    gridViewRow.Cells[col].Value = "" + dataTable.Rows[row][col];
-                }
-                gridViewRowList.Add(gridViewRow);
-            }
-            dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
-            dgvScoreRank.ResumeLayout(); 
-            #endregion
-
-            lbCreateTime.Text = Convert.ToDateTime(dataTable.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
-            lbMemo.Text = "" + dataTable.Rows[0]["memo"];
+            _backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
+            _backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+            _backgroundWorker.RunWorkerAsync(queryTable);
         }
     }
 }

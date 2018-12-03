@@ -39,6 +39,17 @@
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.cboRankType = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.dgvScoreRank = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.labelX8 = new DevComponents.DotNetBar.LabelX();
+            this.labelX7 = new DevComponents.DotNetBar.LabelX();
+            this.labelX6 = new DevComponents.DotNetBar.LabelX();
+            this.labelX5 = new DevComponents.DotNetBar.LabelX();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.labelX3 = new DevComponents.DotNetBar.LabelX();
+            this.labelX2 = new DevComponents.DotNetBar.LabelX();
+            this.labelX1 = new DevComponents.DotNetBar.LabelX();
+            this.btnExit = new DevComponents.DotNetBar.ButtonX();
+            this.txtStudentNum = new DevComponents.DotNetBar.Controls.TextBoxX();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.MatrixId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ScoreType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ScoreCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,17 +68,6 @@
             this.view = new DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn();
             this.SchoolYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Semester = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.labelX8 = new DevComponents.DotNetBar.LabelX();
-            this.labelX7 = new DevComponents.DotNetBar.LabelX();
-            this.labelX6 = new DevComponents.DotNetBar.LabelX();
-            this.labelX5 = new DevComponents.DotNetBar.LabelX();
-            this.labelX4 = new DevComponents.DotNetBar.LabelX();
-            this.labelX3 = new DevComponents.DotNetBar.LabelX();
-            this.labelX2 = new DevComponents.DotNetBar.LabelX();
-            this.labelX1 = new DevComponents.DotNetBar.LabelX();
-            this.btnExit = new DevComponents.DotNetBar.ButtonX();
-            this.txtStudentNum = new DevComponents.DotNetBar.Controls.TextBoxX();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScoreRank)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,7 +99,7 @@
             this.cboItemName.Size = new System.Drawing.Size(164, 29);
             this.cboItemName.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboItemName.TabIndex = 33;
-            this.cboItemName.SelectedIndexChanged += new System.EventHandler(this.cboExamName_SelectedIndexChanged);
+            this.cboItemName.SelectedIndexChanged += new System.EventHandler(this.FillingDataGridView);
             // 
             // cboExamName
             // 
@@ -114,7 +114,7 @@
             this.cboExamName.Size = new System.Drawing.Size(151, 29);
             this.cboExamName.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboExamName.TabIndex = 32;
-            this.cboExamName.SelectedIndexChanged += new System.EventHandler(this.cboExamName_SelectedIndexChanged);
+            this.cboExamName.SelectedIndexChanged += new System.EventHandler(this.FillingDataGridView);
             // 
             // cboScoreCategory
             // 
@@ -129,7 +129,7 @@
             this.cboScoreCategory.Size = new System.Drawing.Size(159, 29);
             this.cboScoreCategory.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboScoreCategory.TabIndex = 31;
-            this.cboScoreCategory.SelectedIndexChanged += new System.EventHandler(this.cboSchoolYear_SelectedIndexChanged);
+            this.cboScoreCategory.SelectedIndexChanged += new System.EventHandler(this.LoadRowData);
             // 
             // cboScoreType
             // 
@@ -144,7 +144,7 @@
             this.cboScoreType.Size = new System.Drawing.Size(164, 29);
             this.cboScoreType.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboScoreType.TabIndex = 29;
-            this.cboScoreType.SelectedIndexChanged += new System.EventHandler(this.cboSchoolYear_SelectedIndexChanged);
+            this.cboScoreType.SelectedIndexChanged += new System.EventHandler(this.LoadRowData);
             // 
             // cboSemester
             // 
@@ -159,7 +159,7 @@
             this.cboSemester.Size = new System.Drawing.Size(76, 29);
             this.cboSemester.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboSemester.TabIndex = 28;
-            this.cboSemester.SelectedIndexChanged += new System.EventHandler(this.cboSchoolYear_SelectedIndexChanged);
+            this.cboSemester.SelectedIndexChanged += new System.EventHandler(this.LoadRowData);
             // 
             // cboSchoolYear
             // 
@@ -174,7 +174,7 @@
             this.cboSchoolYear.Size = new System.Drawing.Size(85, 29);
             this.cboSchoolYear.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboSchoolYear.TabIndex = 27;
-            this.cboSchoolYear.SelectedIndexChanged += new System.EventHandler(this.cboSchoolYear_SelectedIndexChanged);
+            this.cboSchoolYear.SelectedIndexChanged += new System.EventHandler(this.LoadRowData);
             // 
             // cboRankType
             // 
@@ -189,7 +189,7 @@
             this.cboRankType.Size = new System.Drawing.Size(156, 29);
             this.cboRankType.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboRankType.TabIndex = 34;
-            this.cboRankType.SelectedIndexChanged += new System.EventHandler(this.cboExamName_SelectedIndexChanged);
+            this.cboRankType.SelectedIndexChanged += new System.EventHandler(this.FillingDataGridView);
             // 
             // dgvScoreRank
             // 
@@ -197,7 +197,6 @@
             this.dgvScoreRank.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvScoreRank.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvScoreRank.BackgroundColor = System.Drawing.Color.White;
             this.dgvScoreRank.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvScoreRank.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -228,7 +227,9 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvScoreRank.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
+            this.dgvScoreRank.HighlightSelectedColumnHeaders = false;
             this.dgvScoreRank.Location = new System.Drawing.Point(12, 82);
+            this.dgvScoreRank.MultiSelect = false;
             this.dgvScoreRank.Name = "dgvScoreRank";
             this.dgvScoreRank.ReadOnly = true;
             this.dgvScoreRank.RowTemplate.Height = 24;
@@ -236,141 +237,6 @@
             this.dgvScoreRank.Size = new System.Drawing.Size(1160, 458);
             this.dgvScoreRank.TabIndex = 26;
             this.dgvScoreRank.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvScoreRank_CellContentClick);
-            // 
-            // MatrixId
-            // 
-            this.MatrixId.HeaderText = "ID";
-            this.MatrixId.Name = "MatrixId";
-            this.MatrixId.ReadOnly = true;
-            this.MatrixId.Visible = false;
-            this.MatrixId.Width = 47;
-            // 
-            // ScoreType
-            // 
-            this.ScoreType.HeaderText = "成績類型";
-            this.ScoreType.Name = "ScoreType";
-            this.ScoreType.ReadOnly = true;
-            this.ScoreType.Width = 85;
-            // 
-            // ScoreCategory
-            // 
-            this.ScoreCategory.HeaderText = "成績類別";
-            this.ScoreCategory.Name = "ScoreCategory";
-            this.ScoreCategory.ReadOnly = true;
-            this.ScoreCategory.Width = 85;
-            // 
-            // ExamName
-            // 
-            this.ExamName.HeaderText = "試別";
-            this.ExamName.Name = "ExamName";
-            this.ExamName.ReadOnly = true;
-            this.ExamName.Width = 59;
-            // 
-            // ItemName
-            // 
-            this.ItemName.HeaderText = "項目";
-            this.ItemName.Name = "ItemName";
-            this.ItemName.ReadOnly = true;
-            this.ItemName.Width = 59;
-            // 
-            // RankType
-            // 
-            this.RankType.HeaderText = "母群";
-            this.RankType.Name = "RankType";
-            this.RankType.ReadOnly = true;
-            this.RankType.Width = 59;
-            // 
-            // RankName
-            // 
-            this.RankName.HeaderText = "母群名稱";
-            this.RankName.Name = "RankName";
-            this.RankName.ReadOnly = true;
-            this.RankName.Width = 85;
-            // 
-            // ClassName
-            // 
-            this.ClassName.HeaderText = "學生班級";
-            this.ClassName.Name = "ClassName";
-            this.ClassName.ReadOnly = true;
-            this.ClassName.Width = 85;
-            // 
-            // SeatNo
-            // 
-            this.SeatNo.HeaderText = "座號";
-            this.SeatNo.Name = "SeatNo";
-            this.SeatNo.ReadOnly = true;
-            this.SeatNo.Width = 59;
-            // 
-            // StudentNum
-            // 
-            this.StudentNum.HeaderText = "學號";
-            this.StudentNum.Name = "StudentNum";
-            this.StudentNum.ReadOnly = true;
-            this.StudentNum.Width = 59;
-            // 
-            // StudentName
-            // 
-            this.StudentName.HeaderText = "姓名";
-            this.StudentName.Name = "StudentName";
-            this.StudentName.ReadOnly = true;
-            this.StudentName.Width = 59;
-            // 
-            // score
-            // 
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.score.DefaultCellStyle = dataGridViewCellStyle1;
-            this.score.HeaderText = "排名分數";
-            this.score.Name = "score";
-            this.score.ReadOnly = true;
-            this.score.Width = 85;
-            // 
-            // rank
-            // 
-            this.rank.HeaderText = "名次";
-            this.rank.Name = "rank";
-            this.rank.ReadOnly = true;
-            this.rank.Width = 59;
-            // 
-            // pr
-            // 
-            this.pr.HeaderText = "PR";
-            this.pr.Name = "pr";
-            this.pr.ReadOnly = true;
-            this.pr.Width = 49;
-            // 
-            // percentile
-            // 
-            this.percentile.HeaderText = "百分比";
-            this.percentile.Name = "percentile";
-            this.percentile.ReadOnly = true;
-            this.percentile.Width = 72;
-            // 
-            // view
-            // 
-            this.view.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.view.HeaderText = "檢視";
-            this.view.Name = "view";
-            this.view.ReadOnly = true;
-            this.view.Text = "檢視";
-            this.view.UseColumnTextForButtonValue = true;
-            this.view.Width = 40;
-            // 
-            // SchoolYear
-            // 
-            this.SchoolYear.HeaderText = "學年度";
-            this.SchoolYear.Name = "SchoolYear";
-            this.SchoolYear.ReadOnly = true;
-            this.SchoolYear.Visible = false;
-            this.SchoolYear.Width = 72;
-            // 
-            // Semester
-            // 
-            this.Semester.HeaderText = "學期";
-            this.Semester.Name = "Semester";
-            this.Semester.ReadOnly = true;
-            this.Semester.Visible = false;
-            this.Semester.Width = 59;
             // 
             // labelX8
             // 
@@ -529,7 +395,170 @@
             this.txtStudentNum.Name = "txtStudentNum";
             this.txtStudentNum.Size = new System.Drawing.Size(156, 29);
             this.txtStudentNum.TabIndex = 30;
-            this.txtStudentNum.TextChanged += new System.EventHandler(this.cboExamName_SelectedIndexChanged);
+            this.txtStudentNum.TextChanged += new System.EventHandler(this.FillingDataGridView);
+            // 
+            // MatrixId
+            // 
+            this.MatrixId.HeaderText = "ID";
+            this.MatrixId.Name = "MatrixId";
+            this.MatrixId.ReadOnly = true;
+            this.MatrixId.Visible = false;
+            this.MatrixId.Width = 47;
+            // 
+            // ScoreType
+            // 
+            this.ScoreType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ScoreType.HeaderText = "成績類型";
+            this.ScoreType.MinimumWidth = 85;
+            this.ScoreType.Name = "ScoreType";
+            this.ScoreType.ReadOnly = true;
+            this.ScoreType.Width = 85;
+            // 
+            // ScoreCategory
+            // 
+            this.ScoreCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ScoreCategory.HeaderText = "成績類別";
+            this.ScoreCategory.MinimumWidth = 85;
+            this.ScoreCategory.Name = "ScoreCategory";
+            this.ScoreCategory.ReadOnly = true;
+            this.ScoreCategory.Width = 85;
+            // 
+            // ExamName
+            // 
+            this.ExamName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ExamName.HeaderText = "試別";
+            this.ExamName.MinimumWidth = 59;
+            this.ExamName.Name = "ExamName";
+            this.ExamName.ReadOnly = true;
+            this.ExamName.Width = 59;
+            // 
+            // ItemName
+            // 
+            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ItemName.HeaderText = "項目";
+            this.ItemName.MinimumWidth = 59;
+            this.ItemName.Name = "ItemName";
+            this.ItemName.ReadOnly = true;
+            this.ItemName.Width = 59;
+            // 
+            // RankType
+            // 
+            this.RankType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RankType.HeaderText = "母群";
+            this.RankType.MinimumWidth = 59;
+            this.RankType.Name = "RankType";
+            this.RankType.ReadOnly = true;
+            this.RankType.Width = 59;
+            // 
+            // RankName
+            // 
+            this.RankName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RankName.HeaderText = "母群名稱";
+            this.RankName.MinimumWidth = 85;
+            this.RankName.Name = "RankName";
+            this.RankName.ReadOnly = true;
+            this.RankName.Width = 85;
+            // 
+            // ClassName
+            // 
+            this.ClassName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ClassName.HeaderText = "學生班級";
+            this.ClassName.MinimumWidth = 85;
+            this.ClassName.Name = "ClassName";
+            this.ClassName.ReadOnly = true;
+            this.ClassName.Width = 85;
+            // 
+            // SeatNo
+            // 
+            this.SeatNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.SeatNo.HeaderText = "座號";
+            this.SeatNo.MinimumWidth = 59;
+            this.SeatNo.Name = "SeatNo";
+            this.SeatNo.ReadOnly = true;
+            this.SeatNo.Width = 59;
+            // 
+            // StudentNum
+            // 
+            this.StudentNum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.StudentNum.HeaderText = "學號";
+            this.StudentNum.MinimumWidth = 59;
+            this.StudentNum.Name = "StudentNum";
+            this.StudentNum.ReadOnly = true;
+            this.StudentNum.Width = 59;
+            // 
+            // StudentName
+            // 
+            this.StudentName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.StudentName.HeaderText = "姓名";
+            this.StudentName.MinimumWidth = 59;
+            this.StudentName.Name = "StudentName";
+            this.StudentName.ReadOnly = true;
+            this.StudentName.Width = 59;
+            // 
+            // score
+            // 
+            this.score.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle1.Format = "N2";
+            dataGridViewCellStyle1.NullValue = null;
+            this.score.DefaultCellStyle = dataGridViewCellStyle1;
+            this.score.HeaderText = "排名分數";
+            this.score.MinimumWidth = 85;
+            this.score.Name = "score";
+            this.score.ReadOnly = true;
+            // 
+            // rank
+            // 
+            this.rank.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.rank.HeaderText = "名次";
+            this.rank.MinimumWidth = 59;
+            this.rank.Name = "rank";
+            this.rank.ReadOnly = true;
+            this.rank.Width = 59;
+            // 
+            // pr
+            // 
+            this.pr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.pr.HeaderText = "PR";
+            this.pr.MinimumWidth = 49;
+            this.pr.Name = "pr";
+            this.pr.ReadOnly = true;
+            this.pr.Width = 49;
+            // 
+            // percentile
+            // 
+            this.percentile.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.percentile.HeaderText = "百分比";
+            this.percentile.MinimumWidth = 72;
+            this.percentile.Name = "percentile";
+            this.percentile.ReadOnly = true;
+            this.percentile.Width = 72;
+            // 
+            // view
+            // 
+            this.view.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.view.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.view.HeaderText = "檢視";
+            this.view.Name = "view";
+            this.view.ReadOnly = true;
+            this.view.Text = "檢視";
+            this.view.UseColumnTextForButtonValue = true;
+            this.view.Width = 40;
+            // 
+            // SchoolYear
+            // 
+            this.SchoolYear.HeaderText = "學年度";
+            this.SchoolYear.Name = "SchoolYear";
+            this.SchoolYear.ReadOnly = true;
+            this.SchoolYear.Visible = false;
+            this.SchoolYear.Width = 72;
+            // 
+            // Semester
+            // 
+            this.Semester.HeaderText = "學期";
+            this.Semester.Name = "Semester";
+            this.Semester.ReadOnly = true;
+            this.Semester.Visible = false;
+            this.Semester.Width = 59;
             // 
             // RegularRankSelect
             // 
@@ -587,6 +616,7 @@
         private DevComponents.DotNetBar.LabelX labelX1;
         private DevComponents.DotNetBar.ButtonX btnExit;
         private DevComponents.DotNetBar.Controls.TextBoxX txtStudentNum;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.DataGridViewTextBoxColumn MatrixId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScoreType;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScoreCategory;
@@ -605,7 +635,6 @@
         private DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn view;
         private System.Windows.Forms.DataGridViewTextBoxColumn SchoolYear;
         private System.Windows.Forms.DataGridViewTextBoxColumn Semester;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 

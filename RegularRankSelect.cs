@@ -23,10 +23,14 @@ namespace JHEvaluation.Rank
             InitializeComponent();
         }
 
-        List<DataGridViewRow> _rowCollection = new List<DataGridViewRow>();
+        private List<DataGridViewRow> _RowCollection = new List<DataGridViewRow>();
+        private BackgroundWorker _BackgroundWorker = new BackgroundWorker();
 
         private void RegularRankSelect_Load(object sender, EventArgs e)
         {
+            _BackgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
+            _BackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+
             #region 要塞進前4個ComboBox的資料的sql字串
             string queryFilter = @"
 SELECT rank_matrix.school_year
@@ -42,61 +46,150 @@ FROM rank_matrix LEFT OUTER JOIN
 WHERE rank_matrix.is_alive = true";
             #endregion
 
+            QueryHelper queryHelper = new QueryHelper();
+            DataTable dt = queryHelper.Select(queryFilter);
+
+            #region 填入前4個ComboBox
+            //學年度ComboBox
+            foreach (DataRow row in dt.Rows)
+            {
+                string value = "" + row[0];
+                if (!cboSchoolYear.Items.Contains(value))
+                {
+                    cboSchoolYear.Items.Add(value);
+                }
+            }
+            cboSchoolYear.SelectedIndex = 0;
+
+            //學期ComboBox
+            foreach (DataRow row in dt.Rows)
+            {
+                string value = "" + row[1];
+                if (!cboSemester.Items.Contains(value))
+                {
+                    cboSemester.Items.Add(value);
+                }
+            }
+            cboSemester.SelectedIndex = 0;
+
+            //類型ComboBox
+            foreach (DataRow row in dt.Rows)
+            {
+                string value = "" + row[2];
+                if (!cboScoreType.Items.Contains(value))
+                {
+                    cboScoreType.Items.Add(value);
+                }
+            }
+            cboScoreType.SelectedIndex = 0;
+
+            //類別ComboBox
+            foreach (DataRow row in dt.Rows)
+            {
+                string value = "" + row[3];
+                if (!cboScoreCategory.Items.Contains(value))
+                {
+                    cboScoreCategory.Items.Add(value);
+                }
+            }
+            cboScoreCategory.SelectedIndex = 0;
+            #endregion
+
+        }
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string query = (string)e.Argument;
+
             try
             {
-                QueryHelper filterQueryHelper = new QueryHelper();
-                DataTable filterDataTable = filterQueryHelper.Select(queryFilter);
+                DataTable dt = new DataTable();
 
-                #region 填入前4個ComboBox
-                //學年度ComboBox
-                foreach (DataRow row in filterDataTable.Rows)
-                {
-                    string value = "" + row[0];
-                    if (!cboSchoolYear.Items.Contains(value))
-                    {
-                        cboSchoolYear.Items.Add(value);
-                    }
-                }
-                cboSchoolYear.SelectedIndex = 0;
+                QueryHelper queryHelper = new QueryHelper();
+                dt = queryHelper.Select(query);
 
-                //學期ComboBox
-                foreach (DataRow row in filterDataTable.Rows)
-                {
-                    string value = "" + row[1];
-                    if (!cboSemester.Items.Contains(value))
-                    {
-                        cboSemester.Items.Add(value);
-                    }
-                }
-                cboSemester.SelectedIndex = 0;
-
-                //類型ComboBox
-                foreach (DataRow row in filterDataTable.Rows)
-                {
-                    string value = "" + row[2];
-                    if (!cboScoreType.Items.Contains(value))
-                    {
-                        cboScoreType.Items.Add(value);
-                    }
-                }
-                cboScoreType.SelectedIndex = 0;
-
-                //類別ComboBox
-                foreach (DataRow row in filterDataTable.Rows)
-                {
-                    string value = "" + row[3];
-                    if (!cboScoreCategory.Items.Contains(value))
-                    {
-                        cboScoreCategory.Items.Add(value);
-                    }
-                }
-                cboScoreCategory.SelectedIndex = 0;
-                #endregion
-
+                e.Result = dt;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.StackTrace.ToString());
+                MessageBox.Show("資料讀取失敗："+ex.Message);
+            }
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            DataTable dt = (DataTable)e.Result;
+
+            try
+            {
+                #region 塞資料進DataGridView
+                _RowCollection = new List<DataGridViewRow>();
+                for (int rowIndex = 0; rowIndex < dt.Rows.Count; rowIndex++)
+                {
+                    DataGridViewRow gridViewRow = new DataGridViewRow();
+                    gridViewRow.CreateCells(dgvScoreRank);
+                    for (int colindex = 0; colindex < dt.Columns.Count; colindex++)
+                    {
+                        if (colindex >= 14)
+                        {
+                            gridViewRow.Cells[colindex + 1].Value = "" + dt.Rows[rowIndex][colindex];
+                        }
+                        else
+                        {
+                            gridViewRow.Cells[colindex].Value = "" + dt.Rows[rowIndex][colindex];
+                        }
+
+                    }
+                    _RowCollection.Add(gridViewRow);
+                }
+                #endregion
+
+                #region 填入最後3個ComboBox
+                //試別ComboBox
+                cboExamName.Items.Clear();
+                cboExamName.Items.Add("全部");
+                foreach (DataRow row in dt.Rows)
+                {
+                    string value = "" + row[3];
+                    if (!cboExamName.Items.Contains(value))
+                    {
+                        cboExamName.Items.Add(value);
+                    }
+                }
+                cboExamName.SelectedIndex = 0;
+
+                //項目ComboBox
+                cboItemName.Items.Clear();
+                cboItemName.Items.Add("全部");
+                foreach (DataRow row in dt.Rows)
+                {
+                    string value = "" + row[4];
+                    if (!cboItemName.Items.Contains(value))
+                    {
+                        cboItemName.Items.Add(value);
+                    }
+                }
+                cboItemName.SelectedIndex = 0;
+
+                //母群ComboBox
+                cboRankType.Items.Clear();
+                cboRankType.Items.Add("全部");
+                foreach (DataRow row in dt.Rows)
+                {
+                    string value = "" + row[5];
+                    if (!cboRankType.Items.Contains(value))
+                    {
+                        cboRankType.Items.Add(value);
+                    }
+                }
+                cboRankType.SelectedIndex = 0;
+                #endregion
+                _IsFilling = false;
+                FillingDataGridView(null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
             }
         }
 
@@ -168,16 +261,19 @@ WHERE rank_matrix.is_alive = true";
             this.Close();
         }
 
-        private void cboSchoolYear_SelectedIndexChanged(object sender, EventArgs e)
+        private void LoadRowData(object sender, EventArgs e)
         {
-            _IsFilling = true;
             if (!string.IsNullOrEmpty(cboSchoolYear.Text)
                 && !string.IsNullOrEmpty(cboSemester.Text)
                 && !string.IsNullOrEmpty(cboScoreType.Text)
                 && !string.IsNullOrEmpty(cboScoreCategory.Text))
             {
-                QueryHelper queryHelper = new QueryHelper();
 
+                _IsFilling = true;
+                dgvScoreRank.Rows.Clear();
+                cboExamName.Items.Clear();
+                cboItemName.Items.Clear();
+                cboRankType.Items.Clear();
                 #region 要顯示的資料的sql字串
                 string queryTable = @"
 Select *
@@ -210,87 +306,17 @@ Where  school_year = " + Convert.ToInt32(cboSchoolYear.Text) +
     "And score_type = '" + cboScoreType.Text + "'" +
     "And score_category = '" + cboScoreCategory.Text + "'";
                 #endregion
-
-                DataTable rankDataTable = new DataTable();
-                rankDataTable = queryHelper.Select(queryTable);
-
-                #region 塞資料進DataGridView
-                _rowCollection = new List<DataGridViewRow>();
-                dgvScoreRank.SuspendLayout();
-                dgvScoreRank.Rows.Clear();
-                for (int rowIndex = 0; rowIndex < rankDataTable.Rows.Count; rowIndex++)
-                {
-                    DataGridViewRow gridViewRow = new DataGridViewRow();
-                    gridViewRow.CreateCells(dgvScoreRank);
-                    for (int colindex = 0; colindex < rankDataTable.Columns.Count; colindex++)
-                    {
-                        if (colindex >= 14)
-                        {
-                            gridViewRow.Cells[colindex + 1].Value = "" + rankDataTable.Rows[rowIndex][colindex];
-                        }
-                        else
-                        {
-                            gridViewRow.Cells[colindex].Value = "" + rankDataTable.Rows[rowIndex][colindex];
-                        }
-
-                    }
-                    _rowCollection.Add(gridViewRow);
-                }
-                dgvScoreRank.Rows.AddRange(_rowCollection.ToArray());
-                dgvScoreRank.ResumeLayout(true);
-                #endregion
-
-                #region 填入最後3個ComboBox
-                //試別ComboBox
-                cboExamName.Items.Clear();
-                cboExamName.Items.Add("全部");
-                foreach (DataRow row in rankDataTable.Rows)
-                {
-                    string value = "" + row[3];
-                    if (!cboExamName.Items.Contains(value))
-                    {
-                        cboExamName.Items.Add(value);
-                    }
-                }
-                cboExamName.SelectedIndex = 0;
-
-                //項目ComboBox
-                cboItemName.Items.Clear();
-                cboItemName.Items.Add("全部");
-                foreach (DataRow row in rankDataTable.Rows)
-                {
-                    string value = "" + row[4];
-                    if (!cboItemName.Items.Contains(value))
-                    {
-                        cboItemName.Items.Add(value);
-                    }
-                }
-                cboItemName.SelectedIndex = 0;
-
-                //母群ComboBox
-                cboRankType.Items.Clear();
-                cboRankType.Items.Add("全部");
-                foreach (DataRow row in rankDataTable.Rows)
-                {
-                    string value = "" + row[5];
-                    if (!cboRankType.Items.Contains(value))
-                    {
-                        cboRankType.Items.Add(value);
-                    }
-                }
-                cboRankType.SelectedIndex = 0;
-                #endregion
+                _BackgroundWorker.RunWorkerAsync(queryTable);
             }
-            _IsFilling = false;
         }
 
-        private void cboExamName_SelectedIndexChanged(object sender, EventArgs e)
+        private void FillingDataGridView(object sender, EventArgs e)
         {
             if (_IsFilling)
                 return;
             dgvScoreRank.Rows.Clear();
             List<DataGridViewRow> newList = new List<DataGridViewRow>();
-            foreach (DataGridViewRow gridViewRow in _rowCollection)
+            foreach (DataGridViewRow gridViewRow in _RowCollection)
             {
                 var show = true;
                 if (cboExamName.Text != "" && cboExamName.Text != "全部" && cboExamName.Text != ("" + gridViewRow.Cells[3].Value))
@@ -305,7 +331,7 @@ Where  school_year = " + Convert.ToInt32(cboSchoolYear.Text) +
                 {
                     show = show & false;
                 }
-                if (txtStudentNum.Text != "" && txtStudentNum.Text != ("" + gridViewRow.Cells[9].Value))
+                if (txtStudentNum.Text != "" && !("" + gridViewRow.Cells[9].Value).Contains(txtStudentNum.Text))
                 {
                     show = show & false;
                 }
@@ -327,10 +353,13 @@ Where  school_year = " + Convert.ToInt32(cboSchoolYear.Text) +
                 return;
             }
 
-            MatrixRankSelect frm = new MatrixRankSelect(cboSchoolYear.Text, cboSemester.Text
-                                                        , cboScoreType.Text, cboScoreCategory.Text
-                                                        , cboExamName.Text, cboItemName.Text
-                                                        , cboRankType.Text);
+            MatrixRankSelect frm = new MatrixRankSelect("" + dgvScoreRank[16, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[17, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[1, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[2, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[3, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[4, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[5, e.RowIndex].Value);
             frm.ShowDialog();
         }
     }
