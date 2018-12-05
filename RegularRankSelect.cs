@@ -24,12 +24,9 @@ namespace JHEvaluation.Rank
         }
 
         private List<DataGridViewRow> _RowCollection = new List<DataGridViewRow>();
-        private BackgroundWorker _BackgroundWorker = new BackgroundWorker();
 
         private void RegularRankSelect_Load(object sender, EventArgs e)
         {
-            _BackgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            _BackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
 
             #region 要塞進前4個ComboBox的資料的sql字串
             string queryFilter = @"
@@ -97,100 +94,24 @@ WHERE rank_matrix.is_alive = true";
 
         }
 
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private DataTable getDataAsync(string queryString)
         {
-            string query = (string)e.Argument;
-
+            string query = queryString;
+            DataTable dt = new DataTable();
             try
             {
-                DataTable dt = new DataTable();
+                dt = new DataTable();
 
                 QueryHelper queryHelper = new QueryHelper();
                 dt = queryHelper.Select(query);
 
-                e.Result = dt;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("資料讀取失敗："+ex.Message);
+                MessageBox.Show("資料讀取失敗：" + ex.Message);
             }
-        }
 
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            DataTable dt = (DataTable)e.Result;
-
-            try
-            {
-                #region 塞資料進DataGridView
-                _RowCollection = new List<DataGridViewRow>();
-                for (int rowIndex = 0; rowIndex < dt.Rows.Count; rowIndex++)
-                {
-                    DataGridViewRow gridViewRow = new DataGridViewRow();
-                    gridViewRow.CreateCells(dgvScoreRank);
-                    for (int colindex = 0; colindex < dt.Columns.Count; colindex++)
-                    {
-                        if (colindex >= 14)
-                        {
-                            gridViewRow.Cells[colindex + 1].Value = "" + dt.Rows[rowIndex][colindex];
-                        }
-                        else
-                        {
-                            gridViewRow.Cells[colindex].Value = "" + dt.Rows[rowIndex][colindex];
-                        }
-
-                    }
-                    _RowCollection.Add(gridViewRow);
-                }
-                #endregion
-
-                #region 填入最後3個ComboBox
-                //試別ComboBox
-                cboExamName.Items.Clear();
-                cboExamName.Items.Add("全部");
-                foreach (DataRow row in dt.Rows)
-                {
-                    string value = "" + row[3];
-                    if (!cboExamName.Items.Contains(value))
-                    {
-                        cboExamName.Items.Add(value);
-                    }
-                }
-                cboExamName.SelectedIndex = 0;
-
-                //項目ComboBox
-                cboItemName.Items.Clear();
-                cboItemName.Items.Add("全部");
-                foreach (DataRow row in dt.Rows)
-                {
-                    string value = "" + row[4];
-                    if (!cboItemName.Items.Contains(value))
-                    {
-                        cboItemName.Items.Add(value);
-                    }
-                }
-                cboItemName.SelectedIndex = 0;
-
-                //母群ComboBox
-                cboRankType.Items.Clear();
-                cboRankType.Items.Add("全部");
-                foreach (DataRow row in dt.Rows)
-                {
-                    string value = "" + row[5];
-                    if (!cboRankType.Items.Contains(value))
-                    {
-                        cboRankType.Items.Add(value);
-                    }
-                }
-                cboRankType.SelectedIndex = 0;
-                #endregion
-                _IsFilling = false;
-                FillingDataGridView(null, null);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
+            return dt;
         }
 
         private void btnExportToExcel_Click(object sender, EventArgs e)
@@ -261,7 +182,7 @@ WHERE rank_matrix.is_alive = true";
             this.Close();
         }
 
-        private void LoadRowData(object sender, EventArgs e)
+        private async void LoadRowData(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(cboSchoolYear.Text)
                 && !string.IsNullOrEmpty(cboSemester.Text)
@@ -269,11 +190,6 @@ WHERE rank_matrix.is_alive = true";
                 && !string.IsNullOrEmpty(cboScoreCategory.Text))
             {
 
-                _IsFilling = true;
-                dgvScoreRank.Rows.Clear();
-                cboExamName.Items.Clear();
-                cboItemName.Items.Clear();
-                cboRankType.Items.Clear();
                 #region 要顯示的資料的sql字串
                 string queryTable = @"
 Select *
@@ -306,7 +222,92 @@ Where  school_year = " + Convert.ToInt32(cboSchoolYear.Text) +
     "And score_type = '" + cboScoreType.Text + "'" +
     "And score_category = '" + cboScoreCategory.Text + "'";
                 #endregion
-                _BackgroundWorker.RunWorkerAsync(queryTable);
+
+                DataTable dt = await Task.Run(() => getDataAsync(queryTable));
+
+                if (dt.Rows.Count == 0)
+                {
+                    return;
+                }
+
+                try
+                {
+                    _IsFilling = true;
+                    dgvScoreRank.Rows.Clear();
+                    cboExamName.Items.Clear();
+                    cboItemName.Items.Clear();
+                    cboRankType.Items.Clear();
+
+                    #region 填入最後3個ComboBox
+                    //試別ComboBox
+                    cboExamName.Items.Clear();
+                    cboExamName.Items.Add("全部");
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string value = "" + row[3];
+                        if (!cboExamName.Items.Contains(value))
+                        {
+                            cboExamName.Items.Add(value);
+                        }
+                    }
+                    cboExamName.SelectedIndex = 0;
+
+                    //項目ComboBox
+                    cboItemName.Items.Clear();
+                    cboItemName.Items.Add("全部");
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string value = "" + row[4];
+                        if (!cboItemName.Items.Contains(value))
+                        {
+                            cboItemName.Items.Add(value);
+                        }
+                    }
+                    cboItemName.SelectedIndex = 0;
+
+                    //母群ComboBox
+                    cboRankType.Items.Clear();
+                    cboRankType.Items.Add("全部");
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string value = "" + row[5];
+                        if (!cboRankType.Items.Contains(value))
+                        {
+                            cboRankType.Items.Add(value);
+                        }
+                    }
+                    cboRankType.SelectedIndex = 0;
+                    #endregion
+
+                    #region 塞資料進DataGridView
+                    _RowCollection = new List<DataGridViewRow>();
+                    for (int rowIndex = 0; rowIndex < dt.Rows.Count; rowIndex++)
+                    {
+                        DataGridViewRow gridViewRow = new DataGridViewRow();
+                        gridViewRow.CreateCells(dgvScoreRank);
+                        for (int colindex = 0; colindex < dt.Columns.Count; colindex++)
+                        {
+                            if (colindex >= 14)
+                            {
+                                gridViewRow.Cells[colindex + 1].Value = "" + dt.Rows[rowIndex][colindex];
+                            }
+                            else
+                            {
+                                gridViewRow.Cells[colindex].Value = "" + dt.Rows[rowIndex][colindex];
+                            }
+
+                        }
+                        _RowCollection.Add(gridViewRow);
+                    }
+                    #endregion
+
+                    _IsFilling = false;
+                    FillingDataGridView(null, null);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
             }
         }
 

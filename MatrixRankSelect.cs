@@ -29,8 +29,6 @@ namespace JHEvaluation.Rank
             lbRankType.Text = RankType;
         }
 
-        BackgroundWorker _backgroundWorker = new BackgroundWorker();
-
         private void MatrixRankSelect_Load(object sender, EventArgs e)
         {
             QueryHelper queryHelper = new QueryHelper();
@@ -94,56 +92,22 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
 
         }
 
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private DataTable getDataAsync(string queryString)
         {
-            string query = (string)e.Argument;
+            string query = queryString;
 
+            DataTable dt = new DataTable();
             try
             {
-                DataTable dt = new DataTable();
-
                 QueryHelper queryHelper = new QueryHelper();
                 dt = queryHelper.Select(query);
-
-                e.Result = dt;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("資料讀取失敗：" + ex.Message);
             }
-        }
 
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            DataTable dt = (DataTable)e.Result;
-
-            try
-            {
-                #region 塞資料進dataGridView
-                List<DataGridViewRow> gridViewRowList = new List<DataGridViewRow>();
-                dgvScoreRank.Rows.Clear();
-                dgvScoreRank.SuspendLayout();
-                for (int row = 0; row < dt.Rows.Count; row++)
-                {
-                    DataGridViewRow gridViewRow = new DataGridViewRow();
-                    gridViewRow.CreateCells(dgvScoreRank);
-                    for (int col = 0; col < dt.Columns.Count - 2; col++)
-                    {
-                        gridViewRow.Cells[col].Value = "" + dt.Rows[row][col];
-                    }
-                    gridViewRowList.Add(gridViewRow);
-                }
-                dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
-                dgvScoreRank.ResumeLayout();
-                #endregion
-
-                lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
-                lbMemo.Text = "" + dt.Rows[0]["memo"];
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
+            return dt;
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -214,7 +178,7 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
             }
         }
 
-        private void LoadRowData(object sender, EventArgs e)
+        private async void LoadRowData(object sender, EventArgs e)
         {
             string MatrixID = cboMatrixId.Text.Trim('*');
             #region 要顯示的資料的sql字串
@@ -256,9 +220,35 @@ From
 Where rank_matrix_id = " + Convert.ToInt32(MatrixID);
             #endregion
 
-            _backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            _backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
-            _backgroundWorker.RunWorkerAsync(queryTable);
+            DataTable dt = await Task.Run(() => getDataAsync(queryTable));
+
+            try
+            {
+                #region 塞資料進dataGridView
+                List<DataGridViewRow> gridViewRowList = new List<DataGridViewRow>();
+                dgvScoreRank.Rows.Clear();
+                dgvScoreRank.SuspendLayout();
+                for (int row = 0; row < dt.Rows.Count; row++)
+                {
+                    DataGridViewRow gridViewRow = new DataGridViewRow();
+                    gridViewRow.CreateCells(dgvScoreRank);
+                    for (int col = 0; col < dt.Columns.Count - 2; col++)
+                    {
+                        gridViewRow.Cells[col].Value = "" + dt.Rows[row][col];
+                    }
+                    gridViewRowList.Add(gridViewRow);
+                }
+                dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
+                dgvScoreRank.ResumeLayout();
+                #endregion
+
+                lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
+                lbMemo.Text = "" + dt.Rows[0]["memo"];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
         }
     }
 }
