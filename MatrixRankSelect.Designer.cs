@@ -28,10 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnExit = new DevComponents.DotNetBar.ButtonX();
             this.dgvScoreRank = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.MatrixId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ScoreType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ScoreCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExamName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RankType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RankName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SeatNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StudentNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StudentStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.score = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rank = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.percentile = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SchoolYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Semester = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelX8 = new DevComponents.DotNetBar.LabelX();
             this.labelX7 = new DevComponents.DotNetBar.LabelX();
             this.labelX6 = new DevComponents.DotNetBar.LabelX();
@@ -54,24 +72,6 @@
             this.lbMemo = new DevComponents.DotNetBar.LabelX();
             this.labelX11 = new DevComponents.DotNetBar.LabelX();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.MatrixId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ScoreType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ScoreCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ExamName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RankType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RankName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SeatNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StudentNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StudentStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.score = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rank = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.percentile = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SchoolYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Semester = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScoreRank)).BeginInit();
             this.SuspendLayout();
             // 
@@ -117,14 +117,14 @@
             this.percentile,
             this.SchoolYear,
             this.Semester});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvScoreRank.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvScoreRank.HighlightSelectedColumnHeaders = false;
             this.dgvScoreRank.Location = new System.Drawing.Point(12, 174);
@@ -135,6 +135,166 @@
             this.dgvScoreRank.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvScoreRank.Size = new System.Drawing.Size(1160, 472);
             this.dgvScoreRank.TabIndex = 45;
+            // 
+            // MatrixId
+            // 
+            this.MatrixId.HeaderText = "ID";
+            this.MatrixId.Name = "MatrixId";
+            this.MatrixId.ReadOnly = true;
+            this.MatrixId.Visible = false;
+            this.MatrixId.Width = 47;
+            // 
+            // ScoreType
+            // 
+            this.ScoreType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ScoreType.HeaderText = "成績類型";
+            this.ScoreType.MinimumWidth = 85;
+            this.ScoreType.Name = "ScoreType";
+            this.ScoreType.ReadOnly = true;
+            this.ScoreType.Width = 85;
+            // 
+            // ScoreCategory
+            // 
+            this.ScoreCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ScoreCategory.HeaderText = "成績類別";
+            this.ScoreCategory.MinimumWidth = 85;
+            this.ScoreCategory.Name = "ScoreCategory";
+            this.ScoreCategory.ReadOnly = true;
+            this.ScoreCategory.Width = 85;
+            // 
+            // ExamName
+            // 
+            this.ExamName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ExamName.HeaderText = "試別";
+            this.ExamName.MinimumWidth = 59;
+            this.ExamName.Name = "ExamName";
+            this.ExamName.ReadOnly = true;
+            this.ExamName.Width = 59;
+            // 
+            // ItemName
+            // 
+            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ItemName.HeaderText = "項目";
+            this.ItemName.MinimumWidth = 59;
+            this.ItemName.Name = "ItemName";
+            this.ItemName.ReadOnly = true;
+            this.ItemName.Width = 59;
+            // 
+            // RankType
+            // 
+            this.RankType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RankType.HeaderText = "母群";
+            this.RankType.MinimumWidth = 59;
+            this.RankType.Name = "RankType";
+            this.RankType.ReadOnly = true;
+            this.RankType.Width = 59;
+            // 
+            // RankName
+            // 
+            this.RankName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RankName.HeaderText = "母群名稱";
+            this.RankName.MinimumWidth = 85;
+            this.RankName.Name = "RankName";
+            this.RankName.ReadOnly = true;
+            this.RankName.Width = 85;
+            // 
+            // ClassName
+            // 
+            this.ClassName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ClassName.HeaderText = "學生班級";
+            this.ClassName.MinimumWidth = 85;
+            this.ClassName.Name = "ClassName";
+            this.ClassName.ReadOnly = true;
+            this.ClassName.Width = 85;
+            // 
+            // SeatNo
+            // 
+            this.SeatNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.SeatNo.HeaderText = "座號";
+            this.SeatNo.MinimumWidth = 59;
+            this.SeatNo.Name = "SeatNo";
+            this.SeatNo.ReadOnly = true;
+            this.SeatNo.Width = 59;
+            // 
+            // StudentNum
+            // 
+            this.StudentNum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.StudentNum.HeaderText = "學號";
+            this.StudentNum.MinimumWidth = 59;
+            this.StudentNum.Name = "StudentNum";
+            this.StudentNum.ReadOnly = true;
+            this.StudentNum.Width = 59;
+            // 
+            // StudentName
+            // 
+            this.StudentName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.StudentName.HeaderText = "姓名";
+            this.StudentName.MinimumWidth = 59;
+            this.StudentName.Name = "StudentName";
+            this.StudentName.ReadOnly = true;
+            this.StudentName.Width = 59;
+            // 
+            // StudentStatus
+            // 
+            this.StudentStatus.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.StudentStatus.HeaderText = "目前狀態";
+            this.StudentStatus.MinimumWidth = 59;
+            this.StudentStatus.Name = "StudentStatus";
+            this.StudentStatus.ReadOnly = true;
+            this.StudentStatus.Width = 85;
+            // 
+            // score
+            // 
+            this.score.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle3.Format = "N2";
+            dataGridViewCellStyle3.NullValue = null;
+            this.score.DefaultCellStyle = dataGridViewCellStyle3;
+            this.score.HeaderText = "排名分數";
+            this.score.MinimumWidth = 91;
+            this.score.Name = "score";
+            this.score.ReadOnly = true;
+            // 
+            // rank
+            // 
+            this.rank.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.rank.HeaderText = "名次";
+            this.rank.MinimumWidth = 59;
+            this.rank.Name = "rank";
+            this.rank.ReadOnly = true;
+            this.rank.Width = 59;
+            // 
+            // pr
+            // 
+            this.pr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.pr.HeaderText = "PR";
+            this.pr.MinimumWidth = 49;
+            this.pr.Name = "pr";
+            this.pr.ReadOnly = true;
+            this.pr.Width = 49;
+            // 
+            // percentile
+            // 
+            this.percentile.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.percentile.HeaderText = "百分比";
+            this.percentile.Name = "percentile";
+            this.percentile.ReadOnly = true;
+            this.percentile.Width = 72;
+            // 
+            // SchoolYear
+            // 
+            this.SchoolYear.HeaderText = "學年度";
+            this.SchoolYear.Name = "SchoolYear";
+            this.SchoolYear.ReadOnly = true;
+            this.SchoolYear.Visible = false;
+            this.SchoolYear.Width = 72;
+            // 
+            // Semester
+            // 
+            this.Semester.HeaderText = "學期";
+            this.Semester.Name = "Semester";
+            this.Semester.ReadOnly = true;
+            this.Semester.Visible = false;
+            this.Semester.Width = 59;
             // 
             // labelX8
             // 
@@ -469,166 +629,6 @@
             this.labelX11.Size = new System.Drawing.Size(50, 24);
             this.labelX11.TabIndex = 59;
             this.labelX11.Text = "說明：";
-            // 
-            // MatrixId
-            // 
-            this.MatrixId.HeaderText = "ID";
-            this.MatrixId.Name = "MatrixId";
-            this.MatrixId.ReadOnly = true;
-            this.MatrixId.Visible = false;
-            this.MatrixId.Width = 47;
-            // 
-            // ScoreType
-            // 
-            this.ScoreType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ScoreType.HeaderText = "成績類型";
-            this.ScoreType.MinimumWidth = 85;
-            this.ScoreType.Name = "ScoreType";
-            this.ScoreType.ReadOnly = true;
-            this.ScoreType.Width = 85;
-            // 
-            // ScoreCategory
-            // 
-            this.ScoreCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ScoreCategory.HeaderText = "成績類別";
-            this.ScoreCategory.MinimumWidth = 85;
-            this.ScoreCategory.Name = "ScoreCategory";
-            this.ScoreCategory.ReadOnly = true;
-            this.ScoreCategory.Width = 85;
-            // 
-            // ExamName
-            // 
-            this.ExamName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ExamName.HeaderText = "試別";
-            this.ExamName.MinimumWidth = 59;
-            this.ExamName.Name = "ExamName";
-            this.ExamName.ReadOnly = true;
-            this.ExamName.Width = 59;
-            // 
-            // ItemName
-            // 
-            this.ItemName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ItemName.HeaderText = "項目";
-            this.ItemName.MinimumWidth = 59;
-            this.ItemName.Name = "ItemName";
-            this.ItemName.ReadOnly = true;
-            this.ItemName.Width = 59;
-            // 
-            // RankType
-            // 
-            this.RankType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.RankType.HeaderText = "母群";
-            this.RankType.MinimumWidth = 59;
-            this.RankType.Name = "RankType";
-            this.RankType.ReadOnly = true;
-            this.RankType.Width = 59;
-            // 
-            // RankName
-            // 
-            this.RankName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.RankName.HeaderText = "母群名稱";
-            this.RankName.MinimumWidth = 85;
-            this.RankName.Name = "RankName";
-            this.RankName.ReadOnly = true;
-            this.RankName.Width = 85;
-            // 
-            // ClassName
-            // 
-            this.ClassName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ClassName.HeaderText = "學生班級";
-            this.ClassName.MinimumWidth = 85;
-            this.ClassName.Name = "ClassName";
-            this.ClassName.ReadOnly = true;
-            this.ClassName.Width = 85;
-            // 
-            // SeatNo
-            // 
-            this.SeatNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.SeatNo.HeaderText = "座號";
-            this.SeatNo.MinimumWidth = 59;
-            this.SeatNo.Name = "SeatNo";
-            this.SeatNo.ReadOnly = true;
-            this.SeatNo.Width = 59;
-            // 
-            // StudentNum
-            // 
-            this.StudentNum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.StudentNum.HeaderText = "學號";
-            this.StudentNum.MinimumWidth = 59;
-            this.StudentNum.Name = "StudentNum";
-            this.StudentNum.ReadOnly = true;
-            this.StudentNum.Width = 59;
-            // 
-            // StudentName
-            // 
-            this.StudentName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.StudentName.HeaderText = "姓名";
-            this.StudentName.MinimumWidth = 59;
-            this.StudentName.Name = "StudentName";
-            this.StudentName.ReadOnly = true;
-            this.StudentName.Width = 59;
-            // 
-            // StudentStatus
-            // 
-            this.StudentStatus.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.StudentStatus.HeaderText = "目前狀態";
-            this.StudentStatus.MinimumWidth = 59;
-            this.StudentStatus.Name = "StudentStatus";
-            this.StudentStatus.ReadOnly = true;
-            this.StudentStatus.Width = 85;
-            // 
-            // score
-            // 
-            this.score.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle1.Format = "N2";
-            dataGridViewCellStyle1.NullValue = null;
-            this.score.DefaultCellStyle = dataGridViewCellStyle1;
-            this.score.HeaderText = "排名分數";
-            this.score.MinimumWidth = 91;
-            this.score.Name = "score";
-            this.score.ReadOnly = true;
-            // 
-            // rank
-            // 
-            this.rank.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.rank.HeaderText = "名次";
-            this.rank.MinimumWidth = 59;
-            this.rank.Name = "rank";
-            this.rank.ReadOnly = true;
-            this.rank.Width = 59;
-            // 
-            // pr
-            // 
-            this.pr.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.pr.HeaderText = "PR";
-            this.pr.MinimumWidth = 49;
-            this.pr.Name = "pr";
-            this.pr.ReadOnly = true;
-            this.pr.Width = 49;
-            // 
-            // percentile
-            // 
-            this.percentile.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.percentile.HeaderText = "百分比";
-            this.percentile.Name = "percentile";
-            this.percentile.ReadOnly = true;
-            this.percentile.Width = 72;
-            // 
-            // SchoolYear
-            // 
-            this.SchoolYear.HeaderText = "學年度";
-            this.SchoolYear.Name = "SchoolYear";
-            this.SchoolYear.ReadOnly = true;
-            this.SchoolYear.Visible = false;
-            this.SchoolYear.Width = 72;
-            // 
-            // Semester
-            // 
-            this.Semester.HeaderText = "學期";
-            this.Semester.Name = "Semester";
-            this.Semester.ReadOnly = true;
-            this.Semester.Visible = false;
-            this.Semester.Width = 59;
             // 
             // MatrixRankSelect
             // 

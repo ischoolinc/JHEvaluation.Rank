@@ -29,6 +29,8 @@ namespace JHEvaluation.Rank
             lbRankType.Text = RankType;
         }
 
+        bool _IsLoading = false;
+
         private void MatrixRankSelect_Load(object sender, EventArgs e)
         {
             QueryHelper queryHelper = new QueryHelper();
@@ -90,24 +92,6 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
             }
 
 
-        }
-
-        private DataTable getDataAsync(string queryString)
-        {
-            string query = queryString;
-
-            DataTable dt = new DataTable();
-            try
-            {
-                QueryHelper queryHelper = new QueryHelper();
-                dt = queryHelper.Select(query);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("資料讀取失敗：" + ex.Message);
-            }
-
-            return dt;
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -178,11 +162,18 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
             }
         }
 
-        private async void LoadRowData(object sender, EventArgs e)
+        private void LoadRowData(object sender, EventArgs e)
         {
-            string MatrixID = cboMatrixId.Text.Trim('*');
+            if (_IsLoading == true)
+            {
+                return;
+            }
+
+            _IsLoading = true;
+            string matrixId = cboMatrixId.Text.Trim('*');
+
             #region 要顯示的資料的sql字串
-            string queryTable = @"
+            string queryString = @"
 Select *
 From
 	(SELECT rank_matrix.id AS rank_matrix_id 
@@ -217,38 +208,72 @@ From
 		student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
 		class ON class.id = student.ref_class_id LEFT OUTER JOIN 
 		exam ON exam.id=rank_matrix.ref_exam_id) as Rank_Table
-Where rank_matrix_id = " + Convert.ToInt32(MatrixID);
+Where rank_matrix_id = " + matrixId;
             #endregion
 
-            DataTable dt = await Task.Run(() => getDataAsync(queryTable));
+            BackgroundWorker bkw = new BackgroundWorker();
+            DataTable dt = new DataTable();
+            Exception bkwException = null;
 
-            try
+            bkw.DoWork += delegate
             {
-                #region 塞資料進dataGridView
-                List<DataGridViewRow> gridViewRowList = new List<DataGridViewRow>();
-                dgvScoreRank.Rows.Clear();
-                dgvScoreRank.SuspendLayout();
-                for (int row = 0; row < dt.Rows.Count; row++)
+                string query = queryString;
+                try
                 {
-                    DataGridViewRow gridViewRow = new DataGridViewRow();
-                    gridViewRow.CreateCells(dgvScoreRank);
-                    for (int col = 0; col < dt.Columns.Count - 2; col++)
-                    {
-                        gridViewRow.Cells[col].Value = "" + dt.Rows[row][col];
-                    }
-                    gridViewRowList.Add(gridViewRow);
+                    QueryHelper queryHelper = new QueryHelper();
+                    dt = queryHelper.Select(query);
                 }
-                dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
-                dgvScoreRank.ResumeLayout();
-                #endregion
+                catch (Exception ex)
+                {
+                    bkwException = ex;
+                }
+            };
 
-                lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
-                lbMemo.Text = "" + dt.Rows[0]["memo"];
-            }
-            catch (Exception ex)
+            bkw.RunWorkerCompleted += delegate
             {
-                MessageBox.Show(ex.Message.ToString());
-            }
+                if (bkwException != null)
+                {
+                    throw new Exception("資料讀取錯誤", bkwException);
+                }
+                if (matrixId == cboMatrixId.Text)
+                {
+                    LoadRowData(null, null);
+                }
+                else
+                {
+                    try
+                    {
+                        #region 塞資料進dataGridView
+                        List<DataGridViewRow> gridViewRowList = new List<DataGridViewRow>();
+                        dgvScoreRank.Rows.Clear();
+                        dgvScoreRank.SuspendLayout();
+                        for (int row = 0; row < dt.Rows.Count; row++)
+                        {
+                            DataGridViewRow gridViewRow = new DataGridViewRow();
+                            gridViewRow.CreateCells(dgvScoreRank);
+                            for (int col = 0; col < dt.Columns.Count - 2; col++)
+                            {
+                                gridViewRow.Cells[col].Value = "" + dt.Rows[row][col];
+                            }
+                            gridViewRowList.Add(gridViewRow);
+                        }
+                        dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
+                        dgvScoreRank.ResumeLayout();
+                        #endregion
+
+                        lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
+                        lbMemo.Text = "" + dt.Rows[0]["memo"];
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString());
+                    }
+                }
+            };
+
+            bkw.RunWorkerAsync();
+
+            _IsLoading = false;
         }
     }
 }
