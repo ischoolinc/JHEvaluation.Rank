@@ -218,6 +218,7 @@ WHERE
     And score_type = '" + scoreType + @"'
     And score_category = '" + scoreCategory + "'";
                 #endregion
+
                 DataTable dt = null;
                 Exception bkwException = null;
                 BackgroundWorker bkw = new BackgroundWorker();
@@ -226,21 +227,25 @@ WHERE
                 {
                     try
                     {
+                        bkw.ReportProgress(0);
+
                         dt = new QueryHelper().Select(queryString);
 
                         bkw.ReportProgress(100);
                     }
-                    catch (Exception exc) {
+                    catch (Exception exc)
+                    {
                         bkwException = exc;
                     }
                 };
                 bkw.ProgressChanged += delegate (object s1, ProgressChangedEventArgs e1)
                 {
-                    FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取中",e1.ProgressPercentage);
+                    FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取中", e1.ProgressPercentage);
                 };
                 bkw.RunWorkerCompleted += delegate
                 {
-                    if (bkwException != null) {
+                    if (bkwException != null)
+                    {
                         throw new Exception("資料讀取錯誤", bkwException);
                     }
                     if (

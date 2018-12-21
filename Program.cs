@@ -1,4 +1,4 @@
-﻿using FISCA;
+﻿    using FISCA;
 using FISCA.Permission;
 using FISCA.Presentation;
 using System;
@@ -27,6 +27,14 @@ namespace JHEvaluation.Rank
             {
                 RegularRankSelect rankSelect = new RegularRankSelect();
                 rankSelect.ShowDialog();
+            };
+
+            RibbonBarItem regularSchoolYearRank = MotherForm.RibbonBarItems["教務作業", "批次作業/檢視"];
+            regularSchoolYearRank["成績排名"]["計算定期評量排名"].Enable = true;
+            regularSchoolYearRank["成績排名"]["計算定期評量排名"].Click += delegate
+            {
+                CacluateRegularAssessmentRank cacluateRegularAssessmentRank = new CacluateRegularAssessmentRank();
+                cacluateRegularAssessmentRank.ShowDialog();
             };
         }
     }

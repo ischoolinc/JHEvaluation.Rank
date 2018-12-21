@@ -39,27 +39,29 @@ namespace JHEvaluation.Rank
             string queryTable = @"
 Select *
 From
-	(SELECT rank_matrix.id AS rank_matrix_id 
-		, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
-		, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
-		, exam.exam_name 
-		, rank_matrix.item_name 
-		, rank_matrix.rank_type
-		, rank_matrix.school_year
-		, rank_matrix.semester 
-        , rank_matrix.is_alive
-	FROM rank_matrix LEFT OUTER JOIN 
-		rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id LEFT OUTER JOIN 
-		student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
-		class ON class.id = student.ref_class_id LEFT OUTER JOIN 
-		exam ON exam.id=rank_matrix.ref_exam_id) as Rank_Table
-Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) +
-"And semester = " + Convert.ToInt32(lbSemester.Text) +
-"And score_type = '" + lbScoreType.Text + "'" +
-"And score_category = '" + lbScoreCategory.Text + "'" +
-"And exam_name = '" + lbExamName.Text + "'" +
-"And item_name = '" + lbItemName.Text + "'" +
-"And rank_type = '" + lbRankType.Text + "'";
+	(
+        SELECT rank_matrix.id AS rank_matrix_id 
+		    , SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
+		    , SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
+		    , exam.exam_name 
+		    , rank_matrix.item_name 
+		    , rank_matrix.rank_type
+		    , rank_matrix.school_year
+		    , rank_matrix.semester 
+            , rank_matrix.is_alive
+	    FROM rank_matrix LEFT OUTER JOIN 
+		    rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id LEFT OUTER JOIN 
+		    student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
+		    class ON class.id = student.ref_class_id LEFT OUTER JOIN 
+		    exam ON exam.id=rank_matrix.ref_exam_id
+    ) as Rank_Table
+Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
+    And semester = " + Convert.ToInt32(lbSemester.Text) + @"
+    And score_type = '" + lbScoreType.Text + "'" + @"
+    And score_category = '" + lbScoreCategory.Text + "'" + @"
+    And exam_name = '" + lbExamName.Text + "'" + @"
+    And item_name = '" + lbItemName.Text + "'" + @"
+    And rank_type = '" + lbRankType.Text + "'";
             #endregion
 
             try
