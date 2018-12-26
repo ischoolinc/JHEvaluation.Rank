@@ -54,6 +54,10 @@
       <HintPath>Library\FISCA.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FISCA.DSAUtil, Version=3.9.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\FISCA.DSAUtil.dll</HintPath>
+    </Reference>
     <Reference Include="FISCA.LogAgent, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\FISCA.LogAgent.dll</HintPath>
@@ -148,6 +152,7 @@
     <Content Include="Library\Aspose.Cells_201402.dll" />
     <Content Include="Library\FISCA.Data.dll" />
     <Content Include="Library\FISCA.dll" />
+    <Content Include="Library\FISCA.DSAUtil.dll" />
     <Content Include="Library\FISCA.LogAgent.dll" />
     <Content Include="Library\FISCA.Permission.dll" />
     <Content Include="Library\FISCA.Presentation.dll" />
