@@ -75,7 +75,7 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
                     if (!cboMatrixId.Items.Contains("" + row["rank_matrix_id"]))
                     {
                         string isAlive = "";
-                        if (row["is_alive"] != null)
+                        if (!string.IsNullOrEmpty("" + row["is_alive"]))
                         {
                             if (Convert.ToBoolean(row["is_alive"]) == true)
                             {
@@ -237,8 +237,9 @@ Where rank_matrix_id = " + matrixId;
                 {
                     throw new Exception("資料讀取錯誤", bkwException);
                 }
-                if (matrixId == cboMatrixId.Text)
+                if (matrixId != cboMatrixId.Text.Trim('*'))
                 {
+                    _IsLoading = false;
                     LoadRowData(null, null);
                 }
                 else

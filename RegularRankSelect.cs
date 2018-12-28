@@ -47,6 +47,12 @@ WHERE rank_matrix.is_alive = true";
             QueryHelper queryHelper = new QueryHelper();
             DataTable dt = queryHelper.Select(queryFilter);
 
+            if (dt.Rows.Count == 0)
+            {
+                MessageBox.Show("無可檢視的資料");
+                return;
+            }
+
             #region 填入前4個ComboBox
             //學年度ComboBox
             foreach (DataRow row in dt.Rows)
