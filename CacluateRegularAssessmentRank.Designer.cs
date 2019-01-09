@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.cboSemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -38,7 +38,7 @@
             this.labelX5 = new DevComponents.DotNetBar.LabelX();
             this.cboStudentTag1 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX4 = new DevComponents.DotNetBar.LabelX();
-            this.cboStudentFIlter = new DevComponents.DotNetBar.Controls.ComboBoxEx();
+            this.cboStudentFilter = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.btnNext = new DevComponents.DotNetBar.ButtonX();
             this.cboExamType = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -143,7 +143,7 @@
             this.gpRankPeople.Controls.Add(this.labelX5);
             this.gpRankPeople.Controls.Add(this.cboStudentTag1);
             this.gpRankPeople.Controls.Add(this.labelX4);
-            this.gpRankPeople.Controls.Add(this.cboStudentFIlter);
+            this.gpRankPeople.Controls.Add(this.cboStudentFilter);
             this.gpRankPeople.Controls.Add(this.labelX3);
             this.gpRankPeople.DrawTitleBox = false;
             this.gpRankPeople.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -189,6 +189,7 @@
             this.cboStudentTag2.DisplayMember = "Text";
             this.cboStudentTag2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboStudentTag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboStudentTag2.Enabled = false;
             this.cboStudentTag2.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.cboStudentTag2.FormattingEnabled = true;
             this.cboStudentTag2.ItemHeight = 21;
@@ -197,6 +198,7 @@
             this.cboStudentTag2.Size = new System.Drawing.Size(242, 27);
             this.cboStudentTag2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboStudentTag2.TabIndex = 6;
+            this.cboStudentTag2.SelectedIndexChanged += new System.EventHandler(this.cboStudentTag2_SelectedIndexChanged);
             // 
             // labelX5
             // 
@@ -230,6 +232,7 @@
             this.cboStudentTag1.Size = new System.Drawing.Size(242, 27);
             this.cboStudentTag1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboStudentTag1.TabIndex = 4;
+            this.cboStudentTag1.SelectedIndexChanged += new System.EventHandler(this.cboStudentTag1_SelectedIndexChanged);
             // 
             // labelX4
             // 
@@ -249,20 +252,21 @@
             this.labelX4.TabIndex = 3;
             this.labelX4.Text = "類別排名一：";
             // 
-            // cboStudentFIlter
+            // cboStudentFilter
             // 
-            this.cboStudentFIlter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cboStudentFIlter.DisplayMember = "Text";
-            this.cboStudentFIlter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboStudentFIlter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboStudentFIlter.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cboStudentFIlter.FormattingEnabled = true;
-            this.cboStudentFIlter.ItemHeight = 21;
-            this.cboStudentFIlter.Location = new System.Drawing.Point(141, 216);
-            this.cboStudentFIlter.Name = "cboStudentFIlter";
-            this.cboStudentFIlter.Size = new System.Drawing.Size(242, 27);
-            this.cboStudentFIlter.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.cboStudentFIlter.TabIndex = 2;
+            this.cboStudentFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cboStudentFilter.DisplayMember = "Text";
+            this.cboStudentFilter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboStudentFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboStudentFilter.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.cboStudentFilter.FormattingEnabled = true;
+            this.cboStudentFilter.ItemHeight = 21;
+            this.cboStudentFilter.Location = new System.Drawing.Point(141, 216);
+            this.cboStudentFilter.Name = "cboStudentFilter";
+            this.cboStudentFilter.Size = new System.Drawing.Size(242, 27);
+            this.cboStudentFilter.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.cboStudentFilter.TabIndex = 2;
+            this.cboStudentFilter.SelectedIndexChanged += new System.EventHandler(this.cboStudentFilter_SelectedIndexChanged);
             // 
             // labelX3
             // 
@@ -378,7 +382,9 @@
             // dgvStudentList
             // 
             this.dgvStudentList.AllowUserToAddRows = false;
-            this.dgvStudentList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvStudentList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvStudentList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvStudentList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colClass,
@@ -389,14 +395,14 @@
             this.colClassRank,
             this.colRankType1,
             this.colRankType2});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
             this.dgvStudentList.Location = new System.Drawing.Point(3, 68);
@@ -687,7 +693,7 @@
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboSemester;
         private DevComponents.DotNetBar.LabelX labelX2;
         private DevComponents.DotNetBar.Controls.GroupPanel gpRankPeople;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentFIlter;
+        private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentFilter;
         private DevComponents.DotNetBar.LabelX labelX3;
         private DevComponents.DotNetBar.ButtonX btnNext;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentTag2;
