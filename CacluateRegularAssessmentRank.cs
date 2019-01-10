@@ -20,7 +20,7 @@ namespace JHEvaluation.Rank
         {
             InitializeComponent();
 
-            #region 查詢學年度、學期和年級
+            #region 查詢學年度、學期
             string queryString = @"
 SELECT
 	course.school_year
@@ -61,10 +61,11 @@ Order BY course.school_year, course.semester
 
         private void CacluateRegularAssessmentRank_Load(object sender, EventArgs e)
         {
-            //讓Form回到起始狀態
+            #region 讓Form回到起始狀態
             plStudentView.Visible = false;
             this.Width = 580;
-            this.Height = 330;
+            this.Height = 330; 
+            #endregion
 
             #region 篩選資料
             _StudentRecord = _StudentRecord.Where(x => !string.IsNullOrEmpty(x.RefClassID)
@@ -127,15 +128,16 @@ Order BY course.school_year, course.semester
             cboExamType.SelectedIndex = 0;
             #endregion
 
-            List<int> gradeList = _StudentRecord.Select(x => Convert.ToInt32(x.Class.GradeYear)).Distinct().OrderBy(x => x).ToList();//整理年級的清單
+            //整理年級的清單
+            List<int> gradeList = _StudentRecord.Select(x => Convert.ToInt32(x.Class.GradeYear)).Distinct().OrderBy(x => x).ToList();
 
             #region 動態產生年級的CheckBox
-            this.Height += 32 * (((gradeList.Count % 4) == 0 ? 0 : gradeList.Count / 4) + 1);//每多一排checkBox+32
+            this.Height += 32 * (((gradeList.Count % 4) == 0 ? 0 : gradeList.Count / 4) + 1);//每多一排checkBox，Form的高度+32
             for (int i = 0; i < gradeList.Count; i++)
             {
                 CheckBox checkBox = new CheckBox();
                 checkBox.AutoSize = true;
-                checkBox.Location = new System.Drawing.Point(13 + (133 * (i % 4)), 8 + (32 * (i / 4))); //兩個checkBox的X差距133，兩個checkBox的Y差距32
+                checkBox.Location = new System.Drawing.Point(13 + (133 * (i % 4)), 8 + (32 * (i / 4))); //第一個checkBox的位置X=13, y=8，兩個checkBox的X差距133，兩個checkBox的Y差距32
                 checkBox.Name = "ch" + gradeList[i];
                 checkBox.Size = new System.Drawing.Size(101, 23);
                 checkBox.TabIndex = 7 + i;
@@ -149,6 +151,7 @@ Order BY course.school_year, course.semester
 
         private void btnNext_Click(object sender, EventArgs e)
         {
+            //紀錄第一頁的Form的大小
             _FormWidth = this.Width;
             _FormHeight = this.Height;
 
@@ -166,7 +169,7 @@ Order BY course.school_year, course.semester
                 if (checkBox.Checked == true)
                 {
                     CheckBox newCheckBox = new CheckBox();
-                    newCheckBox.Location = new System.Drawing.Point(65 + (97 * (checkBoxCount % 4)), 44 + (27 * (checkBoxCount / 4)));
+                    newCheckBox.Location = new System.Drawing.Point(65 + (97 * (checkBoxCount % 4)), 44 + (27 * (checkBoxCount / 4)));//第一個checkBox的位置X=65, y=44，兩個checkBox的X差距97，兩個checkBox的Y差距27
                     newCheckBox.Name = "new" + checkBox.Name;
                     newCheckBox.Size = new System.Drawing.Size(91, 21);
                     newCheckBox.TabIndex = 26 + checkBoxCount;
@@ -180,14 +183,15 @@ Order BY course.school_year, course.semester
                     checkBoxCount++;
                 }
             }
-            #endregion
 
-            //每多一排CheckBox就把Form的長加23，dataGridView的位置往下加23並把高減少23
+            //每多一排CheckBox就把Form的高加23，dataGridView的位置往下加23並把高減少23
             int height = 23 * ((checkBoxCount % 4) == 0 ? 0 : checkBoxCount / 4);
             this.Height += height;
             dgvStudentList.Location = new Point(3, dgvStudentList.Location.Y + height);
             dgvStudentList.Height -= height;
+            #endregion
 
+            #region 讀取學生清單
             _FilterStudentList = new List<StudentRecord>();
             string studentFilter = cboStudentFilter.Text;
             string studentTag1 = cboStudentTag1.Text;
@@ -207,6 +211,7 @@ Order BY course.school_year, course.semester
             {
                 try
                 {
+                    #region 依據條件篩選學生
                     bkw.ReportProgress(1);
                     foreach (string gradeYear in _CheckBoxList.Select(x => x.Text))
                     {
@@ -221,7 +226,8 @@ Order BY course.school_year, course.semester
                         _FilterStudentList = _FilterStudentList.Where(x => !filterStudentID.Contains(x.ID)).ToList();
                     }
 
-                    bkw.ReportProgress(100);
+                    bkw.ReportProgress(100); 
+                    #endregion
                 }
                 catch (Exception ex)
                 {
@@ -257,6 +263,7 @@ Order BY course.school_year, course.semester
                                        RankClassName = s.Class.Name,
                                    }).ToList();
 
+                #region 取得符合類別的學生
                 string tag1ID = "";
                 string tag2ID = "";
                 if (!string.IsNullOrEmpty(cboStudentTag1.Text))
@@ -268,7 +275,8 @@ Order BY course.school_year, course.semester
                     tag2ID = _TagConfigRecord.First(x => x.Name == cboStudentTag2.Text).ID;
                 }
                 List<StudentTagRecord> studentTag1List = K12.Data.StudentTag.SelectAll().Where(x => x.RefTagID == tag1ID).ToList();
-                List<StudentTagRecord> studentTag2List = K12.Data.StudentTag.SelectAll().Where(x => x.RefTagID == tag2ID).ToList();
+                List<StudentTagRecord> studentTag2List = K12.Data.StudentTag.SelectAll().Where(x => x.RefTagID == tag2ID).ToList(); 
+                #endregion
 
                 List<DataGridViewRow> rowList = new List<DataGridViewRow>();
                 List<string> studentListSQL = new List<string>();
@@ -324,7 +332,8 @@ WITH student_list AS
                 #endregion
             };
 
-            bkw.RunWorkerAsync();
+            bkw.RunWorkerAsync(); 
+            #endregion
         }
 
         private void btnCacluate_Click(object sender, EventArgs e)
@@ -364,6 +373,7 @@ UPDATE rank_matrix SET is_alive = null";
                     for (int index = 0; index < gradeYearList.Count; index++)
                     {
                         string sql = "";
+                        bkw.ReportProgress(1);
 
                         #region 計算校排班排的sql字串
                         string insertGradeYearClassRankSql = @"
@@ -466,8 +476,12 @@ UPDATE rank_matrix SET is_alive = null";
 		) AS score
 	FROM 
 		score_detail
-	WHERE exam_score IS NOT NULL
-		OR assignment_score IS NOT NULL	
+	WHERE 
+		(
+			exam_score IS NOT NULL
+			OR assignment_score IS NOT NULL
+		)
+		AND template_id IS NOT NULL
 )
 -----領域排名所需成績
 ,group_score AS
@@ -1259,6 +1273,7 @@ UPDATE rank_matrix SET is_alive = null";
                         #endregion
 
                         sql += insertGradeYearClassRankSql;
+                        bkw.ReportProgress(25);
 
                         if (!string.IsNullOrEmpty(tag1))
                         {
@@ -1347,8 +1362,12 @@ UPDATE rank_matrix SET is_alive = null";
 		) AS score
 	FROM 
 		tag1_score_detail
-	WHERE exam_score IS NOT NULL
-		OR assignment_score IS NOT NULL	
+	WHERE 
+		(
+			exam_score IS NOT NULL
+			OR assignment_score IS NOT NULL
+		)
+		AND template_id IS NOT NULL	
 )
 -----領域成績類別排名所需成績
 ,tag1_group_score AS
@@ -1808,6 +1827,7 @@ UPDATE rank_matrix SET is_alive = null";
 
                             sql += tag1RankSql;
                         }
+                        bkw.ReportProgress(50);
 
                         if (!string.IsNullOrEmpty(tag2))
                         {
@@ -1896,8 +1916,12 @@ UPDATE rank_matrix SET is_alive = null";
 		) AS score
 	FROM 
 		tag2_score_detail
-	WHERE exam_score IS NOT NULL
-		OR assignment_score IS NOT NULL	
+	WHERE 
+		(
+			exam_score IS NOT NULL
+			OR assignment_score IS NOT NULL
+		)
+		AND template_id IS NOT NULL	
 )
 -----領域成績類別排名所需成績
 ,tag2_group_score AS
@@ -2358,6 +2382,7 @@ UPDATE rank_matrix SET is_alive = null";
 
                             sql += tag2RankSql;
                         }
+                        bkw.ReportProgress(75);
 
                         #region 接在最後的SELECT字串
                         string selectSql = @"
@@ -2368,6 +2393,7 @@ SELECT * FROM rank_matrix";
 
                         QueryHelper queryHelper = new QueryHelper();
                         queryHelper.Select(sql);
+                        bkw.ReportProgress(100);
                     }
                 }
                 catch (Exception exception)
