@@ -191,33 +191,44 @@ WHERE rank_matrix.is_alive = true";
 
                 #region 要顯示的資料的sql字串
                 string queryString = @"
-SELECT *
+SELECT 
+    *
 FROM
-    (
-        SELECT rank_matrix.id AS rank_matrix_id 
-		    , SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
-		    , SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
-		    , exam.exam_name 
-		    , rank_matrix.item_name 
-		    , rank_matrix.rank_type 
-		    , rank_matrix.rank_name 
-		    , class.class_name 
-		    , student.seat_no 
-		    , student.student_number
-		    , student.name 
-		    , rank_detail.score
-		    , rank_detail.rank
-		    , rank_detail.pr
-		    , rank_detail.percentile
-		    , rank_matrix.school_year
-		    , rank_matrix.semester 
-	    FROM rank_matrix LEFT OUTER JOIN 
-		    rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id LEFT OUTER JOIN 
-		    student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
-		    class ON class.id = student.ref_class_id LEFT OUTER JOIN 
-		    exam ON exam.id=rank_matrix.ref_exam_id 
-	    WHERE rank_matrix.is_alive = true
-    ) as Rank_Table
+(
+    SELECT rank_matrix.id AS rank_matrix_id 
+        , SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) AS score_type
+        , SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) AS score_category 
+        , exam.exam_name 
+        , rank_matrix.item_name 
+        , rank_matrix.rank_type 
+        , rank_matrix.rank_name 
+        , class.class_name 
+        , student.seat_no 
+        , student.student_number
+        , student.name AS student_name
+        , rank_detail.score
+        , rank_detail.rank
+        , rank_detail.pr
+        , rank_detail.percentile
+        , rank_matrix.school_year
+        , rank_matrix.semester 
+        , rank_matrix.create_time
+    FROM rank_matrix 
+        LEFT OUTER JOIN 
+            rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
+        LEFT OUTER JOIN 
+            student ON student.id = rank_detail.ref_student_id 
+        LEFT OUTER JOIN 
+            class ON class.id = student.ref_class_id 
+        LEFT OUTER JOIN 
+            exam ON exam.id=rank_matrix.ref_exam_id
+    WHERE 
+        rank_matrix.is_alive = true
+    ORDER BY rank_matrix.rank_type
+        , rank_matrix.rank_name
+        , rank_detail.rank
+        , rank_matrix.create_time DESC
+) AS Rank_Table
 WHERE  
     school_year = " + schoolYear + @"
     And semester = " + semester + @"
@@ -234,7 +245,7 @@ WHERE
                     try
                     {
                         bkw.ReportProgress(0);
-
+                        
                         dt = new QueryHelper().Select(queryString);
 
                         bkw.ReportProgress(100);
@@ -311,20 +322,27 @@ WHERE
                         _RowCollection = new List<DataGridViewRow>();
                         for (int rowIndex = 0; rowIndex < dt.Rows.Count; rowIndex++)
                         {
+                            int tryParseInt;
+                            decimal tryParseDecimal;
                             DataGridViewRow gridViewRow = new DataGridViewRow();
                             gridViewRow.CreateCells(dgvScoreRank);
-                            for (int colindex = 0; colindex < dt.Columns.Count; colindex++)
-                            {
-                                if (colindex >= 14)
-                                {
-                                    gridViewRow.Cells[colindex + 1].Value = "" + dt.Rows[rowIndex][colindex];
-                                }
-                                else
-                                {
-                                    gridViewRow.Cells[colindex].Value = "" + dt.Rows[rowIndex][colindex];
-                                }
-
-                            }
+                            gridViewRow.Cells[0].Value = "" + dt.Rows[rowIndex]["rank_matrix_id"];
+                            gridViewRow.Cells[1].Value = "" + dt.Rows[rowIndex]["score_type"];
+                            gridViewRow.Cells[2].Value = "" + dt.Rows[rowIndex]["score_category"];
+                            gridViewRow.Cells[3].Value = "" + dt.Rows[rowIndex]["exam_name"];
+                            gridViewRow.Cells[4].Value = "" + dt.Rows[rowIndex]["item_name"];
+                            gridViewRow.Cells[5].Value = "" + dt.Rows[rowIndex]["rank_type"];
+                            gridViewRow.Cells[6].Value = "" + dt.Rows[rowIndex]["rank_name"];
+                            gridViewRow.Cells[7].Value = "" + dt.Rows[rowIndex]["class_name"];
+                            gridViewRow.Cells[8].Value = Int32.TryParse("" + dt.Rows[rowIndex]["seat_no"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[9].Value = "" + dt.Rows[rowIndex]["student_number"];
+                            gridViewRow.Cells[10].Value = "" + dt.Rows[rowIndex]["student_name"];
+                            gridViewRow.Cells[11].Value = Decimal.TryParse("" + dt.Rows[rowIndex]["score"], out tryParseDecimal) ? (decimal?)tryParseDecimal : null;
+                            gridViewRow.Cells[12].Value = Int32.TryParse("" + dt.Rows[rowIndex]["rank"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[13].Value = Int32.TryParse("" + dt.Rows[rowIndex]["pr"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[14].Value = Int32.TryParse("" + dt.Rows[rowIndex]["percentile"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[16].Value = "" + dt.Rows[rowIndex]["school_year"];
+                            gridViewRow.Cells[17].Value = "" + dt.Rows[rowIndex]["semester"];
                             _RowCollection.Add(gridViewRow);
                         }
                         #endregion
@@ -380,13 +398,15 @@ WHERE
                 return;
             }
 
-            MatrixRankSelect frm = new MatrixRankSelect("" + dgvScoreRank[16, e.RowIndex].Value
+            MatrixRankSelect frm = new MatrixRankSelect("" + dgvScoreRank[0, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[16, e.RowIndex].Value
                                                       , "" + dgvScoreRank[17, e.RowIndex].Value
                                                       , "" + dgvScoreRank[1, e.RowIndex].Value
                                                       , "" + dgvScoreRank[2, e.RowIndex].Value
                                                       , "" + dgvScoreRank[3, e.RowIndex].Value
                                                       , "" + dgvScoreRank[4, e.RowIndex].Value
-                                                      , "" + dgvScoreRank[5, e.RowIndex].Value);
+                                                      , "" + dgvScoreRank[5, e.RowIndex].Value
+                                                      , "" + dgvScoreRank[6, e.RowIndex].Value);
             frm.ShowDialog();
         }
     }

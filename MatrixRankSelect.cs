@@ -16,56 +16,67 @@ namespace JHEvaluation.Rank
 {
     public partial class MatrixRankSelect : BaseForm
     {
-        public MatrixRankSelect(string SchoolYear, string Semester, string ScoreType, string ScoreCategory, string ExamName, string ItemName, string RankType)
+        public MatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
         {
             InitializeComponent();
 
-            lbSchoolYear.Text = SchoolYear;
-            lbSemester.Text = Semester;
-            lbScoreType.Text = ScoreType;
-            lbScoreCategory.Text = ScoreCategory;
-            lbExamName.Text = ExamName;
-            lbItemName.Text = ItemName;
-            lbRankType.Text = RankType;
+            lbSchoolYear.Text = schoolYear;
+            lbSemester.Text = semester;
+            lbScoreType.Text = scoreType;
+            lbScoreCategory.Text = scoreCategory;
+            lbExamName.Text = examName;
+            lbItemName.Text = itemName;
+            lbRankType.Text = rankType;
+            _RankName = rankName;
+            _RankMatrixId = rankMatrixId;
         }
 
         bool _IsLoading = false;
+        string _RankName, _RankMatrixId;
 
         private void MatrixRankSelect_Load(object sender, EventArgs e)
         {
-            QueryHelper queryHelper = new QueryHelper();
-
-            #region 要顯示的資料的sql字串
-            string queryTable = @"
-Select *
-From
-	(
-        SELECT rank_matrix.id AS rank_matrix_id 
-		    , SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
-		    , SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
-		    , exam.exam_name 
-		    , rank_matrix.item_name 
-		    , rank_matrix.rank_type
-		    , rank_matrix.school_year
-		    , rank_matrix.semester 
-            , rank_matrix.is_alive
-	    FROM rank_matrix LEFT OUTER JOIN 
-		    rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id LEFT OUTER JOIN 
-		    student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
-		    class ON class.id = student.ref_class_id LEFT OUTER JOIN 
-		    exam ON exam.id=rank_matrix.ref_exam_id
-    ) as Rank_Table
-Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
-    And semester = " + Convert.ToInt32(lbSemester.Text) + @"
-    And score_type = '" + lbScoreType.Text + "'" + @"
-    And score_category = '" + lbScoreCategory.Text + "'" + @"
-    And exam_name = '" + lbExamName.Text + "'" + @"
-    And item_name = '" + lbItemName.Text + "'" + @"
-    And rank_type = '" + lbRankType.Text + "'";
-            #endregion
-
             try
             {
+                QueryHelper queryHelper = new QueryHelper();
+
+                #region 要顯示的資料的sql字串
+                string queryTable = @"
+SELECT
+	*
+FROM
+(
+	SELECT rank_matrix.id AS rank_matrix_id 
+		, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
+		, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
+		, exam.exam_name 
+		, rank_matrix.item_name 
+		, rank_matrix.rank_type
+		, rank_matrix.rank_name
+		, rank_matrix.school_year
+		, rank_matrix.semester 
+		, rank_matrix.is_alive
+		, rank_matrix.create_time
+	FROM rank_matrix 
+		LEFT OUTER JOIN 
+			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
+		LEFT OUTER JOIN 
+			student ON student.id = rank_detail.ref_student_id 
+		LEFT OUTER JOIN 
+			class ON class.id = student.ref_class_id 
+		LEFT OUTER JOIN 
+			exam ON exam.id=rank_matrix.ref_exam_id
+	ORDER BY
+		create_time DESC
+) AS Rank_Table
+Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
+	AND semester = " + Convert.ToInt32(lbSemester.Text) + @"
+	AND score_type = '" + lbScoreType.Text + "'" + @"
+	AND score_category = '" + lbScoreCategory.Text + "'" + @"
+	AND exam_name = '" + lbExamName.Text + "'" + @"
+	AND item_name = '" + lbItemName.Text + "'" + @"
+	AND rank_name = '" + _RankName + "'";
+                #endregion
                 DataTable dataTable = new DataTable();
                 dataTable = queryHelper.Select(queryTable);
 
@@ -85,15 +96,21 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
                         cboMatrixId.Items.Add(isAlive + row["rank_matrix_id"]);
                     }
                 }
+
+                if (cboMatrixId.Items.Contains("*" + _RankMatrixId))
+                {
+                    cboMatrixId.SelectedIndex = cboMatrixId.Items.IndexOf("*" + _RankMatrixId);
+                }
+                else
+                {
+                    cboMatrixId.SelectedIndex = 0;
+                }
                 #endregion
-                cboMatrixId.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.StackTrace.ToString());
             }
-
-
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -188,7 +205,7 @@ From
 		, class.class_name 
 		, student.seat_no 
 		, student.student_number
-		, student.name 
+		, student.name AS student_name
         , CASE WHEN student.status = 1 then '一般'::TEXT
 					 WHEN student.status = 2 then '延修' ::TEXT
 					 WHEN student.status = 4 then '休學'::TEXT
@@ -196,7 +213,7 @@ From
 					 WHEN student.status = 16 then '畢業或離校'::TEXT
 					 WHEN student.status = 256 then '刪除'::TEXT
 					 ELSE ''||student.status
-		END as status
+		END as student_status
 		, rank_detail.score
 		, rank_detail.rank
 		, rank_detail.pr
@@ -252,19 +269,35 @@ Where rank_matrix_id = " + matrixId;
                         dgvScoreRank.SuspendLayout();
                         for (int row = 0; row < dt.Rows.Count; row++)
                         {
+                            int tryParseInt;
+                            decimal tryParseDecimal;
                             DataGridViewRow gridViewRow = new DataGridViewRow();
                             gridViewRow.CreateCells(dgvScoreRank);
-                            for (int col = 0; col < dt.Columns.Count - 2; col++)
-                            {
-                                gridViewRow.Cells[col].Value = "" + dt.Rows[row][col];
-                            }
+                            gridViewRow.Cells[0].Value = "" + dt.Rows[row]["rank_matrix_id"];
+                            gridViewRow.Cells[1].Value = "" + dt.Rows[row]["score_type"];
+                            gridViewRow.Cells[2].Value = "" + dt.Rows[row]["score_category"];
+                            gridViewRow.Cells[3].Value = "" + dt.Rows[row]["exam_name"];
+                            gridViewRow.Cells[4].Value = "" + dt.Rows[row]["item_name"];
+                            gridViewRow.Cells[5].Value = "" + dt.Rows[row]["rank_type"];
+                            gridViewRow.Cells[6].Value = "" + dt.Rows[row]["rank_name"];
+                            gridViewRow.Cells[7].Value = "" + dt.Rows[row]["class_name"];
+                            gridViewRow.Cells[8].Value = Int32.TryParse("" + dt.Rows[row]["seat_no"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[9].Value = "" + dt.Rows[row]["student_number"];
+                            gridViewRow.Cells[10].Value = "" + dt.Rows[row]["student_name"];
+                            gridViewRow.Cells[11].Value = "" + dt.Rows[row]["student_status"];
+                            gridViewRow.Cells[12].Value = Decimal.TryParse("" + dt.Rows[row]["score"], out tryParseDecimal) ? (decimal?)tryParseDecimal : null;
+                            gridViewRow.Cells[13].Value = Int32.TryParse("" + dt.Rows[row]["rank"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[14].Value = Int32.TryParse("" + dt.Rows[row]["pr"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[15].Value = Int32.TryParse("" + dt.Rows[row]["percentile"], out tryParseInt) ? (int?)tryParseInt : null;
+                            gridViewRow.Cells[16].Value = "" + dt.Rows[row]["school_year"];
+                            gridViewRow.Cells[17].Value = "" + dt.Rows[row]["semester"];
                             gridViewRowList.Add(gridViewRow);
                         }
                         dgvScoreRank.Rows.AddRange(gridViewRowList.ToArray());
                         dgvScoreRank.ResumeLayout();
                         #endregion
 
-                        lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd");
+                        lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd HH:mm");
                         lbMemo.Text = "" + dt.Rows[0]["memo"];
                     }
                     catch (Exception ex)

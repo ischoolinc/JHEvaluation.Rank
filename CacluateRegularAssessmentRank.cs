@@ -64,7 +64,7 @@ Order BY course.school_year, course.semester
             #region 讓Form回到起始狀態
             plStudentView.Visible = false;
             this.Width = 580;
-            this.Height = 330; 
+            this.Height = 330;
             #endregion
 
             #region 篩選資料
@@ -82,20 +82,21 @@ Order BY course.school_year, course.semester
             cboStudentTag2.Items.Clear();
 
             cboSchoolYear.Items.Add(_DefaultSchoolYear);//加入預設的學年度
+            cboSemester.Items.Add(_DefaultSemester);//加入預設的學年度
             foreach (DataRow row in _SchoolYearTable.Rows)
             {
-                #region 現階段先不用匯入其他學年度
+                #region 現階段先不用匯入其他學年度及學期
                 //現階段先不用匯入其他學年度
                 //if (!string.IsNullOrEmpty("" + row["school_year"]) && !cboSchoolYear.Items.Contains("" + row["school_year"]))
                 //{
                 //    cboSchoolYear.Items.Add("" + row["school_year"]);
                 //} 
-                #endregion
 
-                if (!string.IsNullOrEmpty("" + row["semester"]) && !cboSemester.Items.Contains("" + row["semester"]))
-                {
-                    cboSemester.Items.Add("" + row["semester"]);
-                }
+                //if (!string.IsNullOrEmpty("" + row["semester"]) && !cboSemester.Items.Contains("" + row["semester"]))
+                //{
+                //    cboSemester.Items.Add("" + row["semester"]);
+                //}
+                #endregion
             }
             cboSchoolYear.SelectedIndex = 0;
 
@@ -111,11 +112,11 @@ Order BY course.school_year, course.semester
             cboStudentFilter.Items.Add("");
             cboStudentTag1.Items.Add("");
             cboStudentTag2.Items.Add("");
-            foreach (var item in _TagConfigRecord.Select(x => x.Name).Distinct())
+            foreach (var item in _TagConfigRecord.Select(x => x.Prefix).Distinct())
             {
-                cboStudentFilter.Items.Add(item);
-                cboStudentTag1.Items.Add(item);
-                cboStudentTag2.Items.Add(item);
+                cboStudentFilter.Items.Add("[" + item + "]");
+                cboStudentTag1.Items.Add("[" + item + "]");
+                cboStudentTag2.Items.Add("[" + item + "]");
             }
             cboStudentFilter.SelectedIndex = 0;
             cboStudentTag1.SelectedIndex = 0;
@@ -193,9 +194,9 @@ Order BY course.school_year, course.semester
 
             #region 讀取學生清單
             _FilterStudentList = new List<StudentRecord>();
-            string studentFilter = cboStudentFilter.Text;
-            string studentTag1 = cboStudentTag1.Text;
-            string studentTag2 = cboStudentTag2.Text;
+            string studentFilter = cboStudentFilter.Text.Trim('[', ']');
+            string studentTag1 = cboStudentTag1.Text.Trim('[', ']');
+            string studentTag2 = cboStudentTag2.Text.Trim('[', ']');
             Exception bkwException = null;
             BackgroundWorker bkw = new BackgroundWorker();
             bkw.WorkerReportsProgress = true;
@@ -221,12 +222,12 @@ Order BY course.school_year, course.semester
                     bkw.ReportProgress(50);
                     if (!string.IsNullOrEmpty(studentFilter))
                     {
-                        string studentFilterTagID = _TagConfigRecord.First(x => x.Name == studentFilter).ID;
-                        List<string> filterStudentID = K12.Data.StudentTag.SelectAll().Where(x => x.RefTagID == studentFilterTagID).Select(x => x.RefStudentID).ToList();
+                        List<string> studentFilterTagIDs = _TagConfigRecord.Where(x => x.Prefix == studentFilter).Select(x => x.ID).ToList();
+                        List<string> filterStudentID = K12.Data.StudentTag.SelectAll().Where(x => studentFilterTagIDs.Contains(x.RefTagID)).Select(x => x.RefStudentID).ToList();
                         _FilterStudentList = _FilterStudentList.Where(x => !filterStudentID.Contains(x.ID)).ToList();
                     }
 
-                    bkw.ReportProgress(100); 
+                    bkw.ReportProgress(100);
                     #endregion
                 }
                 catch (Exception ex)
@@ -264,18 +265,18 @@ Order BY course.school_year, course.semester
                                    }).ToList();
 
                 #region 取得符合類別的學生
-                string tag1ID = "";
-                string tag2ID = "";
-                if (!string.IsNullOrEmpty(cboStudentTag1.Text))
+                List<string> tag1IDs = new List<string>();
+                List<string> tag2IDs = new List<string>();
+                if (!string.IsNullOrEmpty(studentTag1))
                 {
-                    tag1ID = _TagConfigRecord.First(x => x.Name == cboStudentTag1.Text).ID;
+                    tag1IDs = _TagConfigRecord.Where(x => x.Prefix == studentTag1).Select(x => x.ID).ToList();
                 }
-                if (!string.IsNullOrEmpty(cboStudentTag2.Text))
+                if (!string.IsNullOrEmpty(studentTag2))
                 {
-                    tag2ID = _TagConfigRecord.First(x => x.Name == cboStudentTag2.Text).ID;
+                    tag2IDs = _TagConfigRecord.Where(x => x.Prefix == studentTag2).Select(x => x.ID).ToList();
                 }
-                List<StudentTagRecord> studentTag1List = K12.Data.StudentTag.SelectAll().Where(x => x.RefTagID == tag1ID).ToList();
-                List<StudentTagRecord> studentTag2List = K12.Data.StudentTag.SelectAll().Where(x => x.RefTagID == tag2ID).ToList(); 
+                List<StudentTagRecord> studentTag1List = K12.Data.StudentTag.SelectAll().Where(x => tag1IDs.Contains(x.RefTagID)).ToList();
+                List<StudentTagRecord> studentTag2List = K12.Data.StudentTag.SelectAll().Where(x => tag2IDs.Contains(x.RefTagID)).ToList();
                 #endregion
 
                 List<DataGridViewRow> rowList = new List<DataGridViewRow>();
@@ -293,13 +294,13 @@ Order BY course.school_year, course.semester
                     row.Cells[5].Value = studentView[rowIndex].RankClassName;
                     if (studentTag1List.Select(x => x.RefStudentID).Contains(studentView[rowIndex].studentId))
                     {
-                        row.Cells[6].Value = cboStudentTag1.Text;
-                        tag1 = cboStudentTag1.Text;
+                        tag1 = studentTag1List.First(x => x.RefStudentID == studentView[rowIndex].studentId).Name;
+                        row.Cells[6].Value = tag1;
                     }
                     if (studentTag2List.Select(x => x.RefStudentID).Contains(studentView[rowIndex].studentId))
                     {
-                        row.Cells[7].Value = cboStudentTag2.Text;
-                        tag2 = cboStudentTag2.Text;
+                        tag2 = studentTag2List.First(x => x.RefStudentID == studentView[rowIndex].studentId).Name;
+                        row.Cells[7].Value = tag2;
                     }
 
                     rowList.Add(row);
@@ -313,7 +314,7 @@ Order BY course.school_year, course.semester
         ,'" + studentView[rowIndex].RankClassName + @"'::TEXT AS rank_class_name
         ,'" + tag1 + @"'::TEXT AS tag1
         ,'" + tag2 + @"'::TEXT AS tag2
-     ");
+    ");
                     #endregion
 
                 }
@@ -332,17 +333,18 @@ WITH student_list AS
                 #endregion
             };
 
-            bkw.RunWorkerAsync(); 
+            bkw.RunWorkerAsync();
             #endregion
         }
 
         private void btnCacluate_Click(object sender, EventArgs e)
         {
+            btnCacluate.Enabled = false;
             string schoolYear = lbSchoolYear.Text;
             string semester = lbSemester.Text;
             string examName = lbExam.Text;
-            string tag1 = cboStudentTag1.Text;
-            string tag2 = cboStudentTag2.Text;
+            string tag1 = cboStudentTag1.Text.Trim('[', ']');
+            string tag2 = cboStudentTag2.Text.Trim('[', ']');
             List<int> gradeYearList = new List<int>();
             foreach (CheckBox checkBox in _CheckBoxList)
             {
@@ -358,12 +360,20 @@ WITH student_list AS
 UPDATE rank_matrix SET is_alive = null";
             #endregion
 
-            UpdateHelper updateHelper = new UpdateHelper();
-            updateHelper.Execute(updateString);
+            try
+            {
+                UpdateHelper updateHelper = new UpdateHelper();
+                updateHelper.Execute(updateString);
+            }
+            catch (Exception ex)
+            {
+                btnCacluate.Enabled = true;
+                throw new Exception("計算排名失敗", ex);
+            }
 
             bkw.ProgressChanged += delegate (object s1, ProgressChangedEventArgs e1)
             {
-                MotherForm.SetStatusBarMessage("計算成績中", e1.ProgressPercentage);
+                MotherForm.SetStatusBarMessage("計算排名中", e1.ProgressPercentage);
             };
 
             bkw.DoWork += delegate
@@ -2406,9 +2416,11 @@ SELECT * FROM rank_matrix";
             {
                 if (bkwException != null)
                 {
-                    throw new Exception("計算成績失敗", bkwException);
+                    btnCacluate.Enabled = true;
+                    throw new Exception("計算排名失敗", bkwException);
                 }
                 MessageBox.Show("計算完成");
+                btnCacluate.Enabled = true;
             };
 
             bkw.RunWorkerAsync();
@@ -2456,6 +2468,7 @@ SELECT * FROM rank_matrix";
             }
             #endregion
 
+            btnCacluate.Enabled = true;
             plStudentView.Visible = false;
             this.Width = _FormWidth;
             this.Height = _FormHeight;
