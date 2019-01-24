@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.cboSemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -395,14 +395,14 @@
             this.colClassRank,
             this.colRankType1,
             this.colRankType2});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
             this.dgvStudentList.Location = new System.Drawing.Point(3, 68);
@@ -553,9 +553,9 @@
             this.labelX13.ForeColor = System.Drawing.Color.Black;
             this.labelX13.Location = new System.Drawing.Point(12, 40);
             this.labelX13.Name = "labelX13";
-            this.labelX13.Size = new System.Drawing.Size(47, 22);
+            this.labelX13.Size = new System.Drawing.Size(77, 22);
             this.labelX13.TabIndex = 11;
-            this.labelX13.Text = "試別：";
+            this.labelX13.Text = "母群資料：";
             // 
             // lbExam
             // 
@@ -674,7 +674,6 @@
             this.Controls.Add(this.cboSchoolYear);
             this.Controls.Add(this.labelX1);
             this.DoubleBuffered = true;
-            this.MaximizeBox = true;
             this.Name = "CacluateRegularAssessmentRank";
             this.Text = "計算定期評量排名";
             this.Load += new System.EventHandler(this.CacluateRegularAssessmentRank_Load);

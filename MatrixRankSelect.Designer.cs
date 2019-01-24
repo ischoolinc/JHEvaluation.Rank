@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnExit = new DevComponents.DotNetBar.ButtonX();
             this.dgvScoreRank = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.MatrixId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -83,7 +83,7 @@
             this.btnExit.BackColor = System.Drawing.Color.Transparent;
             this.btnExit.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnExit.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnExit.Location = new System.Drawing.Point(1081, 644);
+            this.btnExit.Location = new System.Drawing.Point(1111, 646);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(91, 28);
             this.btnExit.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -118,14 +118,14 @@
             this.percentile,
             this.SchoolYear,
             this.Semester});
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvScoreRank.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvScoreRank.HighlightSelectedColumnHeaders = false;
             this.dgvScoreRank.Location = new System.Drawing.Point(12, 168);
@@ -134,7 +134,7 @@
             this.dgvScoreRank.ReadOnly = true;
             this.dgvScoreRank.RowTemplate.Height = 24;
             this.dgvScoreRank.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvScoreRank.Size = new System.Drawing.Size(1160, 470);
+            this.dgvScoreRank.Size = new System.Drawing.Size(1190, 472);
             this.dgvScoreRank.TabIndex = 45;
             // 
             // MatrixId
@@ -247,9 +247,8 @@
             // score
             // 
             this.score.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle7.Format = "N2";
-            dataGridViewCellStyle7.NullValue = null;
-            this.score.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.NullValue = null;
+            this.score.DefaultCellStyle = dataGridViewCellStyle1;
             this.score.HeaderText = "排名分數";
             this.score.MinimumWidth = 91;
             this.score.Name = "score";
@@ -416,7 +415,7 @@
             this.btnExportToExcel.BackColor = System.Drawing.Color.Transparent;
             this.btnExportToExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnExportToExcel.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnExportToExcel.Location = new System.Drawing.Point(12, 644);
+            this.btnExportToExcel.Location = new System.Drawing.Point(12, 646);
             this.btnExportToExcel.Name = "btnExportToExcel";
             this.btnExportToExcel.Size = new System.Drawing.Size(91, 28);
             this.btnExportToExcel.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -651,7 +650,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 684);
+            this.ClientSize = new System.Drawing.Size(1214, 686);
             this.Controls.Add(this.labelX4);
             this.Controls.Add(this.lbMemo);
             this.Controls.Add(this.labelX11);
@@ -712,6 +711,7 @@
         private DevComponents.DotNetBar.LabelX labelX11;
         private DevComponents.DotNetBar.LabelX lbMemo;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private DevComponents.DotNetBar.LabelX labelX4;
         private System.Windows.Forms.DataGridViewTextBoxColumn MatrixId;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScoreType;
         private System.Windows.Forms.DataGridViewTextBoxColumn ScoreCategory;
@@ -730,6 +730,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn percentile;
         private System.Windows.Forms.DataGridViewTextBoxColumn SchoolYear;
         private System.Windows.Forms.DataGridViewTextBoxColumn Semester;
-        private DevComponents.DotNetBar.LabelX labelX4;
     }
 }
