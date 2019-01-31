@@ -64,7 +64,6 @@
             this.labelX7 = new DevComponents.DotNetBar.LabelX();
             this.labelX8 = new DevComponents.DotNetBar.LabelX();
             this.labelX9 = new DevComponents.DotNetBar.LabelX();
-            this.label1 = new System.Windows.Forms.Label();
             this.gpRankPeople.SuspendLayout();
             this.plStudentView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).BeginInit();
@@ -140,7 +139,6 @@
             this.gpRankPeople.BackColor = System.Drawing.Color.Transparent;
             this.gpRankPeople.CanvasColor = System.Drawing.SystemColors.Control;
             this.gpRankPeople.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.Office2007;
-            this.gpRankPeople.Controls.Add(this.label1);
             this.gpRankPeople.Controls.Add(this.cboStudentTag2);
             this.gpRankPeople.Controls.Add(this.labelX5);
             this.gpRankPeople.Controls.Add(this.cboStudentTag1);
@@ -263,7 +261,7 @@
             this.cboStudentFilter.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.cboStudentFilter.FormattingEnabled = true;
             this.cboStudentFilter.ItemHeight = 21;
-            this.cboStudentFilter.Location = new System.Drawing.Point(141, 216);
+            this.cboStudentFilter.Location = new System.Drawing.Point(141, 251);
             this.cboStudentFilter.Name = "cboStudentFilter";
             this.cboStudentFilter.Size = new System.Drawing.Size(242, 27);
             this.cboStudentFilter.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -282,7 +280,7 @@
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX3.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX3.ForeColor = System.Drawing.Color.Black;
-            this.labelX3.Location = new System.Drawing.Point(13, 218);
+            this.labelX3.Location = new System.Drawing.Point(13, 253);
             this.labelX3.Name = "labelX3";
             this.labelX3.Size = new System.Drawing.Size(122, 22);
             this.labelX3.TabIndex = 1;
@@ -661,17 +659,6 @@
             this.labelX9.TabIndex = 5;
             this.labelX9.Text = "學年度：";
             // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.Location = new System.Drawing.Point(13, 259);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(229, 17);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "（平時成績與評量成績缺漏就不排名）";
-            // 
             // CacluateRegularAssessmentRank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -737,6 +724,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colClassRank;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRankType1;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRankType2;
-        private System.Windows.Forms.Label label1;
     }
 }

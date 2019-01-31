@@ -64,7 +64,7 @@ Order BY course.school_year, course.semester
             #region 讓Form回到起始狀態
             plStudentView.Visible = false;
             this.Width = 580;
-            this.Height = 360;
+            this.Height = 330;
             #endregion
 
             #region 篩選資料
@@ -133,7 +133,7 @@ Order BY course.school_year, course.semester
             List<int> gradeList = _StudentRecord.Select(x => Convert.ToInt32(x.Class.GradeYear)).Distinct().OrderBy(x => x).ToList();
 
             #region 動態產生年級的CheckBox
-            this.Height += 32 * (((gradeList.Count % 4) == 0 ? 0 : gradeList.Count / 4) + 1);//每多一排checkBox，Form的高度+32
+            this.Height += 32 * (((gradeList.Count % 4) == 0 ? (gradeList.Count == 4 ? 0 : (gradeList.Count / 4) - 1) : gradeList.Count / 4) + 1);//每多一排checkBox，Form的高度+32
             for (int i = 0; i < gradeList.Count; i++)
             {
                 CheckBox checkBox = new CheckBox();
@@ -187,7 +187,7 @@ Order BY course.school_year, course.semester
             }
 
             //每多一排CheckBox就把Form的高加23，dataGridView的位置往下加23並把高減少23
-            int height = 23 * ((checkBoxCount % 4) == 0 ? 0 : checkBoxCount / 4);
+            int height = 23 * ((checkBoxCount % 4) == 0 ? (checkBoxCount == 4 ? 0 : checkBoxCount / 4) : checkBoxCount / 4);
             this.Height += height;
             dgvStudentList.Location = new Point(3, dgvStudentList.Location.Y + height);
             dgvStudentList.Height -= height;
@@ -344,6 +344,7 @@ WITH student_list AS
             #endregion
 
             btnCacluate.Enabled = false;
+            btnPrevious.Enabled = false;
             string schoolYear = lbSchoolYear.Text;
             string semester = lbSemester.Text;
             string examName = lbExam.Text;
@@ -377,7 +378,7 @@ WITH student_list AS
                     #region 產生計算設定的字串
                     XmlDocument doc = new XmlDocument();
                     var settingEle = doc.CreateElement("Setting");
-                    settingEle.SetAttribute("學年度", ""+ schoolYear);
+                    settingEle.SetAttribute("學年度", "" + schoolYear);
                     settingEle.SetAttribute("學期", "" + semester);
                     settingEle.SetAttribute("考試名稱", "" + examName);
                     settingEle.SetAttribute("不排名學生類別", "" + studentFilter);
@@ -386,7 +387,7 @@ WITH student_list AS
                     foreach (var gradeYear in gradeYearList)
                     {
                         var gradeYearEle = doc.CreateElement("年級");
-                        gradeYearEle.InnerText = ""+gradeYear;
+                        gradeYearEle.InnerText = "" + gradeYear;
                         settingEle.AppendChild(gradeYearEle);
                     }
                     calculationSetting = settingEle.OuterXml;
@@ -474,21 +475,28 @@ WITH student_list AS
 (
 	SELECT	
 		score_detail.*
-		,(
-			exam_score::Decimal * exam_weight::Decimal
-			+
-			assignment_score::Decimal * assignment_weight::Decimal
-		)/(
-			exam_weight
-			+
-			assignment_weight
-		) AS score
+		,CASE
+			WHEN exam_score IS NOT NULL AND assignment_score IS NOT NULL
+			THEN (
+					exam_score::Decimal * exam_weight::Decimal
+					+
+					assignment_score::Decimal * assignment_weight::Decimal
+				)/(
+					exam_weight
+					+
+					assignment_weight
+				)
+			WHEN exam_score IS NOT NULL AND assignment_score IS NULL
+			THEN exam_score::Decimal
+			WHEN assignment_score IS NOT NULL AND exam_score IS NULL
+			THEN assignment_score::Decimal
+		END AS score
 	FROM 
 		score_detail
 	WHERE 
-	(--成績要兩個都有，目前先照這樣去測試
+	(
 		exam_score IS NOT NULL
-		AND assignment_score IS NOT NULL 
+		OR assignment_score IS NOT NULL 
 	)
 	AND template_id IS NOT NULL
 	AND 
@@ -1364,11 +1372,13 @@ FROM
                 if (bkwException != null)
                 {
                     btnCacluate.Enabled = true;
+                    btnPrevious.Enabled = true;
                     throw new Exception("計算排名失敗", bkwException);
                 }
                 MessageBox.Show("計算完成");
                 MotherForm.SetStatusBarMessage("排名計算完成");
                 btnCacluate.Enabled = true;
+                btnPrevious.Enabled = true;
             };
 
             bkw.RunWorkerAsync();

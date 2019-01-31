@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnExit = new DevComponents.DotNetBar.ButtonX();
             this.dgvScoreRank = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.MatrixId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -66,9 +66,7 @@
             this.lbItemName = new DevComponents.DotNetBar.LabelX();
             this.lbRankType = new DevComponents.DotNetBar.LabelX();
             this.labelX9 = new DevComponents.DotNetBar.LabelX();
-            this.cboMatrixId = new DevComponents.DotNetBar.Controls.ComboBoxEx();
-            this.lbCreateTime = new DevComponents.DotNetBar.LabelX();
-            this.labelX10 = new DevComponents.DotNetBar.LabelX();
+            this.cboBatchId = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.lbMemo = new DevComponents.DotNetBar.LabelX();
             this.labelX11 = new DevComponents.DotNetBar.LabelX();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -118,14 +116,14 @@
             this.percentile,
             this.SchoolYear,
             this.Semester});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvScoreRank.DefaultCellStyle = dataGridViewCellStyle6;
             this.dgvScoreRank.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvScoreRank.HighlightSelectedColumnHeaders = false;
             this.dgvScoreRank.Location = new System.Drawing.Point(12, 168);
@@ -247,8 +245,8 @@
             // score
             // 
             this.score.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle1.NullValue = null;
-            this.score.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.NullValue = null;
+            this.score.DefaultCellStyle = dataGridViewCellStyle5;
             this.score.HeaderText = "排名分數";
             this.score.MinimumWidth = 91;
             this.score.Name = "score";
@@ -551,52 +549,20 @@
             this.labelX9.TabIndex = 55;
             this.labelX9.Text = "編號：";
             // 
-            // cboMatrixId
+            // cboBatchId
             // 
-            this.cboMatrixId.DisplayMember = "Text";
-            this.cboMatrixId.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboMatrixId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboMatrixId.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cboMatrixId.FormattingEnabled = true;
-            this.cboMatrixId.ItemHeight = 21;
-            this.cboMatrixId.Location = new System.Drawing.Point(65, 88);
-            this.cboMatrixId.Name = "cboMatrixId";
-            this.cboMatrixId.Size = new System.Drawing.Size(137, 27);
-            this.cboMatrixId.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.cboMatrixId.TabIndex = 56;
-            this.cboMatrixId.SelectedIndexChanged += new System.EventHandler(this.LoadRowData);
-            // 
-            // lbCreateTime
-            // 
-            this.lbCreateTime.AutoSize = true;
-            this.lbCreateTime.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbCreateTime.BackgroundStyle.Class = "";
-            this.lbCreateTime.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbCreateTime.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbCreateTime.Location = new System.Drawing.Point(520, 88);
-            this.lbCreateTime.Name = "lbCreateTime";
-            this.lbCreateTime.Size = new System.Drawing.Size(62, 22);
-            this.lbCreateTime.TabIndex = 58;
-            this.lbCreateTime.Text = "建立時間";
-            // 
-            // labelX10
-            // 
-            this.labelX10.AutoSize = true;
-            this.labelX10.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX10.BackgroundStyle.Class = "";
-            this.labelX10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX10.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX10.Location = new System.Drawing.Point(432, 88);
-            this.labelX10.Name = "labelX10";
-            this.labelX10.Size = new System.Drawing.Size(77, 22);
-            this.labelX10.TabIndex = 57;
-            this.labelX10.Text = "建立時間：";
+            this.cboBatchId.DisplayMember = "Text";
+            this.cboBatchId.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboBatchId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboBatchId.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.cboBatchId.FormattingEnabled = true;
+            this.cboBatchId.ItemHeight = 21;
+            this.cboBatchId.Location = new System.Drawing.Point(65, 88);
+            this.cboBatchId.Name = "cboBatchId";
+            this.cboBatchId.Size = new System.Drawing.Size(347, 27);
+            this.cboBatchId.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.cboBatchId.TabIndex = 56;
+            this.cboBatchId.SelectedIndexChanged += new System.EventHandler(this.LoadRowData);
             // 
             // lbMemo
             // 
@@ -640,11 +606,11 @@
             this.labelX4.BackgroundStyle.Class = "";
             this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX4.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX4.Location = new System.Drawing.Point(208, 90);
+            this.labelX4.Location = new System.Drawing.Point(418, 90);
             this.labelX4.Name = "labelX4";
-            this.labelX4.Size = new System.Drawing.Size(184, 20);
+            this.labelX4.Size = new System.Drawing.Size(327, 20);
             this.labelX4.TabIndex = 61;
-            this.labelX4.Text = "（此為每一組排名的系統編號）";
+            this.labelX4.Text = "（星號表示啟用中的資料，批號為每個批次計算的編號）";
             // 
             // MatrixRankSelect
             // 
@@ -654,9 +620,7 @@
             this.Controls.Add(this.labelX4);
             this.Controls.Add(this.lbMemo);
             this.Controls.Add(this.labelX11);
-            this.Controls.Add(this.lbCreateTime);
-            this.Controls.Add(this.labelX10);
-            this.Controls.Add(this.cboMatrixId);
+            this.Controls.Add(this.cboBatchId);
             this.Controls.Add(this.labelX9);
             this.Controls.Add(this.lbRankType);
             this.Controls.Add(this.lbItemName);
@@ -705,9 +669,7 @@
         private DevComponents.DotNetBar.LabelX lbItemName;
         private DevComponents.DotNetBar.LabelX lbRankType;
         private DevComponents.DotNetBar.LabelX labelX9;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboMatrixId;
-        private DevComponents.DotNetBar.LabelX labelX10;
-        private DevComponents.DotNetBar.LabelX lbCreateTime;
+        private DevComponents.DotNetBar.Controls.ComboBoxEx cboBatchId;
         private DevComponents.DotNetBar.LabelX labelX11;
         private DevComponents.DotNetBar.LabelX lbMemo;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;

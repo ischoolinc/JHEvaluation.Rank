@@ -349,6 +349,7 @@ WHERE
 
                         _IsLoading = false;
                         FillingDataGridView(null, null);
+                        FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取完成");
                     }
                 };
                 bkw.RunWorkerAsync();

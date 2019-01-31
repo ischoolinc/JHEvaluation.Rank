@@ -16,6 +16,11 @@ namespace JHEvaluation.Rank
 {
     public partial class MatrixRankSelect : BaseForm
     {
+
+        bool _IsLoading = false;
+        string _RankName, _RankMatrixId;
+        Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
+
         public MatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
         {
             InitializeComponent();
@@ -31,9 +36,6 @@ namespace JHEvaluation.Rank
             _RankMatrixId = rankMatrixId;
         }
 
-        bool _IsLoading = false;
-        string _RankName, _RankMatrixId;
-
         private void MatrixRankSelect_Load(object sender, EventArgs e)
         {
             try
@@ -46,7 +48,8 @@ SELECT
 	*
 FROM
 (
-	SELECT rank_matrix.id AS rank_matrix_id 
+	SELECT rank_matrix.id AS rank_matrix_id
+        , ref_batch_id
 		, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
 		, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
 		, exam.exam_name 
@@ -77,13 +80,15 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
 	AND item_name = '" + lbItemName.Text + "'" + @"
 	AND rank_name = '" + _RankName + "'";
                 #endregion
+
                 DataTable dataTable = new DataTable();
                 dataTable = queryHelper.Select(queryTable);
 
                 #region 填入編號的ComboBox
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    if (!cboMatrixId.Items.Contains("" + row["rank_matrix_id"]))
+                    if (!cboBatchId.Items.Contains("" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）")
+                        && !cboBatchId.Items.Contains("*" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）"))
                     {
                         string isAlive = "";
                         if (!string.IsNullOrEmpty("" + row["is_alive"]))
@@ -93,23 +98,24 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
                                 isAlive = "*";
                             }
                         }
-                        cboMatrixId.Items.Add(isAlive + row["rank_matrix_id"]);
+                        cboBatchId.Items.Add(isAlive + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）");
+                        _MatrixIdDic.Add(isAlive + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）", "" + row["rank_matrix_id"]);
                     }
                 }
 
-                if (cboMatrixId.Items.Contains("*" + _RankMatrixId))
+                if (cboBatchId.Items.Contains("*"))
                 {
-                    cboMatrixId.SelectedIndex = cboMatrixId.Items.IndexOf("*" + _RankMatrixId);
+                    cboBatchId.SelectedIndex = cboBatchId.Items.IndexOf("*");
                 }
                 else
                 {
-                    cboMatrixId.SelectedIndex = 0;
+                    cboBatchId.SelectedIndex = 0;
                 }
                 #endregion
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.StackTrace.ToString());
+                MessageBox.Show(ex.Message.ToString());
             }
         }
 
@@ -189,7 +195,7 @@ Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
             }
 
             _IsLoading = true;
-            string matrixId = cboMatrixId.Text.Trim('*');
+            string matrixId = _MatrixIdDic[cboBatchId.Text];
 
             #region 要顯示的資料的sql字串
             string queryString = @"
@@ -227,7 +233,8 @@ From
 		student ON student.id = rank_detail.ref_student_id LEFT OUTER JOIN 
 		class ON class.id = student.ref_class_id LEFT OUTER JOIN 
 		exam ON exam.id=rank_matrix.ref_exam_id) as Rank_Table
-Where rank_matrix_id = " + matrixId;
+Where rank_matrix_id = '" + matrixId + @"'
+";
             #endregion
 
             BackgroundWorker bkw = new BackgroundWorker();
@@ -254,7 +261,8 @@ Where rank_matrix_id = " + matrixId;
                 {
                     throw new Exception("資料讀取錯誤", bkwException);
                 }
-                if (matrixId != cboMatrixId.Text.Trim('*'))
+                string selectedMatrixId = _MatrixIdDic[cboBatchId.Text];
+                if (matrixId != selectedMatrixId)
                 {
                     _IsLoading = false;
                     LoadRowData(null, null);
@@ -297,7 +305,6 @@ Where rank_matrix_id = " + matrixId;
                         dgvScoreRank.ResumeLayout();
                         #endregion
 
-                        lbCreateTime.Text = Convert.ToDateTime(dt.Rows[0]["create_time"]).ToString("yyyy/MM/dd HH:mm");
                         lbMemo.Text = "" + dt.Rows[0]["memo"];
                     }
                     catch (Exception ex)
