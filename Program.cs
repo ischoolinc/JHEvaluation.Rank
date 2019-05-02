@@ -25,8 +25,16 @@ namespace JHEvaluation.Rank
             regularSchoolYearRank["成績排名"]["計算定期評量排名"].Enable = true;
             regularSchoolYearRank["成績排名"]["計算定期評量排名"].Click += delegate
             {
-                CacluateRegularAssessmentRank cacluateRegularAssessmentRank = new CacluateRegularAssessmentRank();
+                CalculateRegularAssessmentRank cacluateRegularAssessmentRank = new CalculateRegularAssessmentRank();
                 cacluateRegularAssessmentRank.ShowDialog();
+            };
+
+            RibbonBarItem semesterAssessmentRank = MotherForm.RibbonBarItems["教務作業", "批次作業/檢視"];
+            semesterAssessmentRank["成績排名"]["計算學期成績固定排名"].Enable = true;
+            semesterAssessmentRank["成績排名"]["計算學期成績固定排名"].Click += delegate
+            {
+                CalculateSemesterAssessmentRank calculateSemesterAssessmentRank = new CalculateSemesterAssessmentRank();
+                calculateSemesterAssessmentRank.ShowDialog();
             };
 
             RibbonBarItem regularRank = FISCA.Presentation.MotherForm.RibbonBarItems["教務作業", "批次作業/檢視"];

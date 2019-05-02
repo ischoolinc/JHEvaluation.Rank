@@ -15,7 +15,7 @@ using System.Xml;
 
 namespace JHEvaluation.Rank
 {
-    public partial class CacluateRegularAssessmentRank : BaseForm
+    public partial class CalculateRegularAssessmentRank : BaseForm
     {
         DataTable _SchoolYearTable = new DataTable();
         string _DefaultSchoolYear = "";
@@ -27,7 +27,7 @@ namespace JHEvaluation.Rank
         List<StudentRecord> _FilterStudentList = new List<StudentRecord>();
         int _FormWidth = 0, _FormHeight = 0;
 
-        public CacluateRegularAssessmentRank()
+        public CalculateRegularAssessmentRank()
         {
             InitializeComponent();
 
@@ -1415,6 +1415,16 @@ FROM
             {
                 cboStudentFilter.SelectedIndex = 0;
             }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)

@@ -1,6 +1,6 @@
 ﻿namespace JHEvaluation.Rank
 {
-    partial class CacluateRegularAssessmentRank
+    partial class CalculateRegularAssessmentRank
     {
         /// <summary>
         /// Required designer variable.
@@ -43,8 +43,16 @@
             this.btnNext = new DevComponents.DotNetBar.ButtonX();
             this.cboExamType = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX6 = new DevComponents.DotNetBar.LabelX();
-            this.plStudentView = new DevComponents.DotNetBar.PanelEx();
-            this.btnPrevious = new DevComponents.DotNetBar.ButtonX();
+            this.labelX9 = new DevComponents.DotNetBar.LabelX();
+            this.labelX8 = new DevComponents.DotNetBar.LabelX();
+            this.labelX7 = new DevComponents.DotNetBar.LabelX();
+            this.lbSchoolYear = new DevComponents.DotNetBar.LabelX();
+            this.lbSemester = new DevComponents.DotNetBar.LabelX();
+            this.lbExam = new DevComponents.DotNetBar.LabelX();
+            this.labelX13 = new DevComponents.DotNetBar.LabelX();
+            this.btnExport = new DevComponents.DotNetBar.ButtonX();
+            this.btnImport = new DevComponents.DotNetBar.ButtonX();
+            this.btnCacluate = new DevComponents.DotNetBar.ButtonX();
             this.dgvStudentList = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.colClass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSeatNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,19 +62,11 @@
             this.colClassRank = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRankType1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRankType2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnCacluate = new DevComponents.DotNetBar.ButtonX();
-            this.btnImport = new DevComponents.DotNetBar.ButtonX();
-            this.btnExport = new DevComponents.DotNetBar.ButtonX();
-            this.labelX13 = new DevComponents.DotNetBar.LabelX();
-            this.lbExam = new DevComponents.DotNetBar.LabelX();
-            this.lbSemester = new DevComponents.DotNetBar.LabelX();
-            this.lbSchoolYear = new DevComponents.DotNetBar.LabelX();
-            this.labelX7 = new DevComponents.DotNetBar.LabelX();
-            this.labelX8 = new DevComponents.DotNetBar.LabelX();
-            this.labelX9 = new DevComponents.DotNetBar.LabelX();
+            this.plStudentView = new DevComponents.DotNetBar.PanelEx();
+            this.btnPrevious = new DevComponents.DotNetBar.ButtonX();
             this.gpRankPeople.SuspendLayout();
-            this.plStudentView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).BeginInit();
+            this.plStudentView.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelX1
@@ -333,51 +333,174 @@
             this.labelX6.TabIndex = 4;
             this.labelX6.Text = "試別：";
             // 
-            // plStudentView
+            // labelX9
             // 
-            this.plStudentView.CanvasColor = System.Drawing.SystemColors.Control;
-            this.plStudentView.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.plStudentView.Controls.Add(this.btnPrevious);
-            this.plStudentView.Controls.Add(this.dgvStudentList);
-            this.plStudentView.Controls.Add(this.btnCacluate);
-            this.plStudentView.Controls.Add(this.btnImport);
-            this.plStudentView.Controls.Add(this.btnExport);
-            this.plStudentView.Controls.Add(this.labelX13);
-            this.plStudentView.Controls.Add(this.lbExam);
-            this.plStudentView.Controls.Add(this.lbSemester);
-            this.plStudentView.Controls.Add(this.lbSchoolYear);
-            this.plStudentView.Controls.Add(this.labelX7);
-            this.plStudentView.Controls.Add(this.labelX8);
-            this.plStudentView.Controls.Add(this.labelX9);
-            this.plStudentView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.plStudentView.Location = new System.Drawing.Point(0, 0);
-            this.plStudentView.Name = "plStudentView";
-            this.plStudentView.Size = new System.Drawing.Size(794, 499);
-            this.plStudentView.Style.Alignment = System.Drawing.StringAlignment.Center;
-            this.plStudentView.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
-            this.plStudentView.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
-            this.plStudentView.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
-            this.plStudentView.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
-            this.plStudentView.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
-            this.plStudentView.Style.GradientAngle = 90;
-            this.plStudentView.TabIndex = 7;
-            this.plStudentView.Visible = false;
+            this.labelX9.AutoSize = true;
+            this.labelX9.BackColor = System.Drawing.Color.Transparent;
             // 
-            // btnPrevious
             // 
-            this.btnPrevious.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPrevious.BackColor = System.Drawing.Color.Transparent;
-            this.btnPrevious.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnPrevious.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnPrevious.ForeColor = System.Drawing.Color.Black;
-            this.btnPrevious.Location = new System.Drawing.Point(707, 12);
-            this.btnPrevious.Name = "btnPrevious";
-            this.btnPrevious.Size = new System.Drawing.Size(75, 25);
-            this.btnPrevious.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.btnPrevious.TabIndex = 25;
-            this.btnPrevious.Text = "上一步";
-            this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
+            // 
+            this.labelX9.BackgroundStyle.Class = "";
+            this.labelX9.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX9.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX9.ForeColor = System.Drawing.Color.Black;
+            this.labelX9.Location = new System.Drawing.Point(12, 12);
+            this.labelX9.Name = "labelX9";
+            this.labelX9.Size = new System.Drawing.Size(62, 22);
+            this.labelX9.TabIndex = 5;
+            this.labelX9.Text = "學年度：";
+            // 
+            // labelX8
+            // 
+            this.labelX8.AutoSize = true;
+            this.labelX8.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX8.BackgroundStyle.Class = "";
+            this.labelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX8.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX8.ForeColor = System.Drawing.Color.Black;
+            this.labelX8.Location = new System.Drawing.Point(146, 12);
+            this.labelX8.Name = "labelX8";
+            this.labelX8.Size = new System.Drawing.Size(47, 22);
+            this.labelX8.TabIndex = 6;
+            this.labelX8.Text = "學期：";
+            // 
+            // labelX7
+            // 
+            this.labelX7.AutoSize = true;
+            this.labelX7.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX7.BackgroundStyle.Class = "";
+            this.labelX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX7.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX7.ForeColor = System.Drawing.Color.Black;
+            this.labelX7.Location = new System.Drawing.Point(250, 12);
+            this.labelX7.Name = "labelX7";
+            this.labelX7.Size = new System.Drawing.Size(47, 22);
+            this.labelX7.TabIndex = 7;
+            this.labelX7.Text = "試別：";
+            // 
+            // lbSchoolYear
+            // 
+            this.lbSchoolYear.AutoSize = true;
+            this.lbSchoolYear.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbSchoolYear.BackgroundStyle.Class = "";
+            this.lbSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbSchoolYear.ForeColor = System.Drawing.Color.Black;
+            this.lbSchoolYear.Location = new System.Drawing.Point(80, 12);
+            this.lbSchoolYear.Name = "lbSchoolYear";
+            this.lbSchoolYear.Size = new System.Drawing.Size(47, 22);
+            this.lbSchoolYear.TabIndex = 8;
+            this.lbSchoolYear.Text = "學年度";
+            // 
+            // lbSemester
+            // 
+            this.lbSemester.AutoSize = true;
+            this.lbSemester.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbSemester.BackgroundStyle.Class = "";
+            this.lbSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbSemester.ForeColor = System.Drawing.Color.Black;
+            this.lbSemester.Location = new System.Drawing.Point(199, 12);
+            this.lbSemester.Name = "lbSemester";
+            this.lbSemester.Size = new System.Drawing.Size(32, 22);
+            this.lbSemester.TabIndex = 9;
+            this.lbSemester.Text = "學期";
+            // 
+            // lbExam
+            // 
+            this.lbExam.AutoSize = true;
+            this.lbExam.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbExam.BackgroundStyle.Class = "";
+            this.lbExam.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbExam.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbExam.ForeColor = System.Drawing.Color.Black;
+            this.lbExam.Location = new System.Drawing.Point(303, 12);
+            this.lbExam.Name = "lbExam";
+            this.lbExam.Size = new System.Drawing.Size(32, 22);
+            this.lbExam.TabIndex = 10;
+            this.lbExam.Text = "試別";
+            // 
+            // labelX13
+            // 
+            this.labelX13.AutoSize = true;
+            this.labelX13.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX13.BackgroundStyle.Class = "";
+            this.labelX13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX13.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX13.ForeColor = System.Drawing.Color.Black;
+            this.labelX13.Location = new System.Drawing.Point(12, 40);
+            this.labelX13.Name = "labelX13";
+            this.labelX13.Size = new System.Drawing.Size(77, 22);
+            this.labelX13.TabIndex = 11;
+            this.labelX13.Text = "母群資料：";
+            // 
+            // btnExport
+            // 
+            this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExport.BackColor = System.Drawing.Color.Transparent;
+            this.btnExport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnExport.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnExport.ForeColor = System.Drawing.Color.Black;
+            this.btnExport.Location = new System.Drawing.Point(419, 462);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(75, 25);
+            this.btnExport.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.btnExport.TabIndex = 19;
+            this.btnExport.Text = "匯出";
+            this.btnExport.Visible = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // btnImport
+            // 
+            this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnImport.BackColor = System.Drawing.Color.Transparent;
+            this.btnImport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnImport.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnImport.ForeColor = System.Drawing.Color.Black;
+            this.btnImport.Location = new System.Drawing.Point(510, 462);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(75, 25);
+            this.btnImport.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.btnImport.TabIndex = 20;
+            this.btnImport.Text = "匯入";
+            this.btnImport.Visible = false;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnCacluate
+            // 
+            this.btnCacluate.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnCacluate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCacluate.BackColor = System.Drawing.Color.Transparent;
+            this.btnCacluate.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnCacluate.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnCacluate.ForeColor = System.Drawing.Color.Black;
+            this.btnCacluate.Location = new System.Drawing.Point(701, 462);
+            this.btnCacluate.Name = "btnCacluate";
+            this.btnCacluate.Size = new System.Drawing.Size(81, 25);
+            this.btnCacluate.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.btnCacluate.TabIndex = 22;
+            this.btnCacluate.Text = "計算排名";
+            this.btnCacluate.Click += new System.EventHandler(this.btnCacluate_Click);
             // 
             // dgvStudentList
             // 
@@ -406,13 +529,12 @@
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
             this.dgvStudentList.Location = new System.Drawing.Point(3, 68);
-            this.dgvStudentList.MultiSelect = false;
             this.dgvStudentList.Name = "dgvStudentList";
             this.dgvStudentList.ReadOnly = true;
             this.dgvStudentList.RowTemplate.Height = 24;
             this.dgvStudentList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvStudentList.Size = new System.Drawing.Size(788, 388);
-            this.dgvStudentList.TabIndex = 21;
+            this.dgvStudentList.TabIndex = 18;
             // 
             // colClass
             // 
@@ -492,174 +614,52 @@
             this.colRankType2.Name = "colRankType2";
             this.colRankType2.ReadOnly = true;
             // 
-            // btnCacluate
+            // plStudentView
             // 
-            this.btnCacluate.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnCacluate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCacluate.BackColor = System.Drawing.Color.Transparent;
-            this.btnCacluate.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnCacluate.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnCacluate.ForeColor = System.Drawing.Color.Black;
-            this.btnCacluate.Location = new System.Drawing.Point(699, 462);
-            this.btnCacluate.Name = "btnCacluate";
-            this.btnCacluate.Size = new System.Drawing.Size(81, 25);
-            this.btnCacluate.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.btnCacluate.TabIndex = 20;
-            this.btnCacluate.Text = "計算排名";
-            this.btnCacluate.Click += new System.EventHandler(this.btnCacluate_Click);
+            this.plStudentView.CanvasColor = System.Drawing.SystemColors.Control;
+            this.plStudentView.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.plStudentView.Controls.Add(this.btnPrevious);
+            this.plStudentView.Controls.Add(this.dgvStudentList);
+            this.plStudentView.Controls.Add(this.btnCacluate);
+            this.plStudentView.Controls.Add(this.btnImport);
+            this.plStudentView.Controls.Add(this.btnExport);
+            this.plStudentView.Controls.Add(this.labelX13);
+            this.plStudentView.Controls.Add(this.lbExam);
+            this.plStudentView.Controls.Add(this.lbSemester);
+            this.plStudentView.Controls.Add(this.lbSchoolYear);
+            this.plStudentView.Controls.Add(this.labelX7);
+            this.plStudentView.Controls.Add(this.labelX8);
+            this.plStudentView.Controls.Add(this.labelX9);
+            this.plStudentView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.plStudentView.Location = new System.Drawing.Point(0, 0);
+            this.plStudentView.Name = "plStudentView";
+            this.plStudentView.Size = new System.Drawing.Size(794, 499);
+            this.plStudentView.Style.Alignment = System.Drawing.StringAlignment.Center;
+            this.plStudentView.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.plStudentView.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.plStudentView.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.plStudentView.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.plStudentView.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+            this.plStudentView.Style.GradientAngle = 90;
+            this.plStudentView.TabIndex = 7;
+            this.plStudentView.Visible = false;
             // 
-            // btnImport
+            // btnPrevious
             // 
-            this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnImport.BackColor = System.Drawing.Color.Transparent;
-            this.btnImport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnImport.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnImport.ForeColor = System.Drawing.Color.Black;
-            this.btnImport.Location = new System.Drawing.Point(609, 462);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(75, 25);
-            this.btnImport.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.btnImport.TabIndex = 19;
-            this.btnImport.Text = "匯入";
-            this.btnImport.Visible = false;
+            this.btnPrevious.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPrevious.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnPrevious.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F);
+            this.btnPrevious.ForeColor = System.Drawing.Color.Black;
+            this.btnPrevious.Location = new System.Drawing.Point(601, 462);
+            this.btnPrevious.Name = "btnPrevious";
+            this.btnPrevious.Size = new System.Drawing.Size(84, 25);
+            this.btnPrevious.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.btnPrevious.TabIndex = 21;
+            this.btnPrevious.Text = "上一步";
+            this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
             // 
-            // btnExport
-            // 
-            this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExport.BackColor = System.Drawing.Color.Transparent;
-            this.btnExport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExport.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnExport.ForeColor = System.Drawing.Color.Black;
-            this.btnExport.Location = new System.Drawing.Point(519, 462);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(75, 25);
-            this.btnExport.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.btnExport.TabIndex = 18;
-            this.btnExport.Text = "匯出";
-            this.btnExport.Visible = false;
-            // 
-            // labelX13
-            // 
-            this.labelX13.AutoSize = true;
-            this.labelX13.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX13.BackgroundStyle.Class = "";
-            this.labelX13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX13.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX13.ForeColor = System.Drawing.Color.Black;
-            this.labelX13.Location = new System.Drawing.Point(12, 40);
-            this.labelX13.Name = "labelX13";
-            this.labelX13.Size = new System.Drawing.Size(77, 22);
-            this.labelX13.TabIndex = 11;
-            this.labelX13.Text = "母群資料：";
-            // 
-            // lbExam
-            // 
-            this.lbExam.AutoSize = true;
-            this.lbExam.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbExam.BackgroundStyle.Class = "";
-            this.lbExam.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbExam.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbExam.ForeColor = System.Drawing.Color.Black;
-            this.lbExam.Location = new System.Drawing.Point(303, 12);
-            this.lbExam.Name = "lbExam";
-            this.lbExam.Size = new System.Drawing.Size(32, 22);
-            this.lbExam.TabIndex = 10;
-            this.lbExam.Text = "試別";
-            // 
-            // lbSemester
-            // 
-            this.lbSemester.AutoSize = true;
-            this.lbSemester.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbSemester.BackgroundStyle.Class = "";
-            this.lbSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbSemester.ForeColor = System.Drawing.Color.Black;
-            this.lbSemester.Location = new System.Drawing.Point(199, 12);
-            this.lbSemester.Name = "lbSemester";
-            this.lbSemester.Size = new System.Drawing.Size(32, 22);
-            this.lbSemester.TabIndex = 9;
-            this.lbSemester.Text = "學期";
-            // 
-            // lbSchoolYear
-            // 
-            this.lbSchoolYear.AutoSize = true;
-            this.lbSchoolYear.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbSchoolYear.BackgroundStyle.Class = "";
-            this.lbSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbSchoolYear.ForeColor = System.Drawing.Color.Black;
-            this.lbSchoolYear.Location = new System.Drawing.Point(80, 12);
-            this.lbSchoolYear.Name = "lbSchoolYear";
-            this.lbSchoolYear.Size = new System.Drawing.Size(47, 22);
-            this.lbSchoolYear.TabIndex = 8;
-            this.lbSchoolYear.Text = "學年度";
-            // 
-            // labelX7
-            // 
-            this.labelX7.AutoSize = true;
-            this.labelX7.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX7.BackgroundStyle.Class = "";
-            this.labelX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX7.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX7.ForeColor = System.Drawing.Color.Black;
-            this.labelX7.Location = new System.Drawing.Point(250, 12);
-            this.labelX7.Name = "labelX7";
-            this.labelX7.Size = new System.Drawing.Size(47, 22);
-            this.labelX7.TabIndex = 7;
-            this.labelX7.Text = "試別：";
-            // 
-            // labelX8
-            // 
-            this.labelX8.AutoSize = true;
-            this.labelX8.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX8.BackgroundStyle.Class = "";
-            this.labelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX8.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX8.ForeColor = System.Drawing.Color.Black;
-            this.labelX8.Location = new System.Drawing.Point(146, 12);
-            this.labelX8.Name = "labelX8";
-            this.labelX8.Size = new System.Drawing.Size(47, 22);
-            this.labelX8.TabIndex = 6;
-            this.labelX8.Text = "學期：";
-            // 
-            // labelX9
-            // 
-            this.labelX9.AutoSize = true;
-            this.labelX9.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX9.BackgroundStyle.Class = "";
-            this.labelX9.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX9.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX9.ForeColor = System.Drawing.Color.Black;
-            this.labelX9.Location = new System.Drawing.Point(12, 12);
-            this.labelX9.Name = "labelX9";
-            this.labelX9.Size = new System.Drawing.Size(62, 22);
-            this.labelX9.TabIndex = 5;
-            this.labelX9.Text = "學年度：";
-            // 
-            // CacluateRegularAssessmentRank
+            // CalculateRegularAssessmentRank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -674,14 +674,14 @@
             this.Controls.Add(this.cboSchoolYear);
             this.Controls.Add(this.labelX1);
             this.DoubleBuffered = true;
-            this.Name = "CacluateRegularAssessmentRank";
+            this.Name = "CalculateRegularAssessmentRank";
             this.Text = "計算定期評量排名";
             this.Load += new System.EventHandler(this.CacluateRegularAssessmentRank_Load);
             this.gpRankPeople.ResumeLayout(false);
             this.gpRankPeople.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).EndInit();
             this.plStudentView.ResumeLayout(false);
             this.plStudentView.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -703,19 +703,17 @@
         private DevComponents.DotNetBar.LabelX labelX4;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboExamType;
         private DevComponents.DotNetBar.LabelX labelX6;
-        private DevComponents.DotNetBar.PanelEx plStudentView;
-        private DevComponents.DotNetBar.LabelX labelX13;
-        private DevComponents.DotNetBar.LabelX lbExam;
-        private DevComponents.DotNetBar.LabelX lbSemester;
-        private DevComponents.DotNetBar.LabelX lbSchoolYear;
-        private DevComponents.DotNetBar.LabelX labelX7;
-        private DevComponents.DotNetBar.LabelX labelX8;
         private DevComponents.DotNetBar.LabelX labelX9;
-        private DevComponents.DotNetBar.ButtonX btnCacluate;
-        private DevComponents.DotNetBar.ButtonX btnImport;
+        private DevComponents.DotNetBar.LabelX labelX8;
+        private DevComponents.DotNetBar.LabelX labelX7;
+        private DevComponents.DotNetBar.LabelX lbSchoolYear;
+        private DevComponents.DotNetBar.LabelX lbSemester;
+        private DevComponents.DotNetBar.LabelX lbExam;
+        private DevComponents.DotNetBar.LabelX labelX13;
         private DevComponents.DotNetBar.ButtonX btnExport;
+        private DevComponents.DotNetBar.ButtonX btnImport;
+        private DevComponents.DotNetBar.ButtonX btnCacluate;
         private DevComponents.DotNetBar.Controls.DataGridViewX dgvStudentList;
-        private DevComponents.DotNetBar.ButtonX btnPrevious;
         private System.Windows.Forms.DataGridViewTextBoxColumn colClass;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSeatNum;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStudentNum;
@@ -724,5 +722,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colClassRank;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRankType1;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRankType2;
+        private DevComponents.DotNetBar.PanelEx plStudentView;
+        private DevComponents.DotNetBar.ButtonX btnPrevious;
     }
 }

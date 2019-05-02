@@ -28,7 +28,6 @@ namespace JHEvaluation.Rank
 
         private void RegularRankSelect_Load(object sender, EventArgs e)
         {
-
             #region 要塞進前4個ComboBox的資料的sql字串
             string queryFilter = @"
 SELECT rank_matrix.school_year
@@ -40,8 +39,9 @@ SELECT rank_matrix.school_year
 	, rank_matrix.rank_type 
 FROM rank_matrix LEFT OUTER JOIN 
 	rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id LEFT OUTER JOIN
-	exam ON exam.id=rank_matrix.ref_exam_id 
-WHERE rank_matrix.is_alive = true";
+	exam ON exam.id=rank_matrix.ref_exam_id
+WHERE rank_matrix.is_alive = true
+	AND SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) = '定期評量'";
             #endregion
 
             QueryHelper queryHelper = new QueryHelper();
