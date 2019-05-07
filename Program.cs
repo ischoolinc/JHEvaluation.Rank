@@ -38,11 +38,19 @@ namespace JHEvaluation.Rank
             };
 
             RibbonBarItem regularRank = FISCA.Presentation.MotherForm.RibbonBarItems["教務作業", "批次作業/檢視"];
-            regularRank["成績排名"]["排名資料檢索"].Enable = true;
-            regularRank["成績排名"]["排名資料檢索"].Click += delegate
+            regularRank["成績排名"]["定期評量排名資料檢索"].Enable = true;
+            regularRank["成績排名"]["定期評量排名資料檢索"].Click += delegate
             {
                 RegularRankSelect rankSelect = new RegularRankSelect();
                 rankSelect.ShowDialog();
+            };
+
+            RibbonBarItem semesterAssessmentSelect = FISCA.Presentation.MotherForm.RibbonBarItems["教務作業", "批次作業/檢視"];
+            regularRank["成績排名"]["學期成績排名資料檢索"].Enable = true;
+            regularRank["成績排名"]["學期成績排名資料檢索"].Click += delegate
+            {
+                SemesterAssessmentRankSelect semesterAssessmentRankSelect = new SemesterAssessmentRankSelect();
+                semesterAssessmentRankSelect.ShowDialog();
             };
         }
     }

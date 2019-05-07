@@ -69,7 +69,7 @@ Order BY course.school_year, course.semester
 
             #region 篩選資料
             _StudentRecord = _StudentRecord.Where(x => !string.IsNullOrEmpty(x.RefClassID)
-                                                    && (x.Status == StudentRecord.StudentStatus.一般 || x.Status == StudentRecord.StudentStatus.延修)
+                                                    && (x.Status == StudentRecord.StudentStatus.一般)
                                                     && x.Class.GradeYear != null).ToList();
             #endregion
 

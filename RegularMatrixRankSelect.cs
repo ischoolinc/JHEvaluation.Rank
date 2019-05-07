@@ -14,14 +14,14 @@ using System.Windows.Forms;
 
 namespace JHEvaluation.Rank
 {
-    public partial class MatrixRankSelect : BaseForm
+    public partial class RegularMatrixRankSelect : BaseForm
     {
 
         bool _IsLoading = false;
         string _RankName, _RankMatrixId;
         Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
 
-        public MatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
+        public RegularMatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
         {
             InitializeComponent();
 
@@ -62,17 +62,13 @@ FROM
 		, rank_matrix.create_time
 	FROM rank_matrix 
 		LEFT OUTER JOIN 
-			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
-		LEFT OUTER JOIN 
-			student ON student.id = rank_detail.ref_student_id 
-		LEFT OUTER JOIN 
-			class ON class.id = student.ref_class_id 
+			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id
 		LEFT OUTER JOIN 
 			exam ON exam.id=rank_matrix.ref_exam_id
 	ORDER BY
 		create_time DESC
 ) AS Rank_Table
-Where  school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
+Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
 	AND semester = " + Convert.ToInt32(lbSemester.Text) + @"
 	AND score_type = '" + lbScoreType.Text + "'" + @"
 	AND score_category = '" + lbScoreCategory.Text + "'" + @"

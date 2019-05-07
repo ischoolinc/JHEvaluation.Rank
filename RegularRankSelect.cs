@@ -38,7 +38,6 @@ SELECT rank_matrix.school_year
 	, rank_matrix.item_name 
 	, rank_matrix.rank_type 
 FROM rank_matrix LEFT OUTER JOIN 
-	rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id LEFT OUTER JOIN
 	exam ON exam.id=rank_matrix.ref_exam_id
 WHERE rank_matrix.is_alive = true
 	AND SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) = '定期評量'";
@@ -64,7 +63,7 @@ WHERE rank_matrix.is_alive = true
                 }
             }
             cboSchoolYear.SelectedIndex = 0;
-
+        
             //學期ComboBox
             foreach (DataRow row in dt.Rows)
             {
@@ -399,7 +398,7 @@ WHERE
                 return;
             }
 
-            MatrixRankSelect frm = new MatrixRankSelect("" + dgvScoreRank[0, e.RowIndex].Value
+            RegularMatrixRankSelect frm = new RegularMatrixRankSelect("" + dgvScoreRank[0, e.RowIndex].Value
                                                       , "" + dgvScoreRank[16, e.RowIndex].Value
                                                       , "" + dgvScoreRank[17, e.RowIndex].Value
                                                       , "" + dgvScoreRank[1, e.RowIndex].Value

@@ -34,7 +34,7 @@ namespace JHEvaluation.Rank
             _DefaultSemester = K12.Data.School.DefaultSemester;
             _ExamList = K12.Data.Exam.SelectAll();
             _TagList = K12.Data.TagConfig.SelectByCategory(TagCategory.Student);
-            _StudentList = K12.Data.Student.SelectAll().Where(x => (x.Status == StudentRecord.StudentStatus.一般 || x.Status == StudentRecord.StudentStatus.延修)
+            _StudentList = K12.Data.Student.SelectAll().Where(x => (x.Status == StudentRecord.StudentStatus.一般)
                                                             && !string.IsNullOrEmpty(x.RefClassID)
                                                             && x.Class.GradeYear != null).ToList();
             #endregion
