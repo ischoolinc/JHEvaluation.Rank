@@ -30,7 +30,7 @@ namespace JHEvaluation.Rank
             InitializeComponent();
 
             #region 讀取需要的資料
-            _DefaultSchoolYear = "105";// K12.Data.School.DefaultSchoolYear;
+            _DefaultSchoolYear = K12.Data.School.DefaultSchoolYear;// K12.Data.School.DefaultSchoolYear;
             _DefaultSemester = K12.Data.School.DefaultSemester;
             _ExamList = K12.Data.Exam.SelectAll();
             _TagList = K12.Data.TagConfig.SelectByCategory(TagCategory.Student);
