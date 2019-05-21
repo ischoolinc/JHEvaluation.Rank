@@ -361,6 +361,7 @@ WITH student_list AS
             Exception bkwException = null;
             BackgroundWorker bkw = new BackgroundWorker();
             bkw.WorkerReportsProgress = true;
+            pbLoading.Visible = true;
 
             bkw.ProgressChanged += delegate (object s1, ProgressChangedEventArgs e1)
             {
@@ -1377,6 +1378,7 @@ FROM
                 }
                 MessageBox.Show("計算完成");
                 MotherForm.SetStatusBarMessage("排名計算完成");
+                pbLoading.Visible = false;
                 btnCacluate.Enabled = true;
                 btnPrevious.Enabled = true;
             };

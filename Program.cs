@@ -41,7 +41,7 @@ namespace JHEvaluation.Rank
             regularRank["成績排名"]["定期評量排名資料檢索"].Enable = true;
             regularRank["成績排名"]["定期評量排名資料檢索"].Click += delegate
             {
-                RegularRankSelect rankSelect = new RegularRankSelect();
+                RegularAssessmentRankSelect rankSelect = new RegularAssessmentRankSelect();
                 rankSelect.ShowDialog();
             };
 

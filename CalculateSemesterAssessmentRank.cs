@@ -55,9 +55,9 @@ namespace JHEvaluation.Rank
             cboStudentTag2.Items.Add("");
             foreach (string tagName in _TagList.Select(x => x.Prefix).Distinct().ToList())
             {
-                cboStudentFilter.Items.Add(tagName);
-                cboStudentTag1.Items.Add(tagName);
-                cboStudentTag2.Items.Add(tagName);
+                cboStudentFilter.Items.Add("[" + tagName + "]");
+                cboStudentTag1.Items.Add("[" + tagName + "]");
+                cboStudentTag2.Items.Add("[" + tagName + "]");
             }
             #endregion
 
@@ -351,6 +351,7 @@ WITH student_list AS
             BackgroundWorker bkw = new BackgroundWorker();
             bkw.WorkerReportsProgress = true;
             Exception bkwException = null;
+            pbLoading.Visible = true;
 
             bkw.ProgressChanged += delegate (object obj, ProgressChangedEventArgs eventArgs)
             {
@@ -411,6 +412,7 @@ WITH student_list AS
 		INNER JOIN calc_condition
 			ON sems_subj_score_ext.school_year = calc_condition.rank_school_year::INT
 			AND sems_subj_score_ext.semester = calc_condition.rank_semester::INT
+			AND student_list.rank_grade_year = calc_condition.rank_grade_year::INT
 )
 , subject_rank AS
 (
@@ -2218,6 +2220,7 @@ FROM
 
                 MessageBox.Show("計算完成");
                 MotherForm.SetStatusBarMessage("排名計算完成");
+                pbLoading.Visible = false;
                 btnCacluate.Enabled = true;
                 btnPrevious.Enabled = true;
             };

@@ -63,10 +63,12 @@
             this.colRankType1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRankType2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.plStudentView = new DevComponents.DotNetBar.PanelEx();
+            this.pbLoading = new System.Windows.Forms.PictureBox();
             this.btnPrevious = new DevComponents.DotNetBar.ButtonX();
             this.gpRankPeople.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).BeginInit();
             this.plStudentView.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // labelX1
@@ -618,6 +620,7 @@
             // 
             this.plStudentView.CanvasColor = System.Drawing.SystemColors.Control;
             this.plStudentView.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.plStudentView.Controls.Add(this.pbLoading);
             this.plStudentView.Controls.Add(this.btnPrevious);
             this.plStudentView.Controls.Add(this.dgvStudentList);
             this.plStudentView.Controls.Add(this.btnCacluate);
@@ -643,6 +646,18 @@
             this.plStudentView.Style.GradientAngle = 90;
             this.plStudentView.TabIndex = 7;
             this.plStudentView.Visible = false;
+            // 
+            // pbLoading
+            // 
+            this.pbLoading.BackColor = System.Drawing.Color.Transparent;
+            this.pbLoading.Image = global::JHEvaluation.Rank.Properties.Resources.loading;
+            this.pbLoading.Location = new System.Drawing.Point(337, 217);
+            this.pbLoading.Name = "pbLoading";
+            this.pbLoading.Size = new System.Drawing.Size(157, 109);
+            this.pbLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbLoading.TabIndex = 57;
+            this.pbLoading.TabStop = false;
+            this.pbLoading.Visible = false;
             // 
             // btnPrevious
             // 
@@ -682,6 +697,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).EndInit();
             this.plStudentView.ResumeLayout(false);
             this.plStudentView.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -724,5 +740,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colRankType2;
         private DevComponents.DotNetBar.PanelEx plStudentView;
         private DevComponents.DotNetBar.ButtonX btnPrevious;
+        private System.Windows.Forms.PictureBox pbLoading;
     }
 }

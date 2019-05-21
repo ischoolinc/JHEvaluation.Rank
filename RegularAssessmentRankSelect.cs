@@ -15,16 +15,17 @@ using System.Windows.Forms;
 
 namespace JHEvaluation.Rank
 {
-    public partial class RegularRankSelect : BaseForm
+    public partial class RegularAssessmentRankSelect : BaseForm
     {
         private bool _IsLoading = false;
+        private List<DataGridViewRow> _RowCollection = new List<DataGridViewRow>();
+        private string _LoadSchoolYear = "", _LoadSemester = "", _LoadScoreType = "", _LoadScoreCategory = ""
+                        , _FilterExamName = "", _FilterItemName = "", _FilterRankType = "", _FilterStudentNumber = "";
 
-        public RegularRankSelect()
+        public RegularAssessmentRankSelect()
         {
             InitializeComponent();
         }
-
-        private List<DataGridViewRow> _RowCollection = new List<DataGridViewRow>();
 
         private void RegularRankSelect_Load(object sender, EventArgs e)
         {
@@ -62,8 +63,16 @@ WHERE rank_matrix.is_alive = true
                     cboSchoolYear.Items.Add(value);
                 }
             }
-            cboSchoolYear.SelectedIndex = 0;
-        
+
+            if (cboSchoolYear.Items.Contains(K12.Data.School.DefaultSchoolYear))
+            {
+                cboSchoolYear.SelectedIndex = cboSchoolYear.Items.IndexOf(K12.Data.School.DefaultSchoolYear);
+            }
+            else
+            {
+                cboSchoolYear.SelectedIndex = 0;
+            }
+
             //學期ComboBox
             foreach (DataRow row in dt.Rows)
             {
@@ -73,7 +82,15 @@ WHERE rank_matrix.is_alive = true
                     cboSemester.Items.Add(value);
                 }
             }
-            cboSemester.SelectedIndex = 0;
+
+            if (cboSemester.Items.Contains(K12.Data.School.DefaultSemester))
+            {
+                cboSemester.SelectedIndex = cboSemester.Items.IndexOf(K12.Data.School.DefaultSemester);
+            }
+            else
+            {
+                cboSemester.SelectedIndex = 0;
+            }
 
             //類型ComboBox
             foreach (DataRow row in dt.Rows)
@@ -179,14 +196,10 @@ WHERE rank_matrix.is_alive = true
             {
                 _IsLoading = true;
                 dgvScoreRank.Rows.Clear();
-                cboExamName.Items.Clear();
-                cboItemName.Items.Clear();
-                cboRankType.Items.Clear();
-
-                var schoolYear = cboSchoolYear.Text;
-                var semester = cboSemester.Text;
-                var scoreType = cboScoreType.Text;
-                var scoreCategory = cboScoreCategory.Text;
+                _LoadSchoolYear = cboSchoolYear.Text;
+                _LoadSemester = cboSemester.Text;
+                _LoadScoreType = cboScoreType.Text;
+                _LoadScoreCategory = cboScoreCategory.Text;
 
                 #region 要顯示的資料的sql字串
                 string queryString = @"
@@ -229,22 +242,24 @@ FROM
         , rank_matrix.create_time DESC
 ) AS Rank_Table
 WHERE  
-    school_year = " + schoolYear + @"
-    And semester = " + semester + @"
-    And score_type = '" + scoreType + @"'
-    And score_category = '" + scoreCategory + "'";
+    school_year = " + _LoadSchoolYear + @"
+    And semester = " + _LoadSemester + @"
+    And score_type = '" + _LoadScoreType + @"'
+    And score_category = '" + _LoadScoreCategory + "'";
                 #endregion
 
                 DataTable dt = null;
-                Exception bkwException = null;
                 BackgroundWorker bkw = new BackgroundWorker();
+                Exception bkwException = null;
                 bkw.WorkerReportsProgress = true;
+                pbLoading.Visible = true;
+
                 bkw.DoWork += delegate
                 {
                     try
                     {
                         bkw.ReportProgress(0);
-                        
+
                         dt = new QueryHelper().Select(queryString);
 
                         bkw.ReportProgress(100);
@@ -254,10 +269,12 @@ WHERE
                         bkwException = exc;
                     }
                 };
+
                 bkw.ProgressChanged += delegate (object s1, ProgressChangedEventArgs e1)
                 {
                     FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取中", e1.ProgressPercentage);
                 };
+
                 bkw.RunWorkerCompleted += delegate
                 {
                     if (bkwException != null)
@@ -265,10 +282,10 @@ WHERE
                         throw new Exception("資料讀取錯誤", bkwException);
                     }
                     if (
-                        schoolYear != cboSchoolYear.Text
-                        || semester != cboSemester.Text
-                        || scoreType != cboScoreType.Text
-                        || scoreCategory != cboScoreCategory.Text
+                        _LoadSchoolYear != cboSchoolYear.Text
+                        || _LoadSemester != cboSemester.Text
+                        || _LoadScoreType != cboScoreType.Text
+                        || _LoadScoreCategory != cboScoreCategory.Text
                     )
                     {
                         _IsLoading = false;
@@ -346,9 +363,10 @@ WHERE
                         }
                         #endregion
 
+                        FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取完成");
+                        pbLoading.Visible = false;
                         _IsLoading = false;
                         FillingDataGridView(null, null);
-                        FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取完成");
                     }
                 };
                 bkw.RunWorkerAsync();
@@ -359,31 +377,70 @@ WHERE
         {
             if (_IsLoading)
                 return;
+
+            _IsLoading = true;
             dgvScoreRank.Rows.Clear();
+            _FilterExamName = cboExamName.Text;
+            _FilterItemName = cboItemName.Text;
+            _FilterRankType = cboRankType.Text;
+            _FilterStudentNumber = txtStudentNum.Text;
+
             List<DataGridViewRow> newList = new List<DataGridViewRow>();
             foreach (DataGridViewRow gridViewRow in _RowCollection)
             {
                 var show = true;
-                if (cboExamName.Text != "" && cboExamName.Text != "全部" && cboExamName.Text != ("" + gridViewRow.Cells[3].Value))
+                if (_FilterExamName != "" && _FilterExamName != "全部" && _FilterExamName != ("" + gridViewRow.Cells[3].Value))
                 {
                     show = show & false;
                 }
-                if (cboItemName.Text != "" && cboItemName.Text != "全部" && cboItemName.Text != ("" + gridViewRow.Cells[4].Value))
+                if (_FilterItemName != "" && _FilterItemName != "全部" && _FilterItemName != ("" + gridViewRow.Cells[4].Value))
                 {
                     show = show & false;
                 }
-                if (cboRankType.Text != "" && cboRankType.Text != "全部" && cboRankType.Text != ("" + gridViewRow.Cells[5].Value))
+                if (_FilterRankType != "" && _FilterRankType != "全部" && _FilterRankType != ("" + gridViewRow.Cells[5].Value))
                 {
                     show = show & false;
                 }
-                if (txtStudentNum.Text != "" && !("" + gridViewRow.Cells[9].Value).Contains(txtStudentNum.Text))
+                if (_FilterStudentNumber != "" && !("" + gridViewRow.Cells[9].Value).Contains(_FilterStudentNumber))
                 {
                     show = show & false;
                 }
                 if (show)
                     newList.Add(gridViewRow);
+                if (newList.Count > 200)
+                {
+                    dgvScoreRank.Rows.AddRange(newList.ToArray());
+                    newList.Clear();
+                    Application.DoEvents();
+
+                    if (cboSchoolYear.Text != _LoadSchoolYear
+                        || cboSemester.Text != _LoadSemester
+                        || cboScoreType.Text != _LoadScoreType
+                        || cboScoreCategory.Text != _LoadScoreCategory)
+                    {
+                        _IsLoading = false;
+                        LoadRowData(null, null);
+                        return;
+                    }
+                    if (_FilterExamName != cboExamName.Text
+                        || _FilterItemName != cboItemName.Text
+                        || _FilterRankType != cboRankType.Text
+                        || _FilterStudentNumber != txtStudentNum.Text)
+
+                    {
+                        _IsLoading = false;
+                        FillingDataGridView(null, null);
+                        return;
+                    }
+                }
             }
-            dgvScoreRank.Rows.AddRange(newList.ToArray());
+            if (newList.Count > 0)
+            {
+                dgvScoreRank.Rows.AddRange(newList.ToArray());
+                newList.Clear();
+            }
+
+            _IsLoading = false;
         }
 
         private void dgvScoreRank_CellContentClick(object sender, DataGridViewCellEventArgs e)

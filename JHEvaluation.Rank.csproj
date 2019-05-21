@@ -110,11 +110,11 @@
     <Compile Include="RegularMatrixRankSelect.Designer.cs">
       <DependentUpon>RegularMatrixRankSelect.cs</DependentUpon>
     </Compile>
-    <Compile Include="RegularRankSelect.cs">
+    <Compile Include="RegularAssessmentRankSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RegularRankSelect.Designer.cs">
-      <DependentUpon>RegularRankSelect.cs</DependentUpon>
+    <Compile Include="RegularAssessmentRankSelect.Designer.cs">
+      <DependentUpon>RegularAssessmentRankSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,8 +152,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="RegularRankSelect.resx">
-      <DependentUpon>RegularRankSelect.cs</DependentUpon>
+    <EmbeddedResource Include="RegularAssessmentRankSelect.resx">
+      <DependentUpon>RegularAssessmentRankSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CalculateRegularAssessmentRank.resx">
       <DependentUpon>CalculateRegularAssessmentRank.cs</DependentUpon>
@@ -187,6 +187,7 @@
     <Content Include="Library\FISCA.Presentation.dll" />
     <Content Include="Library\K12.Data.dll" />
     <Content Include="Library\K12.Presentation.dll" />
+    <None Include="Resources\loading.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
