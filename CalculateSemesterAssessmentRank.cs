@@ -505,6 +505,7 @@ WITH student_list AS
 	INNER JOIN calc_condition
 		ON sems_domain_score_ext.school_year = calc_condition.rank_school_year::INT
 		AND sems_domain_score_ext.semester = calc_condition.rank_semester::INT
+		AND student_list.rank_grade_year = calc_condition.rank_grade_year::INT
 )
 , domain_rank AS
 (
@@ -590,6 +591,7 @@ WITH student_list AS
 		INNER JOIN calc_condition
 			ON sems_subj_score.school_year = calc_condition.rank_school_year::INT
 			AND sems_subj_score.semester = calc_condition.rank_semester::INT
+		    AND student_list.rank_grade_year = calc_condition.rank_grade_year::INT
 )
 , learn_domain_rank AS
 (
@@ -674,6 +676,7 @@ WITH student_list AS
 	INNER JOIN calc_condition
 		ON sems_subj_score.school_year = calc_condition.rank_school_year::INT
 		AND sems_subj_score.semester = calc_condition.rank_semester::INT
+		AND student_list.rank_grade_year = calc_condition.rank_grade_year::INT
 )
 , course_learn_rank AS
 (
