@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.plBasicInfSelect = new DevComponents.DotNetBar.PanelEx();
             this.btnNext = new DevComponents.DotNetBar.ButtonX();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
-            this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.gpRankPeople = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.listGradeYear = new DevComponents.DotNetBar.Controls.ListViewEx();
             this.cboStudentTag2 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -42,7 +41,6 @@
             this.cboStudentFilter = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
-            this.cboSemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.plStudentView = new DevComponents.DotNetBar.PanelEx();
             this.pbLoading = new System.Windows.Forms.PictureBox();
             this.btnPrevious = new DevComponents.DotNetBar.ButtonX();
@@ -63,6 +61,8 @@
             this.lbSchoolYear = new DevComponents.DotNetBar.LabelX();
             this.labelX8 = new DevComponents.DotNetBar.LabelX();
             this.labelX9 = new DevComponents.DotNetBar.LabelX();
+            this.lbCalcSchoolYear = new DevComponents.DotNetBar.LabelX();
+            this.lbCalcSemester = new DevComponents.DotNetBar.LabelX();
             this.plBasicInfSelect.SuspendLayout();
             this.gpRankPeople.SuspendLayout();
             this.plStudentView.SuspendLayout();
@@ -74,12 +74,12 @@
             // 
             this.plBasicInfSelect.CanvasColor = System.Drawing.SystemColors.Control;
             this.plBasicInfSelect.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.plBasicInfSelect.Controls.Add(this.lbCalcSemester);
+            this.plBasicInfSelect.Controls.Add(this.lbCalcSchoolYear);
             this.plBasicInfSelect.Controls.Add(this.btnNext);
             this.plBasicInfSelect.Controls.Add(this.labelX1);
-            this.plBasicInfSelect.Controls.Add(this.cboSchoolYear);
             this.plBasicInfSelect.Controls.Add(this.gpRankPeople);
             this.plBasicInfSelect.Controls.Add(this.labelX2);
-            this.plBasicInfSelect.Controls.Add(this.cboSemester);
             this.plBasicInfSelect.Dock = System.Windows.Forms.DockStyle.Fill;
             this.plBasicInfSelect.Location = new System.Drawing.Point(0, 0);
             this.plBasicInfSelect.Name = "plBasicInfSelect";
@@ -125,20 +125,6 @@
             this.labelX1.Size = new System.Drawing.Size(62, 22);
             this.labelX1.TabIndex = 8;
             this.labelX1.Text = "學年度：";
-            // 
-            // cboSchoolYear
-            // 
-            this.cboSchoolYear.DisplayMember = "Text";
-            this.cboSchoolYear.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboSchoolYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cboSchoolYear.FormattingEnabled = true;
-            this.cboSchoolYear.ItemHeight = 21;
-            this.cboSchoolYear.Location = new System.Drawing.Point(80, 10);
-            this.cboSchoolYear.Name = "cboSchoolYear";
-            this.cboSchoolYear.Size = new System.Drawing.Size(88, 27);
-            this.cboSchoolYear.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.cboSchoolYear.TabIndex = 9;
             // 
             // gpRankPeople
             // 
@@ -322,20 +308,6 @@
             this.labelX2.TabIndex = 10;
             this.labelX2.Text = "學期：";
             // 
-            // cboSemester
-            // 
-            this.cboSemester.DisplayMember = "Text";
-            this.cboSemester.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboSemester.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cboSemester.FormattingEnabled = true;
-            this.cboSemester.ItemHeight = 21;
-            this.cboSemester.Location = new System.Drawing.Point(241, 10);
-            this.cboSemester.Name = "cboSemester";
-            this.cboSemester.Size = new System.Drawing.Size(82, 27);
-            this.cboSemester.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.cboSemester.TabIndex = 11;
-            // 
             // plStudentView
             // 
             this.plStudentView.CanvasColor = System.Drawing.SystemColors.Control;
@@ -408,14 +380,14 @@
             this.colClassRank,
             this.colRankType1,
             this.colRankType2});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
             this.dgvStudentList.Location = new System.Drawing.Point(3, 68);
@@ -637,6 +609,40 @@
             this.labelX9.TabIndex = 26;
             this.labelX9.Text = "學年度：";
             // 
+            // lbCalcSchoolYear
+            // 
+            this.lbCalcSchoolYear.AutoSize = true;
+            this.lbCalcSchoolYear.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbCalcSchoolYear.BackgroundStyle.Class = "";
+            this.lbCalcSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbCalcSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbCalcSchoolYear.ForeColor = System.Drawing.Color.Black;
+            this.lbCalcSchoolYear.Location = new System.Drawing.Point(80, 12);
+            this.lbCalcSchoolYear.Name = "lbCalcSchoolYear";
+            this.lbCalcSchoolYear.Size = new System.Drawing.Size(47, 22);
+            this.lbCalcSchoolYear.TabIndex = 9;
+            this.lbCalcSchoolYear.Text = "學年度";
+            // 
+            // lbCalcSemester
+            // 
+            this.lbCalcSemester.AutoSize = true;
+            this.lbCalcSemester.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbCalcSemester.BackgroundStyle.Class = "";
+            this.lbCalcSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbCalcSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbCalcSemester.ForeColor = System.Drawing.Color.Black;
+            this.lbCalcSemester.Location = new System.Drawing.Point(241, 12);
+            this.lbCalcSemester.Name = "lbCalcSemester";
+            this.lbCalcSemester.Size = new System.Drawing.Size(32, 22);
+            this.lbCalcSemester.TabIndex = 11;
+            this.lbCalcSemester.Text = "學期";
+            // 
             // CalculateSemesterAssessmentRank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -683,7 +689,6 @@
         private DevComponents.DotNetBar.LabelX labelX9;
         private DevComponents.DotNetBar.ButtonX btnNext;
         private DevComponents.DotNetBar.LabelX labelX1;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboSchoolYear;
         private DevComponents.DotNetBar.Controls.GroupPanel gpRankPeople;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentTag2;
         private DevComponents.DotNetBar.LabelX labelX5;
@@ -692,9 +697,10 @@
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentFilter;
         private DevComponents.DotNetBar.LabelX labelX3;
         private DevComponents.DotNetBar.LabelX labelX2;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboSemester;
         private DevComponents.DotNetBar.Controls.ListViewEx listGradeYear;
         private DevComponents.DotNetBar.ButtonX btnPrevious;
         private System.Windows.Forms.PictureBox pbLoading;
+        private DevComponents.DotNetBar.LabelX lbCalcSemester;
+        private DevComponents.DotNetBar.LabelX lbCalcSchoolYear;
     }
 }

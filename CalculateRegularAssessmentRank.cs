@@ -74,40 +74,43 @@ Order BY course.school_year, course.semester
             #endregion
 
             #region 填資料進ComboBox
-            cboSchoolYear.Items.Clear();
-            cboSemester.Items.Clear();
+            //因為目前只提供計算預設學年度學期的排名，所以暫時先註解起來
+            //cboSchoolYear.Items.Clear();
+            //cboSemester.Items.Clear();
             cboExamType.Items.Clear();
             cboStudentFilter.Items.Clear();
             cboStudentTag1.Items.Clear();
             cboStudentTag2.Items.Clear();
 
-            cboSchoolYear.Items.Add(_DefaultSchoolYear);//加入預設的學年度
-            cboSemester.Items.Add(_DefaultSemester);//加入預設的學年度
-            foreach (DataRow row in _SchoolYearTable.Rows)
-            {
-                #region 現階段先不用匯入其他學年度及學期
-                //現階段先不用匯入其他學年度
-                //if (!string.IsNullOrEmpty("" + row["school_year"]) && !cboSchoolYear.Items.Contains("" + row["school_year"]))
-                //{
-                //    cboSchoolYear.Items.Add("" + row["school_year"]);
-                //} 
+            lbCalcSchoolYear.Text = _DefaultSchoolYear;
+            lbCalcSemester.Text = _DefaultSemester;
+            //cboSchoolYear.Items.Add(_DefaultSchoolYear);//加入預設的學年度
+            //cboSemester.Items.Add(_DefaultSemester);//加入預設的學年度
+            //foreach (DataRow row in _SchoolYearTable.Rows)
+            //{
+            //    #region 現階段先不用匯入其他學年度及學期
+            //    //現階段先不用匯入其他學年度
+            //    //if (!string.IsNullOrEmpty("" + row["school_year"]) && !cboSchoolYear.Items.Contains("" + row["school_year"]))
+            //    //{
+            //    //    cboSchoolYear.Items.Add("" + row["school_year"]);
+            //    //} 
 
-                //if (!string.IsNullOrEmpty("" + row["semester"]) && !cboSemester.Items.Contains("" + row["semester"]))
-                //{
-                //    cboSemester.Items.Add("" + row["semester"]);
-                //}
-                #endregion
-            }
-            cboSchoolYear.SelectedIndex = 0;
+            //    //if (!string.IsNullOrEmpty("" + row["semester"]) && !cboSemester.Items.Contains("" + row["semester"]))
+            //    //{
+            //    //    cboSemester.Items.Add("" + row["semester"]);
+            //    //}
+            //    #endregion
+            //}
+            //cboSchoolYear.SelectedIndex = 0;
 
-            if (cboSemester.Items.Contains(_DefaultSemester))
-            {
-                cboSemester.SelectedIndex = cboSemester.Items.IndexOf(_DefaultSemester);
-            }
-            else
-            {
-                cboSemester.SelectedIndex = 0;
-            }
+            //if (cboSemester.Items.Contains(_DefaultSemester))
+            //{
+            //    cboSemester.SelectedIndex = cboSemester.Items.IndexOf(_DefaultSemester);
+            //}
+            //else
+            //{
+            //    cboSemester.SelectedIndex = 0;
+            //}
 
             cboStudentFilter.Items.Add("");
             cboStudentTag1.Items.Add("");
@@ -160,8 +163,10 @@ Order BY course.school_year, course.semester
             this.Width = 810;
             this.Height = 510;
             lbExam.Text = cboExamType.Text;
-            lbSemester.Text = cboSemester.Text;
-            lbSchoolYear.Text = cboSchoolYear.Text;
+
+            //因為目前只提供計算預設學年度學期的排名，所以暫時先註解起來
+            lbSemester.Text = lbCalcSchoolYear.Text; //cboSemester.Text;
+            lbSchoolYear.Text = lbCalcSemester.Text; //cboSchoolYear.Text;
 
             #region 依據勾選的項目動態產生CheckBox
             int checkBoxCount = 0;

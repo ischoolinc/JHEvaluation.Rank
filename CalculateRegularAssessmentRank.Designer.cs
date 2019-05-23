@@ -30,8 +30,6 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
-            this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
-            this.cboSemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
             this.gpRankPeople = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.cboStudentTag2 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -65,6 +63,8 @@
             this.plStudentView = new DevComponents.DotNetBar.PanelEx();
             this.pbLoading = new System.Windows.Forms.PictureBox();
             this.btnPrevious = new DevComponents.DotNetBar.ButtonX();
+            this.lbCalcSchoolYear = new DevComponents.DotNetBar.LabelX();
+            this.lbCalcSemester = new DevComponents.DotNetBar.LabelX();
             this.gpRankPeople.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).BeginInit();
             this.plStudentView.SuspendLayout();
@@ -87,34 +87,6 @@
             this.labelX1.Size = new System.Drawing.Size(62, 22);
             this.labelX1.TabIndex = 0;
             this.labelX1.Text = "學年度：";
-            // 
-            // cboSchoolYear
-            // 
-            this.cboSchoolYear.DisplayMember = "Text";
-            this.cboSchoolYear.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboSchoolYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cboSchoolYear.FormattingEnabled = true;
-            this.cboSchoolYear.ItemHeight = 21;
-            this.cboSchoolYear.Location = new System.Drawing.Point(80, 10);
-            this.cboSchoolYear.Name = "cboSchoolYear";
-            this.cboSchoolYear.Size = new System.Drawing.Size(88, 27);
-            this.cboSchoolYear.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.cboSchoolYear.TabIndex = 1;
-            // 
-            // cboSemester
-            // 
-            this.cboSemester.DisplayMember = "Text";
-            this.cboSemester.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboSemester.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cboSemester.FormattingEnabled = true;
-            this.cboSemester.ItemHeight = 21;
-            this.cboSemester.Location = new System.Drawing.Point(241, 10);
-            this.cboSemester.Name = "cboSemester";
-            this.cboSemester.Size = new System.Drawing.Size(82, 27);
-            this.cboSemester.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.cboSemester.TabIndex = 3;
             // 
             // labelX2
             // 
@@ -674,19 +646,53 @@
             this.btnPrevious.Text = "上一步";
             this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
             // 
+            // lbCalcSchoolYear
+            // 
+            this.lbCalcSchoolYear.AutoSize = true;
+            this.lbCalcSchoolYear.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbCalcSchoolYear.BackgroundStyle.Class = "";
+            this.lbCalcSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbCalcSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbCalcSchoolYear.ForeColor = System.Drawing.Color.Black;
+            this.lbCalcSchoolYear.Location = new System.Drawing.Point(80, 12);
+            this.lbCalcSchoolYear.Name = "lbCalcSchoolYear";
+            this.lbCalcSchoolYear.Size = new System.Drawing.Size(47, 22);
+            this.lbCalcSchoolYear.TabIndex = 1;
+            this.lbCalcSchoolYear.Text = "學年度";
+            // 
+            // lbCalcSemester
+            // 
+            this.lbCalcSemester.AutoSize = true;
+            this.lbCalcSemester.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbCalcSemester.BackgroundStyle.Class = "";
+            this.lbCalcSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbCalcSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbCalcSemester.ForeColor = System.Drawing.Color.Black;
+            this.lbCalcSemester.Location = new System.Drawing.Point(241, 12);
+            this.lbCalcSemester.Name = "lbCalcSemester";
+            this.lbCalcSemester.Size = new System.Drawing.Size(32, 22);
+            this.lbCalcSemester.TabIndex = 3;
+            this.lbCalcSemester.Text = "學期";
+            // 
             // CalculateRegularAssessmentRank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(794, 499);
             this.Controls.Add(this.plStudentView);
+            this.Controls.Add(this.lbCalcSemester);
+            this.Controls.Add(this.lbCalcSchoolYear);
             this.Controls.Add(this.cboExamType);
             this.Controls.Add(this.labelX6);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.gpRankPeople);
-            this.Controls.Add(this.cboSemester);
             this.Controls.Add(this.labelX2);
-            this.Controls.Add(this.cboSchoolYear);
             this.Controls.Add(this.labelX1);
             this.DoubleBuffered = true;
             this.Name = "CalculateRegularAssessmentRank";
@@ -706,8 +712,6 @@
         #endregion
 
         private DevComponents.DotNetBar.LabelX labelX1;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboSchoolYear;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboSemester;
         private DevComponents.DotNetBar.LabelX labelX2;
         private DevComponents.DotNetBar.Controls.GroupPanel gpRankPeople;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentFilter;
@@ -741,5 +745,7 @@
         private DevComponents.DotNetBar.PanelEx plStudentView;
         private DevComponents.DotNetBar.ButtonX btnPrevious;
         private System.Windows.Forms.PictureBox pbLoading;
+        private DevComponents.DotNetBar.LabelX lbCalcSchoolYear;
+        private DevComponents.DotNetBar.LabelX lbCalcSemester;
     }
 }

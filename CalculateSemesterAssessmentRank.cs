@@ -45,10 +45,13 @@ namespace JHEvaluation.Rank
             plStudentView.Visible = false;
 
             #region 將資料填入comboBox
-            cboSchoolYear.Items.Add(_DefaultSchoolYear);
-            cboSchoolYear.SelectedIndex = 0;
-            cboSemester.Items.Add(_DefaultSemester);
-            cboSemester.SelectedIndex = 0;
+            //因為目前只提供計算預設學年度學期的排名，所以這邊先註解起來
+            //cboSchoolYear.Items.Add(_DefaultSchoolYear);
+            //cboSchoolYear.SelectedIndex = 0;
+            //cboSemester.Items.Add(_DefaultSemester);
+            //cboSemester.SelectedIndex = 0;
+            lbCalcSchoolYear.Text = _DefaultSchoolYear;
+            lbCalcSemester.Text = _DefaultSemester;
 
             cboStudentFilter.Items.Add("");
             cboStudentTag1.Items.Add("");
@@ -109,8 +112,9 @@ namespace JHEvaluation.Rank
         {
             plStudentView.Visible = true;
 
-            lbSchoolYear.Text = cboSchoolYear.Text;
-            lbSemester.Text = cboSemester.Text;
+            //因為目前只提供計算預設學年度學期的排名，所以這邊先註解起來
+            lbSchoolYear.Text = lbCalcSchoolYear.Text; //cboSchoolYear.Text;
+            lbSemester.Text = lbCalcSemester.Text; //cboSemester.Text;
 
             string studentFilter = cboStudentFilter.Text.Trim('[', ']');
             string studentTag1 = cboStudentTag1.Text.Trim('[', ']');
@@ -293,8 +297,8 @@ WITH student_list AS
 
             btnCacluate.Enabled = false;
             btnPrevious.Enabled = false;
-            string schoolYear = cboSchoolYear.Text;
-            string semester = cboSemester.Text;
+            string schoolYear = lbSchoolYear.Text;
+            string semester = lbSemester.Text;
             string studentFilter = cboStudentFilter.Text.Trim('[', ']');
             string tag1 = cboStudentTag1.Text.Trim('[', ']'); ;
             string tag2 = cboStudentTag2.Text.Trim('[', ']'); ;
