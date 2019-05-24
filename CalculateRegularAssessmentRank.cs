@@ -165,8 +165,8 @@ Order BY course.school_year, course.semester
             lbExam.Text = cboExamType.Text;
 
             //因為目前只提供計算預設學年度學期的排名，所以暫時先註解起來
-            lbSemester.Text = lbCalcSchoolYear.Text; //cboSemester.Text;
-            lbSchoolYear.Text = lbCalcSemester.Text; //cboSchoolYear.Text;
+            lbSchoolYear.Text = lbCalcSchoolYear.Text; //cboSemester.Text;
+            lbSemester.Text = lbCalcSemester.Text; //cboSchoolYear.Text;
 
             #region 依據勾選的項目動態產生CheckBox
             int checkBoxCount = 0;
