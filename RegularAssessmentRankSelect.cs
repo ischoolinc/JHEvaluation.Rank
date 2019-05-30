@@ -17,6 +17,7 @@ namespace JHEvaluation.Rank
 {
     public partial class RegularAssessmentRankSelect : BaseForm
     {
+        private bool _IsClosing = false;
         private bool _IsLoading = false;
         private List<DataGridViewRow> _RowCollection = new List<DataGridViewRow>();
         private string _LoadSchoolYear = "", _LoadSemester = "", _LoadScoreType = "", _LoadScoreCategory = ""
@@ -25,6 +26,8 @@ namespace JHEvaluation.Rank
         public RegularAssessmentRankSelect()
         {
             InitializeComponent();
+            //目前loading圖片因不明原因背景色會自動變成透明，所以加這行讓他變成白色
+            pbLoading.BackColor = Color.White;
         }
 
         private void RegularRankSelect_Load(object sender, EventArgs e)
@@ -369,6 +372,7 @@ WHERE
                         FillingDataGridView(null, null);
                     }
                 };
+
                 bkw.RunWorkerAsync();
             }
         }
@@ -422,6 +426,7 @@ WHERE
                         LoadRowData(null, null);
                         return;
                     }
+
                     if (_FilterExamName != cboExamName.Text
                         || _FilterItemName != cboItemName.Text
                         || _FilterRankType != cboRankType.Text
@@ -430,6 +435,13 @@ WHERE
                     {
                         _IsLoading = false;
                         FillingDataGridView(null, null);
+                        return;
+                    }
+
+                    if (_IsClosing)
+                    {
+                        _IsClosing = false;
+                        _IsLoading = false;
                         return;
                     }
                 }
@@ -465,6 +477,17 @@ WHERE
                                                       , "" + dgvScoreRank[5, e.RowIndex].Value
                                                       , "" + dgvScoreRank[6, e.RowIndex].Value);
             frm.ShowDialog();
+        }
+
+        private void RegularAssessmentRankSelect_Resize(object sender, EventArgs e)
+        {
+            //調整Loading圖案的位置
+            pbLoading.Location = new Point(this.Width / 2 - 20, this.Height / 2 - 20);
+        }
+
+        private void RegularAssessmentRankSelect_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _IsClosing = true;
         }
     }
 }

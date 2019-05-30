@@ -83,25 +83,25 @@ Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
                 #region 填入編號的ComboBox
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    if (!cboBatchId.Items.Contains("" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）")
-                        && !cboBatchId.Items.Contains("*" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）"))
+                    if (!cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）")
+                        && !cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）-目前採計"))
                     {
                         string isAlive = "";
                         if (!string.IsNullOrEmpty("" + row["is_alive"]))
                         {
                             if (Convert.ToBoolean(row["is_alive"]) == true)
                             {
-                                isAlive = "*";
+                                isAlive = "-目前採計";
                             }
                         }
-                        cboBatchId.Items.Add(isAlive + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）");
-                        _MatrixIdDic.Add(isAlive + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + " （批號：" + row["ref_batch_id"] + "）", "" + row["rank_matrix_id"]);
+                        cboBatchId.Items.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive);
+                        _MatrixIdDic.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive, "" + row["rank_matrix_id"]);
                     }
                 }
 
-                if (cboBatchId.Items.Contains("*"))
+                if (cboBatchId.Items.Contains("-目前採計"))
                 {
-                    cboBatchId.SelectedIndex = cboBatchId.Items.IndexOf("*");
+                    cboBatchId.SelectedIndex = cboBatchId.Items.IndexOf("-目前採計");
                 }
                 else
                 {
@@ -230,6 +230,7 @@ From
 		class ON class.id = student.ref_class_id LEFT OUTER JOIN 
 		exam ON exam.id=rank_matrix.ref_exam_id) as Rank_Table
 Where rank_matrix_id = '" + matrixId + @"'
+ORDER BY rank
 ";
             #endregion
 

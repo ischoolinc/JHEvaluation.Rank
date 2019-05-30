@@ -2234,5 +2234,10 @@ FROM
 
             bkw.RunWorkerAsync();
         }
+
+        private void CalculateSemesterAssessmentRank_Resize(object sender, EventArgs e)
+        {
+            pbLoading.Location = new Point(this.Width / 2 - 20, this.Height / 2 - 20);
+        }
     }
 }

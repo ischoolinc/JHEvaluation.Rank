@@ -1453,5 +1453,11 @@ FROM
                 dgvStudentList.Rows.Clear();
             }
         }
+
+        private void CalculateRegularAssessmentRank_Resize(object sender, EventArgs e)
+        {
+            //調整Loading圖案的位置
+            pbLoading.Location = new Point(this.Width / 2 - 20, this.Height / 2 - 20);
+        }
     }
 }

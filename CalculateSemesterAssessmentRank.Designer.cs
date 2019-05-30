@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.plBasicInfSelect = new DevComponents.DotNetBar.PanelEx();
+            this.lbCalcSemester = new DevComponents.DotNetBar.LabelX();
+            this.lbCalcSchoolYear = new DevComponents.DotNetBar.LabelX();
             this.btnNext = new DevComponents.DotNetBar.ButtonX();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.gpRankPeople = new DevComponents.DotNetBar.Controls.GroupPanel();
@@ -61,8 +63,6 @@
             this.lbSchoolYear = new DevComponents.DotNetBar.LabelX();
             this.labelX8 = new DevComponents.DotNetBar.LabelX();
             this.labelX9 = new DevComponents.DotNetBar.LabelX();
-            this.lbCalcSchoolYear = new DevComponents.DotNetBar.LabelX();
-            this.lbCalcSemester = new DevComponents.DotNetBar.LabelX();
             this.plBasicInfSelect.SuspendLayout();
             this.gpRankPeople.SuspendLayout();
             this.plStudentView.SuspendLayout();
@@ -92,6 +92,40 @@
             this.plBasicInfSelect.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
             this.plBasicInfSelect.Style.GradientAngle = 90;
             this.plBasicInfSelect.TabIndex = 0;
+            // 
+            // lbCalcSemester
+            // 
+            this.lbCalcSemester.AutoSize = true;
+            this.lbCalcSemester.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbCalcSemester.BackgroundStyle.Class = "";
+            this.lbCalcSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbCalcSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbCalcSemester.ForeColor = System.Drawing.Color.Black;
+            this.lbCalcSemester.Location = new System.Drawing.Point(241, 12);
+            this.lbCalcSemester.Name = "lbCalcSemester";
+            this.lbCalcSemester.Size = new System.Drawing.Size(32, 22);
+            this.lbCalcSemester.TabIndex = 11;
+            this.lbCalcSemester.Text = "學期";
+            // 
+            // lbCalcSchoolYear
+            // 
+            this.lbCalcSchoolYear.AutoSize = true;
+            this.lbCalcSchoolYear.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lbCalcSchoolYear.BackgroundStyle.Class = "";
+            this.lbCalcSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lbCalcSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lbCalcSchoolYear.ForeColor = System.Drawing.Color.Black;
+            this.lbCalcSchoolYear.Location = new System.Drawing.Point(80, 12);
+            this.lbCalcSchoolYear.Name = "lbCalcSchoolYear";
+            this.lbCalcSchoolYear.Size = new System.Drawing.Size(47, 22);
+            this.lbCalcSchoolYear.TabIndex = 9;
+            this.lbCalcSchoolYear.Text = "學年度";
             // 
             // btnNext
             // 
@@ -338,12 +372,11 @@
             // 
             // pbLoading
             // 
-            this.pbLoading.BackColor = System.Drawing.Color.Transparent;
+            this.pbLoading.BackColor = System.Drawing.Color.White;
             this.pbLoading.Image = global::JHEvaluation.Rank.Properties.Resources.loading;
-            this.pbLoading.Location = new System.Drawing.Point(332, 194);
+            this.pbLoading.Location = new System.Drawing.Point(385, 235);
             this.pbLoading.Name = "pbLoading";
-            this.pbLoading.Size = new System.Drawing.Size(157, 109);
-            this.pbLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbLoading.Size = new System.Drawing.Size(32, 32);
             this.pbLoading.TabIndex = 57;
             this.pbLoading.TabStop = false;
             this.pbLoading.Visible = false;
@@ -380,14 +413,14 @@
             this.colClassRank,
             this.colRankType1,
             this.colRankType2});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft JhengHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
             this.dgvStudentList.Location = new System.Drawing.Point(3, 68);
@@ -609,40 +642,6 @@
             this.labelX9.TabIndex = 26;
             this.labelX9.Text = "學年度：";
             // 
-            // lbCalcSchoolYear
-            // 
-            this.lbCalcSchoolYear.AutoSize = true;
-            this.lbCalcSchoolYear.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbCalcSchoolYear.BackgroundStyle.Class = "";
-            this.lbCalcSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbCalcSchoolYear.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbCalcSchoolYear.ForeColor = System.Drawing.Color.Black;
-            this.lbCalcSchoolYear.Location = new System.Drawing.Point(80, 12);
-            this.lbCalcSchoolYear.Name = "lbCalcSchoolYear";
-            this.lbCalcSchoolYear.Size = new System.Drawing.Size(47, 22);
-            this.lbCalcSchoolYear.TabIndex = 9;
-            this.lbCalcSchoolYear.Text = "學年度";
-            // 
-            // lbCalcSemester
-            // 
-            this.lbCalcSemester.AutoSize = true;
-            this.lbCalcSemester.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lbCalcSemester.BackgroundStyle.Class = "";
-            this.lbCalcSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbCalcSemester.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbCalcSemester.ForeColor = System.Drawing.Color.Black;
-            this.lbCalcSemester.Location = new System.Drawing.Point(241, 12);
-            this.lbCalcSemester.Name = "lbCalcSemester";
-            this.lbCalcSemester.Size = new System.Drawing.Size(32, 22);
-            this.lbCalcSemester.TabIndex = 11;
-            this.lbCalcSemester.Text = "學期";
-            // 
             // CalculateSemesterAssessmentRank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -654,6 +653,7 @@
             this.Name = "CalculateSemesterAssessmentRank";
             this.Text = "計算學期成績固定排名";
             this.Load += new System.EventHandler(this.CalculateSemesterAssessmentRank_Load);
+            this.Resize += new System.EventHandler(this.CalculateSemesterAssessmentRank_Resize);
             this.plBasicInfSelect.ResumeLayout(false);
             this.plBasicInfSelect.PerformLayout();
             this.gpRankPeople.ResumeLayout(false);

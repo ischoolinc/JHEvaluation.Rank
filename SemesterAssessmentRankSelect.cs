@@ -17,6 +17,7 @@ namespace JHEvaluation.Rank
 {
     public partial class SemesterAssessmentRankSelect : BaseForm
     {
+        private bool _IsClosing = false;
         private bool _IsLoading = false;
         private string _LoadSchoolYear = "", _LoadSemester = "", _LoadScoreType = "", _LoadScoreCategory = ""
                      , _FilterStudentNumber = "", _FilterItemName = "", _FilterRankType = "";
@@ -25,6 +26,8 @@ namespace JHEvaluation.Rank
         public SemesterAssessmentRankSelect()
         {
             InitializeComponent();
+            //目前loading圖片因不明原因背景色會自動變成透明，所以加這行讓他變成白色
+            pbLoading.BackColor = Color.White;
         }
 
         private void SemesterAssessmentRankSelect_Load(object sender, EventArgs e)
@@ -380,6 +383,7 @@ WHERE
                         LoadRowData(null, null);
                         return;
                     }
+
                     if (_FilterItemName != cboItemName.Text
                         || _FilterRankType != cboRankType.Text
                         || _FilterStudentNumber != txtStudentNum.Text)
@@ -387,6 +391,13 @@ WHERE
                     {
                         _IsLoading = false;
                         FillingDataGridView(null, null);
+                        return;
+                    }
+
+                    if (_IsClosing)
+                    {
+                        _IsClosing = false;
+                        _IsLoading = false;
                         return;
                     }
                 }
@@ -494,6 +505,17 @@ WHERE
                     MessageBox.Show("檔案儲存失敗：" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void SemesterAssessmentRankSelect_Resize(object sender, EventArgs e)
+        {
+            //調整Loading圖案的位置
+            pbLoading.Location = new Point(this.Width / 2 - 20, this.Height / 2 - 20);
+        }
+
+        private void SemesterAssessmentRankSelect_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _IsClosing = true;
         }
     }
 }
