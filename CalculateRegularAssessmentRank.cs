@@ -117,9 +117,18 @@ Order BY course.school_year, course.semester
             cboStudentTag2.Items.Add("");
             foreach (var item in _TagConfigRecord.Select(x => x.Prefix).Distinct())
             {
-                cboStudentFilter.Items.Add("[" + item + "]");
-                cboStudentTag1.Items.Add("[" + item + "]");
-                cboStudentTag2.Items.Add("[" + item + "]");
+                if (!string.IsNullOrEmpty(item))
+                {
+                    cboStudentFilter.Items.Add("[" + item + "]");
+                    cboStudentTag1.Items.Add("[" + item + "]");
+                    cboStudentTag2.Items.Add("[" + item + "]");
+                }
+            }
+            foreach (string tagName in _TagConfigRecord.Where(x => string.IsNullOrEmpty(x.Prefix)).Select(x => x.Name).ToList())
+            {
+                cboStudentFilter.Items.Add(tagName);
+                cboStudentTag1.Items.Add(tagName);
+                cboStudentTag2.Items.Add(tagName);
             }
             cboStudentFilter.SelectedIndex = 0;
             cboStudentTag1.SelectedIndex = 0;
@@ -229,6 +238,10 @@ Order BY course.school_year, course.semester
                     if (!string.IsNullOrEmpty(studentFilter))
                     {
                         List<string> studentFilterTagIDs = _TagConfigRecord.Where(x => x.Prefix == studentFilter).Select(x => x.ID).ToList();
+                        if (studentFilterTagIDs.Count == 0)
+                        {
+                            studentFilterTagIDs = _TagConfigRecord.Where(x => x.Name == studentFilter).Select(x => x.ID).ToList();
+                        }
                         List<string> filterStudentID = K12.Data.StudentTag.SelectAll().Where(x => studentFilterTagIDs.Contains(x.RefTagID)).Select(x => x.RefStudentID).ToList();
                         _FilterStudentList = _FilterStudentList.Where(x => !filterStudentID.Contains(x.ID)).ToList();
                     }
@@ -276,10 +289,18 @@ Order BY course.school_year, course.semester
                 if (!string.IsNullOrEmpty(studentTag1))
                 {
                     tag1IDs = _TagConfigRecord.Where(x => x.Prefix == studentTag1).Select(x => x.ID).ToList();
+                    if (tag1IDs.Count == 0)
+                    {
+                        tag1IDs = _TagConfigRecord.Where(x => x.Name == studentTag1).Select(x => x.ID).ToList();
+                    }
                 }
                 if (!string.IsNullOrEmpty(studentTag2))
                 {
                     tag2IDs = _TagConfigRecord.Where(x => x.Prefix == studentTag2).Select(x => x.ID).ToList();
+                    if (tag2IDs.Count == 0)
+                    {
+                        tag2IDs = _TagConfigRecord.Where(x => x.Name == studentTag2).Select(x => x.ID).ToList();
+                    }
                 }
                 List<StudentTagRecord> studentTag1List = K12.Data.StudentTag.SelectAll().Where(x => tag1IDs.Contains(x.RefTagID)).ToList();
                 List<StudentTagRecord> studentTag2List = K12.Data.StudentTag.SelectAll().Where(x => tag2IDs.Contains(x.RefTagID)).ToList();

@@ -58,10 +58,22 @@ namespace JHEvaluation.Rank
             cboStudentTag2.Items.Add("");
             foreach (string tagName in _TagList.Select(x => x.Prefix).Distinct().ToList())
             {
-                cboStudentFilter.Items.Add("[" + tagName + "]");
-                cboStudentTag1.Items.Add("[" + tagName + "]");
-                cboStudentTag2.Items.Add("[" + tagName + "]");
+                if (!string.IsNullOrEmpty(tagName))
+                {
+                    cboStudentFilter.Items.Add("[" + tagName + "]");
+                    cboStudentTag1.Items.Add("[" + tagName + "]");
+                    cboStudentTag2.Items.Add("[" + tagName + "]");
+                }
             }
+            foreach (string tagName in _TagList.Where(x => string.IsNullOrEmpty(x.Prefix)).Select(x => x.Name).ToList())
+            {
+                cboStudentFilter.Items.Add(tagName);
+                cboStudentTag1.Items.Add(tagName);
+                cboStudentTag2.Items.Add(tagName);
+            }
+            cboStudentFilter.SelectedIndex = 0;
+            cboStudentTag1.SelectedIndex = 0;
+            cboStudentTag2.SelectedIndex = 0;
             #endregion
 
             #region 將年級資料填入listView
@@ -158,6 +170,10 @@ namespace JHEvaluation.Rank
                     if (!string.IsNullOrEmpty(studentFilter))
                     {
                         List<string> studentFilterIDs = _TagList.Where(x => x.Prefix == studentFilter).Select(x => x.ID).ToList();
+                        if (studentFilterIDs.Count == 0)
+                        {
+                            studentFilterIDs = _TagList.Where(x => x.Name == studentFilter).Select(x => x.ID).ToList();
+                        }
                         List<string> studentIDs = StudentTag.SelectAll().Where(x => studentFilterIDs.Contains(x.RefTagID)).Select(x => x.RefStudentID).ToList();
                         _StudentFilterList = _StudentFilterList.Where(x => !studentIDs.Contains(x.ID)).ToList();
                     }
@@ -203,11 +219,19 @@ namespace JHEvaluation.Rank
                 if (!string.IsNullOrEmpty(studentTag1))
                 {
                     List<string> tag1IDs = _TagList.Where(x => x.Prefix == studentTag1).Select(x => x.ID).ToList();
+                    if (tag1IDs.Count == 0)
+                    {
+                        tag1IDs = _TagList.Where(x => x.Name == studentTag1).Select(x => x.ID).ToList();
+                    }
                     tag1Student = StudentTag.SelectAll().Where(x => tag1IDs.Contains(x.RefTagID)).ToList();
                 }
                 if (!string.IsNullOrEmpty(studentTag2))
                 {
                     List<string> tag2IDs = _TagList.Where(x => x.Prefix == studentTag2).Select(x => x.ID).ToList();
+                    if (tag2IDs.Count == 0)
+                    {
+                        tag2IDs = _TagList.Where(x => x.Name == studentTag2).Select(x => x.ID).ToList();
+                    }
                     tag2Student = StudentTag.SelectAll().Where(x => tag2IDs.Contains(x.RefTagID)).ToList();
                 }
                 #endregion
@@ -430,7 +454,7 @@ WITH student_list AS
 		, student_id
 		, rank_tag1
 		, rank_tag2
-		, subject_score AS origin_score
+		, subject_origin_score AS origin_score
 		, subject_score AS score
 		, RANK() OVER(PARTITION BY rank_grade_year, subject ORDER BY subject_origin_score DESC) AS grade_origin_rank
 		, RANK() OVER(PARTITION BY rank_class_name, subject ORDER BY subject_origin_score DESC) AS class_origin_rank
