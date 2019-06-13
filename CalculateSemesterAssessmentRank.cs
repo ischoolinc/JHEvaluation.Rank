@@ -356,6 +356,7 @@ WITH student_list AS
         '" + gradeYear + @"'::TEXT AS rank_grade_year
         , '" + schoolYear + @"'::TEXT AS rank_school_year
         , '" + semester + @"'::TEXT AS rank_semester
+        , '-1'::TEXT AS ref_exam_id
         , '學期成績'::TEXT AS rank_exam_name
         , '" + calculationSetting + @"'::TEXT AS calculation_setting
 ";
@@ -619,7 +620,7 @@ WITH student_list AS
 		INNER JOIN calc_condition
 			ON sems_subj_score.school_year = calc_condition.rank_school_year::INT
 			AND sems_subj_score.semester = calc_condition.rank_semester::INT
-		    AND student_list.rank_grade_year = calc_condition.rank_grade_year::INT
+			AND student_list.rank_grade_year = calc_condition.rank_grade_year::INT
 )
 , learn_domain_rank AS
 (
@@ -2023,13 +2024,14 @@ WITH student_list AS
 		rank_matrix
 	SET
 		is_alive = NULL
-	FROM score_list
+	FROM 
+		calc_condition
 	WHERE
 		rank_matrix.is_alive = true
-		AND rank_matrix.school_year = score_list.rank_school_year::INT
-		AND rank_matrix.semester = score_list.rank_semester::INT
-		AND rank_matrix.grade_year = score_list.rank_grade_year::INT
-		AND rank_matrix.ref_exam_id = score_list.ref_exam_id
+		AND rank_matrix.school_year = calc_condition.rank_school_year::INT
+		AND rank_matrix.semester = calc_condition.rank_semester::INT
+		AND rank_matrix.grade_year = calc_condition.rank_grade_year::INT
+		AND rank_matrix.ref_exam_id = calc_condition.ref_exam_id::INT
 
 	RETURNING rank_matrix.*
 )

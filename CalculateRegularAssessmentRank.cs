@@ -428,6 +428,7 @@ WITH student_list AS
 		'" + gradeYearList[index] + @"'::TEXT  AS rank_grade_year
 		, '" + schoolYear + @"'::TEXT AS rank_school_year
 		, '" + semester + @"'::TEXT AS rank_semester
+        , '" + examId + @"'::TEXT AS ref_exam_id
 		, '" + examName + @"'::TEXT AS rank_exam_name
         , '" + calculationSetting + @"'::TEXT AS calculation_setting
 ");
@@ -616,7 +617,7 @@ WITH student_list AS
 		, RANK() OVER(PARTITION BY group_score.rank_class_name ,group_score.domain ORDER BY group_score.domain_score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY group_score.rank_grade_year, group_score.rank_tag1, group_score.domain ORDER BY group_score.domain_score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY group_score.rank_grade_year, group_score.rank_tag2, group_score.domain ORDER BY group_score.domain_score DESC) AS tag2_rank
-		, COUNT (group_score.student_id) OVER(PARTITION BY group_score.rank_grade_year ,group_score.domain ) AS grade_count
+		, COUNT (group_score.student_id) OVER(PARTITION BY group_score.rank_grade_year ,group_score.domain) AS grade_count
 		, COUNT (group_score.student_id) OVER(PARTITION BY group_score.rank_class_name, group_score.domain) AS class_count
 		, COUNT (group_score.student_id) OVER(PARTITION BY group_score.rank_grade_year, group_score.rank_tag1, group_score.domain) AS tag1_count
 		, COUNT (group_score.student_id) OVER(PARTITION BY group_score.rank_grade_year, group_score.rank_tag2, group_score.domain) AS tag2_count
@@ -1179,13 +1180,14 @@ WITH student_list AS
 		rank_matrix
 	SET
 		is_alive = NULL
-	FROM score_list
+	FROM 
+		raw
 	WHERE
 		rank_matrix.is_alive = true
-		AND rank_matrix.school_year = score_list.rank_school_year
-		AND rank_matrix.semester = score_list.rank_semester
-		AND rank_matrix.grade_year = score_list.rank_grade_year
-		AND rank_matrix.ref_exam_id = score_list.ref_exam_id
+		AND rank_matrix.school_year = raw.rank_school_year::INT
+		AND rank_matrix.semester = raw.rank_semester::INT
+		AND rank_matrix.grade_year = raw.rank_grade_year::INT
+		AND rank_matrix.ref_exam_id = raw.ref_exam_id::INT
 
 	RETURNING rank_matrix.*
 )
