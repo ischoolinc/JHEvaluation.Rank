@@ -561,8 +561,9 @@ WITH student_list AS
 		)AS domain_score
 	FROM  
 		score_detail_avge
-	WHERE 
+	WHERE
 		score_detail_avge.score IS NOT NULL
+		AND score_detail_avge.credit IS NOT NULL
 	GROUP BY
 		domain,rank_school_year, rank_semester, rank_grade_year, rank_class_name, exam_id, student_id, student_name, rank_tag1, rank_tag2
 )
@@ -595,6 +596,7 @@ WITH student_list AS
 		score_detail_avge
 	WHERE
 		score_detail_avge.score IS NOT NULL
+		AND score_detail_avge.credit IS NOT NULL
 	GROUP BY 
 		student_id, student_name, rank_school_year, rank_semester, rank_grade_year, rank_class_name, exam_id, rank_tag1, rank_tag2
 )

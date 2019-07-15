@@ -415,7 +415,7 @@ WITH student_list AS
 				array_to_string(xpath('/root/Subject/@原始成績', xmlparse(content '<root>'||subj_score_ele||'</root>')), '') IS NULL
 				OR array_to_string(xpath('/root/Subject/@原始成績', xmlparse(content '<root>'||subj_score_ele||'</root>')), '') = ''
 			THEN
-				array_to_string(xpath('/root/Subject/@成績', xmlparse(content '<root>'||subj_score_ele||'</root>')), '')::DECIMAL
+				NULLIF(array_to_string(xpath('/root/Subject/@成績', xmlparse(content '<root>'||subj_score_ele||'</root>')), ''),'')::DECIMAL
 			ELSE
 				array_to_string(xpath('/root/Subject/@原始成績', xmlparse(content '<root>'||subj_score_ele||'</root>')), '')::DECIMAL
 		  END As subject_origin_score
@@ -508,7 +508,7 @@ WITH student_list AS
 				array_to_string(xpath('/root/Domain/@原始成績', xmlparse(content '<root>'||domain_score_ele||'</root>')), '') IS NULL
 				OR array_to_string(xpath('/root/Domain/@原始成績', xmlparse(content '<root>'||domain_score_ele||'</root>')), '') = ''
 			THEN
-				array_to_string(xpath('/root/Domain/@成績', xmlparse(content '<root>'||domain_score_ele||'</root>')), '')::DECIMAL
+				NULLIF(array_to_string(xpath('/root/Domain/@成績', xmlparse(content '<root>'||domain_score_ele||'</root>')), ''),'')::DECIMAL
 			ELSE
 				array_to_string(xpath('/root/Domain/@原始成績', xmlparse(content '<root>'||domain_score_ele||'</root>')), '')::DECIMAL
 		  END As domain_origin_score
@@ -600,7 +600,7 @@ WITH student_list AS
 				array_to_string(xpath('/root/LearnDomainScoreOrigin/text()', xmlparse(content '<root>'||score_info||'</root>')), '') IS NULL
 				OR array_to_string(xpath('/root/LearnDomainScoreOrigin/text()', xmlparse(content '<root>'||score_info||'</root>')), '') = ''
 			THEN
-				array_to_string(xpath('/root/LearnDomainScore/text()', xmlparse(content '<root>'||score_info||'</root>')), '')::DECIMAL 
+				NULLIF(array_to_string(xpath('/root/LearnDomainScore/text()', xmlparse(content '<root>'||score_info||'</root>')), ''),'')::DECIMAL
 			ELSE
 				array_to_string(xpath('/root/LearnDomainScoreOrigin/text()', xmlparse(content '<root>'||score_info||'</root>')), '')::DECIMAL
 		  END As learn_domain_origin_score
@@ -685,7 +685,7 @@ WITH student_list AS
 				array_to_string(xpath('/root/CourseLearnScoreOrigin/text()', xmlparse(content '<root>'||score_info||'</root>')), '') IS NULL
 				OR array_to_string(xpath('/root/CourseLearnScoreOrigin/text()', xmlparse(content '<root>'||score_info||'</root>')), '') = ''
 			THEN
-				array_to_string(xpath('/root/CourseLearnScore/text()', xmlparse(content '<root>'||score_info||'</root>')), '')::DECIMAL 
+				NULLIF(array_to_string(xpath('/root/CourseLearnScore/text()', xmlparse(content '<root>'||score_info||'</root>')), ''),'')::DECIMAL
 			ELSE
 				array_to_string(xpath('/root/CourseLearnScoreOrigin/text()', xmlparse(content '<root>'||score_info||'</root>')), '')::DECIMAL
 		  END As course_learn_origin_score
