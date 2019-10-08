@@ -1224,7 +1224,7 @@ WITH row AS (
 		, level_10
 		, level_lt10
 	)
-	SELECT
+	SELECT DISTINCT
 		insert_batch_data.id AS ref_batch_id
 		, score_list.rank_school_year
 		, score_list.rank_semester
@@ -1257,34 +1257,6 @@ WITH row AS (
 		LEFT OUTER JOIN update_data
 			ON update_data.id  < 0 --永遠為false，只是為了讓insert等待update執行完
 		CROSS JOIN insert_batch_data
-	GROUP BY
-		insert_batch_data.id
-		, score_list.rank_school_year
-		, score_list.rank_semester
-		, score_list.rank_grade_year
-		, score_list.item_type
-		, score_list.ref_exam_id
-		, score_list.item_name
-		, score_list.rank_type
-		, score_list.rank_name
-		, score_list.is_alive
-		, score_list.matrix_count
-		, score_list.avg_top_25
-		, score_list.avg_top_50
-		, score_list.avg
-		, score_list.avg_bottom_50
-		, score_list.avg_bottom_25
-		, score_list.level_gte100
-		, score_list.level_90
-		, score_list.level_80
-		, score_list.level_70
-		, score_list.level_60
-		, score_list.level_50
-		, score_list.level_40
-		, score_list.level_30
-		, score_list.level_20
-		, score_list.level_10
-		, score_list.level_lt10
 	RETURNING *
 ), insert_batch_student_data AS (
 	INSERT INTO rank_batch_student(
