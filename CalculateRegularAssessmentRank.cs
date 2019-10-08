@@ -1270,14 +1270,14 @@ WITH row AS (
 	)
 	SELECT
 		insert_batch_data.id AS ref_batch_id
-		, score_list.student_id
-		, score_list.rank_grade_year
-		, score_list.rank_grade_year||'年級' AS matrix_grade
-		, score_list.rank_class_name
-		, score_list.rank_tag1
-		, score_list.rank_tag2
+		, student_row.student_id
+		, student_row.rank_grade_year
+		, student_row.rank_grade_year||'年級' AS matrix_grade
+		, student_row.rank_class_name
+		, student_row.rank_tag1
+		, student_row.rank_tag2
 	FROM
-		score_list
+		student_row
 		CROSS JOIN insert_batch_data
 ), insert_detail_data AS (
 	INSERT INTO rank_detail(
