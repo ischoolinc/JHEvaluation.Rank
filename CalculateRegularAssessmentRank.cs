@@ -637,7 +637,7 @@ WITH row AS (
 		, exam_id
 		, rank_tag1
 		, rank_tag2
-		, SUM( exam_score.score::decimal * exam_score.credit::decimal ) / SUM( CASE WHEN exam_score.credit = 0 THEN 1 ELSE exam_score.credit::decimal END )  AS score
+		, SUM( exam_score.score::decimal * exam_score.credit::decimal ) / CASE WHEN SUM(exam_score.credit) = 0 THEN 1 ELSE SUM(exam_score.credit)::decimal END AS score
 	FROM 
 		exam_score
 	WHERE
