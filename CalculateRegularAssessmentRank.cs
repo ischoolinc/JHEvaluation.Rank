@@ -25,12 +25,12 @@ namespace JHEvaluation.Rank
         List<StudentRecord> _StudentRecord = new List<StudentRecord>();
         List<CheckBox> _CheckBoxList = new List<CheckBox>();
         List<StudentRecord> _FilterStudentList = new List<StudentRecord>();
-        int _FormWidth = 0, _FormHeight = 0;
 
         public CalculateRegularAssessmentRank()
         {
             InitializeComponent();
 
+            this.CalculateRegularAssessmentRank_Resize(null, null);
             #region 查詢學年度、學期
             string queryString = @"
 SELECT
@@ -62,9 +62,8 @@ Order BY course.school_year, course.semester
         private void CacluateRegularAssessmentRank_Load(object sender, EventArgs e)
         {
             #region 讓Form回到起始狀態
+            plSetting.Visible = true;
             plStudentView.Visible = false;
-            this.Width = 580;
-            this.Height = 330;
             #endregion
 
             #region 篩選資料
@@ -145,32 +144,24 @@ Order BY course.school_year, course.semester
             List<int> gradeList = _StudentRecord.Select(x => Convert.ToInt32(x.Class.GradeYear)).Distinct().OrderBy(x => x).ToList();
 
             #region 動態產生年級的CheckBox
-            this.Height += 32 * (((gradeList.Count % 4) == 0 ? (gradeList.Count == 4 ? 0 : (gradeList.Count / 4) - 1) : gradeList.Count / 4) + 1);//每多一排checkBox，Form的高度+32
             for (int i = 0; i < gradeList.Count; i++)
             {
                 CheckBox checkBox = new CheckBox();
                 checkBox.AutoSize = true;
-                checkBox.Location = new System.Drawing.Point(13 + (133 * (i % 4)), 8 + (32 * (i / 4))); //第一個checkBox的位置X=13, y=8，兩個checkBox的X差距133，兩個checkBox的Y差距32
                 checkBox.Name = "ch" + gradeList[i];
-                checkBox.Size = new System.Drawing.Size(101, 23);
                 checkBox.TabIndex = 7 + i;
                 checkBox.Text = "" + gradeList[i] + "年級";
                 checkBox.UseVisualStyleBackColor = true;
                 checkBox.Checked = true;
-                gpRankPeople.Controls.Add(checkBox);
+                flowLayoutPanel1.Controls.Add(checkBox);
             }
             #endregion
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            //紀錄第一頁的Form的大小
-            _FormWidth = this.Width;
-            _FormHeight = this.Height;
-
+            plSetting.Visible = false;
             plStudentView.Visible = true;
-            this.Width = 810;
-            this.Height = 510;
             lbExam.Text = cboExamType.Text;
 
             //因為目前只提供計算預設學年度學期的排名，所以暫時先註解起來
@@ -179,7 +170,7 @@ Order BY course.school_year, course.semester
 
             #region 依據勾選的項目動態產生CheckBox
             int checkBoxCount = 0;
-            foreach (CheckBox checkBox in gpRankPeople.Controls.OfType<CheckBox>())
+            foreach (CheckBox checkBox in flowLayoutPanel1.Controls.OfType<CheckBox>())
             {
                 if (checkBox.Checked == true)
                 {
@@ -199,12 +190,6 @@ Order BY course.school_year, course.semester
                     checkBoxCount++;
                 }
             }
-
-            //每多一排CheckBox就把Form的高加23，dataGridView的位置往下加23並把高減少23
-            int height = 23 * ((checkBoxCount % 4) == 0 ? (checkBoxCount == 4 ? 0 : checkBoxCount / 4) : checkBoxCount / 4);
-            this.Height += height;
-            dgvStudentList.Location = new Point(3, dgvStudentList.Location.Y + height);
-            dgvStudentList.Height -= height;
             #endregion
 
             #region 讀取學生清單
@@ -2204,6 +2189,7 @@ FROM
                 pbLoading.Visible = false;
                 btnCacluate.Enabled = true;
                 btnPrevious.Enabled = true;
+                this.Close();
             };
 
             bkw.RunWorkerAsync();
@@ -2262,9 +2248,8 @@ FROM
             #endregion
 
             btnCacluate.Enabled = true;
+            plSetting.Visible = true;
             plStudentView.Visible = false;
-            this.Width = _FormWidth;
-            this.Height = _FormHeight;
             _CheckBoxList = new List<CheckBox>();
             if (dgvStudentList.Rows.Count > 0)
             {

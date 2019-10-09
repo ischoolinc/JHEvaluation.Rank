@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
-            this.gpRankPeople = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.cboStudentTag2 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX5 = new DevComponents.DotNetBar.LabelX();
             this.cboStudentTag1 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -61,14 +60,38 @@
             this.colRankType1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRankType2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.plStudentView = new DevComponents.DotNetBar.PanelEx();
-            this.pbLoading = new System.Windows.Forms.PictureBox();
             this.btnPrevious = new DevComponents.DotNetBar.ButtonX();
+            this.pbLoading = new System.Windows.Forms.PictureBox();
             this.lbCalcSchoolYear = new DevComponents.DotNetBar.LabelX();
             this.lbCalcSemester = new DevComponents.DotNetBar.LabelX();
-            this.gpRankPeople.SuspendLayout();
+            this.plSetting = new DevComponents.DotNetBar.PanelEx();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.labelX10 = new DevComponents.DotNetBar.LabelX();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.labelX11 = new DevComponents.DotNetBar.LabelX();
+            this.labelX12 = new DevComponents.DotNetBar.LabelX();
+            this.labelX14 = new DevComponents.DotNetBar.LabelX();
+            this.listViewEx1 = new DevComponents.DotNetBar.Controls.ListViewEx();
+            this.listViewEx2 = new DevComponents.DotNetBar.Controls.ListViewEx();
+            this.listViewEx3 = new DevComponents.DotNetBar.Controls.ListViewEx();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).BeginInit();
             this.plStudentView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).BeginInit();
+            this.plSetting.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelX1
@@ -81,10 +104,9 @@
             this.labelX1.BackgroundStyle.Class = "";
             this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX1.ForeColor = System.Drawing.Color.Black;
             this.labelX1.Location = new System.Drawing.Point(12, 12);
             this.labelX1.Name = "labelX1";
-            this.labelX1.Size = new System.Drawing.Size(69, 24);
+            this.labelX1.Size = new System.Drawing.Size(60, 21);
             this.labelX1.TabIndex = 0;
             this.labelX1.Text = "學年度：";
             // 
@@ -98,68 +120,14 @@
             this.labelX2.BackgroundStyle.Class = "";
             this.labelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX2.ForeColor = System.Drawing.Color.Black;
-            this.labelX2.Location = new System.Drawing.Point(188, 12);
+            this.labelX2.Location = new System.Drawing.Point(136, 12);
             this.labelX2.Name = "labelX2";
-            this.labelX2.Size = new System.Drawing.Size(54, 24);
+            this.labelX2.Size = new System.Drawing.Size(47, 21);
             this.labelX2.TabIndex = 2;
             this.labelX2.Text = "學期：";
             // 
-            // gpRankPeople
-            // 
-            this.gpRankPeople.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gpRankPeople.BackColor = System.Drawing.Color.Transparent;
-            this.gpRankPeople.CanvasColor = System.Drawing.SystemColors.Control;
-            this.gpRankPeople.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.Office2007;
-            this.gpRankPeople.Controls.Add(this.cboStudentTag2);
-            this.gpRankPeople.Controls.Add(this.labelX5);
-            this.gpRankPeople.Controls.Add(this.cboStudentTag1);
-            this.gpRankPeople.Controls.Add(this.labelX4);
-            this.gpRankPeople.Controls.Add(this.cboStudentFilter);
-            this.gpRankPeople.Controls.Add(this.labelX3);
-            this.gpRankPeople.DrawTitleBox = false;
-            this.gpRankPeople.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.gpRankPeople.Location = new System.Drawing.Point(12, 56);
-            this.gpRankPeople.Name = "gpRankPeople";
-            this.gpRankPeople.Size = new System.Drawing.Size(770, 402);
-            // 
-            // 
-            // 
-            this.gpRankPeople.Style.BackColor2SchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
-            this.gpRankPeople.Style.BackColorGradientAngle = 90;
-            this.gpRankPeople.Style.BackColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
-            this.gpRankPeople.Style.BorderBottom = DevComponents.DotNetBar.eStyleBorderType.Solid;
-            this.gpRankPeople.Style.BorderBottomWidth = 1;
-            this.gpRankPeople.Style.BorderColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
-            this.gpRankPeople.Style.BorderLeft = DevComponents.DotNetBar.eStyleBorderType.Solid;
-            this.gpRankPeople.Style.BorderLeftWidth = 1;
-            this.gpRankPeople.Style.BorderRight = DevComponents.DotNetBar.eStyleBorderType.Solid;
-            this.gpRankPeople.Style.BorderRightWidth = 1;
-            this.gpRankPeople.Style.BorderTop = DevComponents.DotNetBar.eStyleBorderType.Solid;
-            this.gpRankPeople.Style.BorderTopWidth = 1;
-            this.gpRankPeople.Style.Class = "";
-            this.gpRankPeople.Style.CornerDiameter = 4;
-            this.gpRankPeople.Style.CornerType = DevComponents.DotNetBar.eCornerType.Rounded;
-            this.gpRankPeople.Style.TextColor = System.Drawing.Color.Black;
-            this.gpRankPeople.Style.TextLineAlignment = DevComponents.DotNetBar.eStyleTextAlignment.Near;
-            // 
-            // 
-            // 
-            this.gpRankPeople.StyleMouseDown.Class = "";
-            this.gpRankPeople.StyleMouseDown.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            // 
-            // 
-            // 
-            this.gpRankPeople.StyleMouseOver.Class = "";
-            this.gpRankPeople.StyleMouseOver.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.gpRankPeople.TabIndex = 6;
-            this.gpRankPeople.Text = "排名對象";
-            // 
             // cboStudentTag2
             // 
-            this.cboStudentTag2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cboStudentTag2.DisplayMember = "Text";
             this.cboStudentTag2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboStudentTag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -167,16 +135,15 @@
             this.cboStudentTag2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.cboStudentTag2.FormattingEnabled = true;
             this.cboStudentTag2.ItemHeight = 21;
-            this.cboStudentTag2.Location = new System.Drawing.Point(111, 336);
+            this.cboStudentTag2.Location = new System.Drawing.Point(93, 3);
             this.cboStudentTag2.Name = "cboStudentTag2";
-            this.cboStudentTag2.Size = new System.Drawing.Size(242, 27);
+            this.cboStudentTag2.Size = new System.Drawing.Size(164, 27);
             this.cboStudentTag2.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboStudentTag2.TabIndex = 6;
             this.cboStudentTag2.SelectedIndexChanged += new System.EventHandler(this.cboStudentTag2_SelectedIndexChanged);
             // 
             // labelX5
             // 
-            this.labelX5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelX5.AutoSize = true;
             this.labelX5.BackColor = System.Drawing.Color.Transparent;
             // 
@@ -185,32 +152,30 @@
             this.labelX5.BackgroundStyle.Class = "";
             this.labelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX5.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX5.ForeColor = System.Drawing.Color.Black;
-            this.labelX5.Location = new System.Drawing.Point(13, 338);
+            this.labelX5.Location = new System.Drawing.Point(0, 6);
+            this.labelX5.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
             this.labelX5.Name = "labelX5";
-            this.labelX5.Size = new System.Drawing.Size(100, 24);
+            this.labelX5.Size = new System.Drawing.Size(87, 21);
             this.labelX5.TabIndex = 5;
             this.labelX5.Text = "類別排名二：";
             // 
             // cboStudentTag1
             // 
-            this.cboStudentTag1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cboStudentTag1.DisplayMember = "Text";
             this.cboStudentTag1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboStudentTag1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboStudentTag1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.cboStudentTag1.FormattingEnabled = true;
             this.cboStudentTag1.ItemHeight = 21;
-            this.cboStudentTag1.Location = new System.Drawing.Point(111, 295);
+            this.cboStudentTag1.Location = new System.Drawing.Point(93, 3);
             this.cboStudentTag1.Name = "cboStudentTag1";
-            this.cboStudentTag1.Size = new System.Drawing.Size(242, 27);
+            this.cboStudentTag1.Size = new System.Drawing.Size(164, 27);
             this.cboStudentTag1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboStudentTag1.TabIndex = 4;
             this.cboStudentTag1.SelectedIndexChanged += new System.EventHandler(this.cboStudentTag1_SelectedIndexChanged);
             // 
             // labelX4
             // 
-            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelX4.AutoSize = true;
             this.labelX4.BackColor = System.Drawing.Color.Transparent;
             // 
@@ -219,32 +184,30 @@
             this.labelX4.BackgroundStyle.Class = "";
             this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX4.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX4.ForeColor = System.Drawing.Color.Black;
-            this.labelX4.Location = new System.Drawing.Point(13, 297);
+            this.labelX4.Location = new System.Drawing.Point(0, 6);
+            this.labelX4.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
             this.labelX4.Name = "labelX4";
-            this.labelX4.Size = new System.Drawing.Size(100, 24);
+            this.labelX4.Size = new System.Drawing.Size(87, 21);
             this.labelX4.TabIndex = 3;
             this.labelX4.Text = "類別排名一：";
             // 
             // cboStudentFilter
             // 
-            this.cboStudentFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cboStudentFilter.DisplayMember = "Text";
             this.cboStudentFilter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboStudentFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboStudentFilter.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.cboStudentFilter.FormattingEnabled = true;
             this.cboStudentFilter.ItemHeight = 21;
-            this.cboStudentFilter.Location = new System.Drawing.Point(141, 253);
+            this.cboStudentFilter.Location = new System.Drawing.Point(93, 3);
             this.cboStudentFilter.Name = "cboStudentFilter";
-            this.cboStudentFilter.Size = new System.Drawing.Size(242, 27);
+            this.cboStudentFilter.Size = new System.Drawing.Size(164, 27);
             this.cboStudentFilter.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboStudentFilter.TabIndex = 2;
             this.cboStudentFilter.SelectedIndexChanged += new System.EventHandler(this.cboStudentFilter_SelectedIndexChanged);
             // 
             // labelX3
             // 
-            this.labelX3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelX3.AutoSize = true;
             this.labelX3.BackColor = System.Drawing.Color.Transparent;
             // 
@@ -253,12 +216,12 @@
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX3.ForeColor = System.Drawing.Color.Black;
-            this.labelX3.Location = new System.Drawing.Point(13, 255);
+            this.labelX3.Location = new System.Drawing.Point(0, 6);
+            this.labelX3.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
             this.labelX3.Name = "labelX3";
-            this.labelX3.Size = new System.Drawing.Size(131, 24);
+            this.labelX3.Size = new System.Drawing.Size(87, 21);
             this.labelX3.TabIndex = 1;
-            this.labelX3.Text = "不排名學生類別：";
+            this.labelX3.Text = "不排名學生：";
             // 
             // btnNext
             // 
@@ -267,8 +230,7 @@
             this.btnNext.BackColor = System.Drawing.Color.Transparent;
             this.btnNext.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnNext.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnNext.ForeColor = System.Drawing.Color.Black;
-            this.btnNext.Location = new System.Drawing.Point(707, 464);
+            this.btnNext.Location = new System.Drawing.Point(772, 519);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(75, 25);
             this.btnNext.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -278,13 +240,14 @@
             // 
             // cboExamType
             // 
+            this.cboExamType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cboExamType.DisplayMember = "Text";
             this.cboExamType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboExamType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboExamType.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.cboExamType.FormattingEnabled = true;
             this.cboExamType.ItemHeight = 21;
-            this.cboExamType.Location = new System.Drawing.Point(392, 10);
+            this.cboExamType.Location = new System.Drawing.Point(685, 9);
             this.cboExamType.Name = "cboExamType";
             this.cboExamType.Size = new System.Drawing.Size(159, 27);
             this.cboExamType.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -292,6 +255,7 @@
             // 
             // labelX6
             // 
+            this.labelX6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelX6.AutoSize = true;
             this.labelX6.BackColor = System.Drawing.Color.Transparent;
             // 
@@ -300,12 +264,11 @@
             this.labelX6.BackgroundStyle.Class = "";
             this.labelX6.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX6.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX6.ForeColor = System.Drawing.Color.Black;
-            this.labelX6.Location = new System.Drawing.Point(339, 12);
+            this.labelX6.Location = new System.Drawing.Point(584, 12);
             this.labelX6.Name = "labelX6";
-            this.labelX6.Size = new System.Drawing.Size(54, 24);
+            this.labelX6.Size = new System.Drawing.Size(101, 21);
             this.labelX6.TabIndex = 4;
-            this.labelX6.Text = "試別：";
+            this.labelX6.Text = "計算排名試別：";
             // 
             // labelX9
             // 
@@ -317,10 +280,9 @@
             this.labelX9.BackgroundStyle.Class = "";
             this.labelX9.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX9.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX9.ForeColor = System.Drawing.Color.Black;
             this.labelX9.Location = new System.Drawing.Point(12, 12);
             this.labelX9.Name = "labelX9";
-            this.labelX9.Size = new System.Drawing.Size(69, 24);
+            this.labelX9.Size = new System.Drawing.Size(60, 21);
             this.labelX9.TabIndex = 5;
             this.labelX9.Text = "學年度：";
             // 
@@ -334,10 +296,9 @@
             this.labelX8.BackgroundStyle.Class = "";
             this.labelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX8.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX8.ForeColor = System.Drawing.Color.Black;
             this.labelX8.Location = new System.Drawing.Point(146, 12);
             this.labelX8.Name = "labelX8";
-            this.labelX8.Size = new System.Drawing.Size(54, 24);
+            this.labelX8.Size = new System.Drawing.Size(47, 21);
             this.labelX8.TabIndex = 6;
             this.labelX8.Text = "學期：";
             // 
@@ -351,10 +312,9 @@
             this.labelX7.BackgroundStyle.Class = "";
             this.labelX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX7.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX7.ForeColor = System.Drawing.Color.Black;
             this.labelX7.Location = new System.Drawing.Point(250, 12);
             this.labelX7.Name = "labelX7";
-            this.labelX7.Size = new System.Drawing.Size(54, 24);
+            this.labelX7.Size = new System.Drawing.Size(47, 21);
             this.labelX7.TabIndex = 7;
             this.labelX7.Text = "試別：";
             // 
@@ -368,10 +328,9 @@
             this.lbSchoolYear.BackgroundStyle.Class = "";
             this.lbSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbSchoolYear.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbSchoolYear.ForeColor = System.Drawing.Color.Black;
             this.lbSchoolYear.Location = new System.Drawing.Point(80, 12);
             this.lbSchoolYear.Name = "lbSchoolYear";
-            this.lbSchoolYear.Size = new System.Drawing.Size(54, 24);
+            this.lbSchoolYear.Size = new System.Drawing.Size(47, 21);
             this.lbSchoolYear.TabIndex = 8;
             this.lbSchoolYear.Text = "學年度";
             // 
@@ -385,10 +344,9 @@
             this.lbSemester.BackgroundStyle.Class = "";
             this.lbSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbSemester.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbSemester.ForeColor = System.Drawing.Color.Black;
             this.lbSemester.Location = new System.Drawing.Point(199, 12);
             this.lbSemester.Name = "lbSemester";
-            this.lbSemester.Size = new System.Drawing.Size(38, 24);
+            this.lbSemester.Size = new System.Drawing.Size(34, 21);
             this.lbSemester.TabIndex = 9;
             this.lbSemester.Text = "學期";
             // 
@@ -402,10 +360,9 @@
             this.lbExam.BackgroundStyle.Class = "";
             this.lbExam.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbExam.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbExam.ForeColor = System.Drawing.Color.Black;
             this.lbExam.Location = new System.Drawing.Point(303, 12);
             this.lbExam.Name = "lbExam";
-            this.lbExam.Size = new System.Drawing.Size(38, 24);
+            this.lbExam.Size = new System.Drawing.Size(34, 21);
             this.lbExam.TabIndex = 10;
             this.lbExam.Text = "試別";
             // 
@@ -419,22 +376,20 @@
             this.labelX13.BackgroundStyle.Class = "";
             this.labelX13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX13.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX13.ForeColor = System.Drawing.Color.Black;
-            this.labelX13.Location = new System.Drawing.Point(12, 40);
+            this.labelX13.Location = new System.Drawing.Point(12, 39);
             this.labelX13.Name = "labelX13";
-            this.labelX13.Size = new System.Drawing.Size(85, 24);
+            this.labelX13.Size = new System.Drawing.Size(74, 21);
             this.labelX13.TabIndex = 11;
             this.labelX13.Text = "母群資料：";
             // 
             // btnExport
             // 
             this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExport.BackColor = System.Drawing.Color.Transparent;
             this.btnExport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnExport.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnExport.ForeColor = System.Drawing.Color.Black;
-            this.btnExport.Location = new System.Drawing.Point(419, 464);
+            this.btnExport.Location = new System.Drawing.Point(12, 519);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(75, 25);
             this.btnExport.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -446,12 +401,11 @@
             // btnImport
             // 
             this.btnImport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnImport.BackColor = System.Drawing.Color.Transparent;
             this.btnImport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnImport.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnImport.ForeColor = System.Drawing.Color.Black;
-            this.btnImport.Location = new System.Drawing.Point(510, 464);
+            this.btnImport.Location = new System.Drawing.Point(93, 519);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(75, 25);
             this.btnImport.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -467,8 +421,7 @@
             this.btnCacluate.BackColor = System.Drawing.Color.Transparent;
             this.btnCacluate.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnCacluate.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnCacluate.ForeColor = System.Drawing.Color.Black;
-            this.btnCacluate.Location = new System.Drawing.Point(701, 464);
+            this.btnCacluate.Location = new System.Drawing.Point(772, 519);
             this.btnCacluate.Name = "btnCacluate";
             this.btnCacluate.Size = new System.Drawing.Size(81, 25);
             this.btnCacluate.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -492,22 +445,22 @@
             this.colClassRank,
             this.colRankType1,
             this.colRankType2});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
-            this.dgvStudentList.Location = new System.Drawing.Point(3, 68);
+            this.dgvStudentList.Location = new System.Drawing.Point(12, 66);
             this.dgvStudentList.Name = "dgvStudentList";
             this.dgvStudentList.ReadOnly = true;
             this.dgvStudentList.RowTemplate.Height = 24;
             this.dgvStudentList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvStudentList.Size = new System.Drawing.Size(788, 390);
+            this.dgvStudentList.Size = new System.Drawing.Size(835, 441);
             this.dgvStudentList.TabIndex = 18;
             // 
             // colClass
@@ -592,7 +545,6 @@
             // 
             this.plStudentView.CanvasColor = System.Drawing.SystemColors.Control;
             this.plStudentView.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
-            this.plStudentView.Controls.Add(this.pbLoading);
             this.plStudentView.Controls.Add(this.btnPrevious);
             this.plStudentView.Controls.Add(this.dgvStudentList);
             this.plStudentView.Controls.Add(this.btnCacluate);
@@ -608,7 +560,7 @@
             this.plStudentView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.plStudentView.Location = new System.Drawing.Point(0, 0);
             this.plStudentView.Name = "plStudentView";
-            this.plStudentView.Size = new System.Drawing.Size(794, 501);
+            this.plStudentView.Size = new System.Drawing.Size(859, 556);
             this.plStudentView.Style.Alignment = System.Drawing.StringAlignment.Center;
             this.plStudentView.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
             this.plStudentView.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
@@ -619,31 +571,31 @@
             this.plStudentView.TabIndex = 7;
             this.plStudentView.Visible = false;
             // 
-            // pbLoading
-            // 
-            this.pbLoading.BackColor = System.Drawing.Color.White;
-            this.pbLoading.Image = global::JHEvaluation.Rank.Properties.Resources.loading;
-            this.pbLoading.Location = new System.Drawing.Point(385, 250);
-            this.pbLoading.Name = "pbLoading";
-            this.pbLoading.Size = new System.Drawing.Size(33, 34);
-            this.pbLoading.TabIndex = 57;
-            this.pbLoading.TabStop = false;
-            this.pbLoading.Visible = false;
-            // 
             // btnPrevious
             // 
             this.btnPrevious.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
             this.btnPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPrevious.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnPrevious.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
-            this.btnPrevious.ForeColor = System.Drawing.Color.Black;
-            this.btnPrevious.Location = new System.Drawing.Point(601, 464);
+            this.btnPrevious.Location = new System.Drawing.Point(682, 519);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(84, 25);
             this.btnPrevious.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.btnPrevious.TabIndex = 21;
             this.btnPrevious.Text = "上一步";
             this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
+            // 
+            // pbLoading
+            // 
+            this.pbLoading.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pbLoading.BackColor = System.Drawing.Color.Transparent;
+            this.pbLoading.Image = global::JHEvaluation.Rank.Properties.Resources.loading;
+            this.pbLoading.Location = new System.Drawing.Point(-100, -100);
+            this.pbLoading.Name = "pbLoading";
+            this.pbLoading.Size = new System.Drawing.Size(33, 34);
+            this.pbLoading.TabIndex = 57;
+            this.pbLoading.TabStop = false;
+            this.pbLoading.Visible = false;
             // 
             // lbCalcSchoolYear
             // 
@@ -655,10 +607,9 @@
             this.lbCalcSchoolYear.BackgroundStyle.Class = "";
             this.lbCalcSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbCalcSchoolYear.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbCalcSchoolYear.ForeColor = System.Drawing.Color.Black;
-            this.lbCalcSchoolYear.Location = new System.Drawing.Point(80, 12);
+            this.lbCalcSchoolYear.Location = new System.Drawing.Point(78, 12);
             this.lbCalcSchoolYear.Name = "lbCalcSchoolYear";
-            this.lbCalcSchoolYear.Size = new System.Drawing.Size(54, 24);
+            this.lbCalcSchoolYear.Size = new System.Drawing.Size(47, 21);
             this.lbCalcSchoolYear.TabIndex = 1;
             this.lbCalcSchoolYear.Text = "學年度";
             // 
@@ -672,40 +623,297 @@
             this.lbCalcSemester.BackgroundStyle.Class = "";
             this.lbCalcSemester.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbCalcSemester.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.lbCalcSemester.ForeColor = System.Drawing.Color.Black;
-            this.lbCalcSemester.Location = new System.Drawing.Point(241, 12);
+            this.lbCalcSemester.Location = new System.Drawing.Point(189, 12);
             this.lbCalcSemester.Name = "lbCalcSemester";
-            this.lbCalcSemester.Size = new System.Drawing.Size(38, 24);
+            this.lbCalcSemester.Size = new System.Drawing.Size(34, 21);
             this.lbCalcSemester.TabIndex = 3;
             this.lbCalcSemester.Text = "學期";
+            // 
+            // plSetting
+            // 
+            this.plSetting.CanvasColor = System.Drawing.SystemColors.Control;
+            this.plSetting.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.plSetting.Controls.Add(this.tableLayoutPanel1);
+            this.plSetting.Controls.Add(this.lbCalcSemester);
+            this.plSetting.Controls.Add(this.lbCalcSchoolYear);
+            this.plSetting.Controls.Add(this.cboExamType);
+            this.plSetting.Controls.Add(this.labelX6);
+            this.plSetting.Controls.Add(this.btnNext);
+            this.plSetting.Controls.Add(this.labelX2);
+            this.plSetting.Controls.Add(this.labelX1);
+            this.plSetting.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.plSetting.Location = new System.Drawing.Point(0, 0);
+            this.plSetting.Name = "plSetting";
+            this.plSetting.Size = new System.Drawing.Size(859, 556);
+            this.plSetting.Style.Alignment = System.Drawing.StringAlignment.Center;
+            this.plSetting.Style.BackColor1.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground;
+            this.plSetting.Style.BackColor2.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBackground2;
+            this.plSetting.Style.Border = DevComponents.DotNetBar.eBorderType.SingleLine;
+            this.plSetting.Style.BorderColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelBorder;
+            this.plSetting.Style.ForeColor.ColorSchemePart = DevComponents.DotNetBar.eColorSchemePart.PanelText;
+            this.plSetting.Style.GradientAngle = 90;
+            this.plSetting.TabIndex = 8;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.panel3, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 2);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 42);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 7;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33908F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33115F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.32977F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(835, 465);
+            this.tableLayoutPanel1.TabIndex = 8;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.Controls.Add(this.labelX10);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(835, 26);
+            this.flowLayoutPanel1.TabIndex = 0;
+            // 
+            // labelX10
+            // 
+            // 
+            // 
+            // 
+            this.labelX10.BackgroundStyle.Class = "";
+            this.labelX10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX10.Location = new System.Drawing.Point(0, 0);
+            this.labelX10.Margin = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.labelX10.Name = "labelX10";
+            this.labelX10.Size = new System.Drawing.Size(75, 23);
+            this.labelX10.TabIndex = 0;
+            this.labelX10.Text = "排名年級：";
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.AutoSize = true;
+            this.flowLayoutPanel2.Controls.Add(this.labelX3);
+            this.flowLayoutPanel2.Controls.Add(this.cboStudentFilter);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 26);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(835, 33);
+            this.flowLayoutPanel2.TabIndex = 1;
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoSize = true;
+            this.flowLayoutPanel3.Controls.Add(this.labelX4);
+            this.flowLayoutPanel3.Controls.Add(this.cboStudentTag1);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 172);
+            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(835, 33);
+            this.flowLayoutPanel3.TabIndex = 2;
+            // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.AutoSize = true;
+            this.flowLayoutPanel4.Controls.Add(this.labelX5);
+            this.flowLayoutPanel4.Controls.Add(this.cboStudentTag2);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 318);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(835, 33);
+            this.flowLayoutPanel4.TabIndex = 3;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.listViewEx1);
+            this.panel1.Controls.Add(this.labelX11);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 62);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(835, 107);
+            this.panel1.TabIndex = 4;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.listViewEx2);
+            this.panel2.Controls.Add(this.labelX12);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 208);
+            this.panel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(835, 107);
+            this.panel2.TabIndex = 5;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.listViewEx3);
+            this.panel3.Controls.Add(this.labelX14);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 354);
+            this.panel3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(835, 108);
+            this.panel3.TabIndex = 6;
+            // 
+            // labelX11
+            // 
+            this.labelX11.AutoSize = true;
+            this.labelX11.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX11.BackgroundStyle.Class = "";
+            this.labelX11.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX11.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX11.Location = new System.Drawing.Point(0, 6);
+            this.labelX11.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
+            this.labelX11.Name = "labelX11";
+            this.labelX11.Size = new System.Drawing.Size(101, 21);
+            this.labelX11.TabIndex = 2;
+            this.labelX11.Text = "參與排名科目：";
+            // 
+            // labelX12
+            // 
+            this.labelX12.AutoSize = true;
+            this.labelX12.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX12.BackgroundStyle.Class = "";
+            this.labelX12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX12.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX12.Location = new System.Drawing.Point(1, 0);
+            this.labelX12.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
+            this.labelX12.Name = "labelX12";
+            this.labelX12.Size = new System.Drawing.Size(74, 21);
+            this.labelX12.TabIndex = 3;
+            this.labelX12.Text = "採計科目：";
+            // 
+            // labelX14
+            // 
+            this.labelX14.AutoSize = true;
+            this.labelX14.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX14.BackgroundStyle.Class = "";
+            this.labelX14.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX14.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX14.Location = new System.Drawing.Point(0, 0);
+            this.labelX14.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
+            this.labelX14.Name = "labelX14";
+            this.labelX14.Size = new System.Drawing.Size(74, 21);
+            this.labelX14.TabIndex = 4;
+            this.labelX14.Text = "採計科目：";
+            // 
+            // listViewEx1
+            // 
+            this.listViewEx1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.listViewEx1.Border.Class = "ListViewBorder";
+            this.listViewEx1.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.listViewEx1.HideSelection = false;
+            this.listViewEx1.Location = new System.Drawing.Point(1, 33);
+            this.listViewEx1.Name = "listViewEx1";
+            this.listViewEx1.Size = new System.Drawing.Size(834, 74);
+            this.listViewEx1.TabIndex = 3;
+            this.listViewEx1.UseCompatibleStateImageBehavior = false;
+            // 
+            // listViewEx2
+            // 
+            this.listViewEx2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.listViewEx2.Border.Class = "ListViewBorder";
+            this.listViewEx2.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.listViewEx2.HideSelection = false;
+            this.listViewEx2.Location = new System.Drawing.Point(0, 27);
+            this.listViewEx2.Name = "listViewEx2";
+            this.listViewEx2.Size = new System.Drawing.Size(834, 74);
+            this.listViewEx2.TabIndex = 4;
+            this.listViewEx2.UseCompatibleStateImageBehavior = false;
+            // 
+            // listViewEx3
+            // 
+            this.listViewEx3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.listViewEx3.Border.Class = "ListViewBorder";
+            this.listViewEx3.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.listViewEx3.HideSelection = false;
+            this.listViewEx3.Location = new System.Drawing.Point(0, 27);
+            this.listViewEx3.Name = "listViewEx3";
+            this.listViewEx3.Size = new System.Drawing.Size(834, 74);
+            this.listViewEx3.TabIndex = 5;
+            this.listViewEx3.UseCompatibleStateImageBehavior = false;
             // 
             // CalculateRegularAssessmentRank
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(794, 501);
+            this.ClientSize = new System.Drawing.Size(859, 556);
+            this.Controls.Add(this.pbLoading);
+            this.Controls.Add(this.plSetting);
             this.Controls.Add(this.plStudentView);
-            this.Controls.Add(this.lbCalcSemester);
-            this.Controls.Add(this.lbCalcSchoolYear);
-            this.Controls.Add(this.cboExamType);
-            this.Controls.Add(this.labelX6);
-            this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.gpRankPeople);
-            this.Controls.Add(this.labelX2);
-            this.Controls.Add(this.labelX1);
             this.DoubleBuffered = true;
+            this.MaximizeBox = true;
             this.Name = "CalculateRegularAssessmentRank";
             this.Text = "計算定期評量排名";
             this.Load += new System.EventHandler(this.CacluateRegularAssessmentRank_Load);
             this.Resize += new System.EventHandler(this.CalculateRegularAssessmentRank_Resize);
-            this.gpRankPeople.ResumeLayout(false);
-            this.gpRankPeople.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).EndInit();
             this.plStudentView.ResumeLayout(false);
             this.plStudentView.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).EndInit();
+            this.plSetting.ResumeLayout(false);
+            this.plSetting.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -713,7 +921,6 @@
 
         private DevComponents.DotNetBar.LabelX labelX1;
         private DevComponents.DotNetBar.LabelX labelX2;
-        private DevComponents.DotNetBar.Controls.GroupPanel gpRankPeople;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboStudentFilter;
         private DevComponents.DotNetBar.LabelX labelX3;
         private DevComponents.DotNetBar.ButtonX btnNext;
@@ -747,5 +954,21 @@
         private System.Windows.Forms.PictureBox pbLoading;
         private DevComponents.DotNetBar.LabelX lbCalcSchoolYear;
         private DevComponents.DotNetBar.LabelX lbCalcSemester;
+        private DevComponents.DotNetBar.PanelEx plSetting;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private DevComponents.DotNetBar.LabelX labelX10;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.Panel panel3;
+        private DevComponents.DotNetBar.Controls.ListViewEx listViewEx3;
+        private DevComponents.DotNetBar.LabelX labelX14;
+        private System.Windows.Forms.Panel panel2;
+        private DevComponents.DotNetBar.Controls.ListViewEx listViewEx2;
+        private DevComponents.DotNetBar.LabelX labelX12;
+        private System.Windows.Forms.Panel panel1;
+        private DevComponents.DotNetBar.Controls.ListViewEx listViewEx1;
+        private DevComponents.DotNetBar.LabelX labelX11;
     }
 }
