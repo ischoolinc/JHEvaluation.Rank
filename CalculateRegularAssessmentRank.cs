@@ -17,7 +17,6 @@ namespace JHEvaluation.Rank
 {
     public partial class CalculateRegularAssessmentRank : BaseForm
     {
-        DataTable _SchoolYearTable = new DataTable();
         string _DefaultSchoolYear = "";
         string _DefaultSemester = "";
         List<ExamRecord> _ExamList = new List<ExamRecord>();
@@ -29,24 +28,8 @@ namespace JHEvaluation.Rank
         public CalculateRegularAssessmentRank()
         {
             InitializeComponent();
-
-            this.CalculateRegularAssessmentRank_Resize(null, null);
-            #region 查詢學年度、學期
-            string queryString = @"
-SELECT
-	course.school_year
-	, course.semester
-FROM
-		course
-Order BY course.school_year, course.semester
-";
-            #endregion
-
-            QueryHelper queryHelper = new QueryHelper();
-
             try
             {
-                _SchoolYearTable = queryHelper.Select(queryString);
                 _DefaultSchoolYear = K12.Data.School.DefaultSchoolYear;
                 _DefaultSemester = K12.Data.School.DefaultSemester;
                 _ExamList = K12.Data.Exam.SelectAll();
@@ -57,6 +40,7 @@ Order BY course.school_year, course.semester
             {
                 throw new Exception("資料讀取失敗", ex);
             }
+
         }
 
         private void CacluateRegularAssessmentRank_Load(object sender, EventArgs e)
@@ -64,12 +48,32 @@ Order BY course.school_year, course.semester
             #region 讓Form回到起始狀態
             plSetting.Visible = true;
             plStudentView.Visible = false;
+            this.CalculateRegularAssessmentRank_Resize(null, null);
             #endregion
 
-            #region 篩選資料
-            _StudentRecord = _StudentRecord.Where(x => !string.IsNullOrEmpty(x.RefClassID)
-                                                    && (x.Status == StudentRecord.StudentStatus.一般)
-                                                    && x.Class.GradeYear != null).ToList();
+            #region 篩選學生資料
+            _StudentRecord = _StudentRecord.Where(
+                x => !string.IsNullOrEmpty(x.RefClassID)
+                && (x.Status == StudentRecord.StudentStatus.一般 || x.Status == StudentRecord.StudentStatus.延修)
+                && x.Class.GradeYear != null
+            ).ToList();
+            #endregion
+
+            #region 動態產生年級的CheckBox
+            //整理年級的清單
+            List<int> gradeList = _StudentRecord.Select(x => Convert.ToInt32(x.Class.GradeYear)).Distinct().OrderBy(x => x).ToList();
+            for (int i = 0; i < gradeList.Count; i++)
+            {
+                CheckBox checkBox = new CheckBox();
+                checkBox.AutoSize = true;
+                checkBox.Name = "ch" + gradeList[i];
+                checkBox.TabIndex = 7 + i;
+                checkBox.Text = "" + gradeList[i] + "年級";
+                checkBox.UseVisualStyleBackColor = true;
+                checkBox.Checked = true;
+                checkBox.CheckedChanged += reloadSubject;
+                flowLayoutPanel1.Controls.Add(checkBox);
+            }
             #endregion
 
             #region 填資料進ComboBox
@@ -139,23 +143,74 @@ Order BY course.school_year, course.semester
             }
             cboExamType.SelectedIndex = 0;
             #endregion
+        }
 
-            //整理年級的清單
-            List<int> gradeList = _StudentRecord.Select(x => Convert.ToInt32(x.Class.GradeYear)).Distinct().OrderBy(x => x).ToList();
+        private void reloadSubject(object eander, EventArgs e)
+        {
 
-            #region 動態產生年級的CheckBox
-            for (int i = 0; i < gradeList.Count; i++)
+            lvCalcSubject.Items.Clear();
+            lvCalcSubjectTag1.Items.Clear();
+            lvCalcSubjectTag2.Items.Clear();
+            #region 取得科目
+            List<string> gradeList = new List<string>();
+            gradeList.Add("" + int.MinValue);
+            foreach (CheckBox checkBox in flowLayoutPanel1.Controls.OfType<CheckBox>())
             {
-                CheckBox checkBox = new CheckBox();
-                checkBox.AutoSize = true;
-                checkBox.Name = "ch" + gradeList[i];
-                checkBox.TabIndex = 7 + i;
-                checkBox.Text = "" + gradeList[i] + "年級";
-                checkBox.UseVisualStyleBackColor = true;
-                checkBox.Checked = true;
-                flowLayoutPanel1.Controls.Add(checkBox);
+                if (checkBox.Checked == true)
+                {
+                    gradeList.Add(checkBox.Text.Trim('年', '級'));
+                }
             }
+            var examID = "-1";
+            foreach (var item in _ExamList)
+            {
+                if (item.Name == "" + cboExamType.SelectedItem)
+                    examID = item.ID;
+            }
+            var subjectTable = new QueryHelper().Select(@"
+
+SELECT
+	subject
+FROM (
+	SELECT
+		subject
+		, row_number() OVER () as subject_order
+	FROM (
+		SELECT DISTINCT
+			course.credit
+			, course.period
+			, course.subject
+		FROM
+			student
+			INNER JOIN class
+				ON class.id = student.ref_class_id
+				AND class.grade_year IN (" + string.Join(", ", gradeList) + @")
+			INNER JOIN sc_attend
+				ON sc_attend.ref_student_id = student.id
+			INNER JOIN course
+				ON course.id = sc_attend.ref_course_id
+				AND course.school_year = " + _DefaultSchoolYear + @"
+				AND course.semester = " + _DefaultSemester + @"
+			INNER JOIN sce_take
+				ON sce_take.ref_sc_attend_id = sc_attend.id
+				AND sce_take.ref_exam_id = " + examID + @"
+		ORDER BY
+			course.credit DESC
+			, course.period DESC
+			, course.subject
+	) AS s
+) AS s
+GROUP BY
+	subject
+ORDER BY
+	MIN(subject_order)");
             #endregion
+            foreach (DataRow row in subjectTable.Rows)
+            {
+                lvCalcSubject.Items.Add("" + row["subject"]).Checked = true;
+                lvCalcSubjectTag1.Items.Add("" + row["subject"]).Checked = true;
+                lvCalcSubjectTag2.Items.Add("" + row["subject"]).Checked = true;
+            }
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -358,6 +413,50 @@ Order BY course.school_year, course.semester
                 gradeYearList.Add(Convert.ToInt32(checkBox.Text.Trim('年', '級')));
             }
 
+            #region 產生計算設定的字串
+            XmlDocument doc = new XmlDocument();
+            var settingEle = doc.CreateElement("Setting");
+            settingEle.SetAttribute("學年度", "" + schoolYear);
+            settingEle.SetAttribute("學期", "" + semester);
+            settingEle.SetAttribute("考試名稱", "" + examName);
+            settingEle.SetAttribute("不排名學生類別", "" + studentFilter);
+            settingEle.SetAttribute("類別一", "" + tag1);
+            settingEle.SetAttribute("類別二", "" + tag2);
+            foreach (var gradeYear in gradeYearList)
+            {
+                var gradeYearEle = doc.CreateElement("年級");
+                gradeYearEle.InnerText = "" + gradeYear;
+                settingEle.AppendChild(gradeYearEle);
+            }
+            foreach (ListViewItem item in lvCalcSubject.Items)
+            {
+                if (item.Checked)
+                {
+                    var ele = doc.CreateElement("採計科目");
+                    ele.InnerText = item.Text;
+                    settingEle.AppendChild(ele);
+                }
+            }
+            foreach (ListViewItem item in lvCalcSubjectTag1.Items)
+            {
+                if (item.Checked)
+                {
+                    var ele = doc.CreateElement("類別一採計科目");
+                    ele.InnerText = item.Text;
+                    settingEle.AppendChild(ele);
+                }
+            }
+            foreach (ListViewItem item in lvCalcSubjectTag2.Items)
+            {
+                if (item.Checked)
+                {
+                    var ele = doc.CreateElement("類別二採計科目");
+                    ele.InnerText = item.Text;
+                    settingEle.AppendChild(ele);
+                }
+            }
+            #endregion
+
             Exception bkwException = null;
             BackgroundWorker bkw = new BackgroundWorker();
             bkw.WorkerReportsProgress = true;
@@ -374,25 +473,6 @@ Order BY course.school_year, course.semester
                 {
                     bkw.ReportProgress(1);
                     List<string> rowSqlList = new List<string>();
-                    string calculationSetting = "";
-
-                    #region 產生計算設定的字串
-                    XmlDocument doc = new XmlDocument();
-                    var settingEle = doc.CreateElement("Setting");
-                    settingEle.SetAttribute("學年度", "" + schoolYear);
-                    settingEle.SetAttribute("學期", "" + semester);
-                    settingEle.SetAttribute("考試名稱", "" + examName);
-                    settingEle.SetAttribute("不排名學生類別", "" + studentFilter);
-                    settingEle.SetAttribute("類別一", "" + tag1);
-                    settingEle.SetAttribute("類別二", "" + tag2);
-                    foreach (var gradeYear in gradeYearList)
-                    {
-                        var gradeYearEle = doc.CreateElement("年級");
-                        gradeYearEle.InnerText = "" + gradeYear;
-                        settingEle.AppendChild(gradeYearEle);
-                    }
-                    calculationSetting = settingEle.OuterXml;
-                    #endregion
 
                     for (int index = 0; index < gradeYearList.Count; index++)
                     {
@@ -404,7 +484,7 @@ Order BY course.school_year, course.semester
 		, '" + semester + @"'::TEXT AS rank_semester
         , '" + examId + @"'::TEXT AS ref_exam_id
 		, '" + examName + @"'::TEXT AS rank_exam_name
-        , '" + calculationSetting + @"'::TEXT AS calculation_setting
+        , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting
 ");
                     }
 
@@ -420,6 +500,33 @@ WITH row AS (
 " + string.Join(@"
     UNION ALL
 ", studentSqlList) + @"
+), calc_subject AS ( --採計科目
+    SELECT
+        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
+    FROM (
+        SELECT
+            unnest(xpath('/Setting/採計科目', xmlparse(content calculation_setting))) AS eleSubject
+        FROM
+            row
+    ) as ele
+), calc_subject_tag1 AS ( --類別一採計科目
+    SELECT
+        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
+    FROM (
+        SELECT
+            unnest(xpath('/Setting/類別一採計科目', xmlparse(content calculation_setting))) AS eleSubject
+        FROM
+            row
+    ) as ele
+), calc_subject_tag2 AS ( --類別二採計科目
+    SELECT
+        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
+    FROM (
+        SELECT
+            unnest(xpath('/Setting/類別二採計科目', xmlparse(content calculation_setting))) AS eleSubject
+        FROM
+            row
+    ) as ele
 ), score_detail_row AS (--取得學生的定期評量成績
 	SELECT
 		student_row.student_id
@@ -458,6 +565,9 @@ WITH row AS (
 			ON ref_exam_id = exam.id
 		LEFT JOIN course 
 			ON sc_attend.ref_course_id = course.id
+            AND course.subject IN (
+                SELECT subject FROM calc_subject
+            )
 		INNER JOIN student_row
 			ON sc_attend.ref_student_id = student_row.student_id
 		LEFT JOIN exam_template
@@ -513,7 +623,7 @@ WITH row AS (
 				THEN 1
 				ELSE exam_score.credit::decimal
 			END
-		)AS domain_score
+		) AS score
 	FROM  
 		exam_score
 	WHERE
@@ -650,11 +760,11 @@ WITH row AS (
 		, domain_score.rank_grade_year
 		, domain_score.rank_class_name
 		, domain_score.exam_id
-		, domain_score.domain_score AS score
-		, RANK() OVER(PARTITION BY domain_score.rank_grade_year ,domain_score.domain ORDER BY domain_score.domain_score DESC) AS grade_rank
-		, RANK() OVER(PARTITION BY domain_score.rank_class_name ,domain_score.domain ORDER BY domain_score.domain_score DESC) AS class_rank
-		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag1, domain_score.domain ORDER BY domain_score.domain_score DESC) AS tag1_rank
-		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag2, domain_score.domain ORDER BY domain_score.domain_score DESC) AS tag2_rank
+		, domain_score.score
+		, RANK() OVER(PARTITION BY domain_score.rank_grade_year ,domain_score.domain ORDER BY domain_score.score DESC) AS grade_rank
+		, RANK() OVER(PARTITION BY domain_score.rank_class_name ,domain_score.domain ORDER BY domain_score.score DESC) AS class_rank
+		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag1, domain_score.domain ORDER BY domain_score.score DESC) AS tag1_rank
+		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag2, domain_score.domain ORDER BY domain_score.score DESC) AS tag2_rank
 		, COUNT (domain_score.student_id) OVER(PARTITION BY domain_score.rank_grade_year ,domain_score.domain) AS grade_count
 		, COUNT (domain_score.student_id) OVER(PARTITION BY domain_score.rank_class_name, domain_score.domain) AS class_count
 		, COUNT (domain_score.student_id) OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag1, domain_score.domain) AS tag1_count

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
             this.cboStudentTag2 = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -66,32 +66,32 @@
             this.lbCalcSemester = new DevComponents.DotNetBar.LabelX();
             this.plSetting = new DevComponents.DotNetBar.PanelEx();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.lvCalcSubjectTag2 = new DevComponents.DotNetBar.Controls.ListViewEx();
+            this.labelX14 = new DevComponents.DotNetBar.LabelX();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.lvCalcSubjectTag1 = new DevComponents.DotNetBar.Controls.ListViewEx();
+            this.labelX12 = new DevComponents.DotNetBar.LabelX();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelX10 = new DevComponents.DotNetBar.LabelX();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.lvCalcSubject = new DevComponents.DotNetBar.Controls.ListViewEx();
             this.labelX11 = new DevComponents.DotNetBar.LabelX();
-            this.labelX12 = new DevComponents.DotNetBar.LabelX();
-            this.labelX14 = new DevComponents.DotNetBar.LabelX();
-            this.listViewEx1 = new DevComponents.DotNetBar.Controls.ListViewEx();
-            this.listViewEx2 = new DevComponents.DotNetBar.Controls.ListViewEx();
-            this.listViewEx3 = new DevComponents.DotNetBar.Controls.ListViewEx();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStudentList)).BeginInit();
             this.plStudentView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLoading)).BeginInit();
             this.plSetting.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelX1
@@ -252,6 +252,7 @@
             this.cboExamType.Size = new System.Drawing.Size(159, 27);
             this.cboExamType.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cboExamType.TabIndex = 5;
+            this.cboExamType.SelectedIndexChanged += new System.EventHandler(this.reloadSubject);
             // 
             // labelX6
             // 
@@ -445,14 +446,14 @@
             this.colClassRank,
             this.colRankType1,
             this.colRankType2});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvStudentList.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvStudentList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dgvStudentList.HighlightSelectedColumnHeaders = false;
             this.dgvStudentList.Location = new System.Drawing.Point(12, 66);
@@ -682,6 +683,100 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(835, 465);
             this.tableLayoutPanel1.TabIndex = 8;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.lvCalcSubjectTag2);
+            this.panel3.Controls.Add(this.labelX14);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 354);
+            this.panel3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(835, 108);
+            this.panel3.TabIndex = 6;
+            // 
+            // lvCalcSubjectTag2
+            // 
+            this.lvCalcSubjectTag2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.lvCalcSubjectTag2.Border.Class = "ListViewBorder";
+            this.lvCalcSubjectTag2.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lvCalcSubjectTag2.CheckBoxes = true;
+            this.lvCalcSubjectTag2.HideSelection = false;
+            this.lvCalcSubjectTag2.Location = new System.Drawing.Point(0, 27);
+            this.lvCalcSubjectTag2.Name = "lvCalcSubjectTag2";
+            this.lvCalcSubjectTag2.Size = new System.Drawing.Size(834, 74);
+            this.lvCalcSubjectTag2.TabIndex = 5;
+            this.lvCalcSubjectTag2.UseCompatibleStateImageBehavior = false;
+            this.lvCalcSubjectTag2.View = System.Windows.Forms.View.List;
+            // 
+            // labelX14
+            // 
+            this.labelX14.AutoSize = true;
+            this.labelX14.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX14.BackgroundStyle.Class = "";
+            this.labelX14.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX14.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX14.Location = new System.Drawing.Point(0, 0);
+            this.labelX14.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
+            this.labelX14.Name = "labelX14";
+            this.labelX14.Size = new System.Drawing.Size(74, 21);
+            this.labelX14.TabIndex = 4;
+            this.labelX14.Text = "採計科目：";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.lvCalcSubjectTag1);
+            this.panel2.Controls.Add(this.labelX12);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 208);
+            this.panel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(835, 107);
+            this.panel2.TabIndex = 5;
+            // 
+            // lvCalcSubjectTag1
+            // 
+            this.lvCalcSubjectTag1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.lvCalcSubjectTag1.Border.Class = "ListViewBorder";
+            this.lvCalcSubjectTag1.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lvCalcSubjectTag1.CheckBoxes = true;
+            this.lvCalcSubjectTag1.HideSelection = false;
+            this.lvCalcSubjectTag1.Location = new System.Drawing.Point(0, 27);
+            this.lvCalcSubjectTag1.Name = "lvCalcSubjectTag1";
+            this.lvCalcSubjectTag1.Size = new System.Drawing.Size(834, 74);
+            this.lvCalcSubjectTag1.TabIndex = 4;
+            this.lvCalcSubjectTag1.UseCompatibleStateImageBehavior = false;
+            this.lvCalcSubjectTag1.View = System.Windows.Forms.View.List;
+            // 
+            // labelX12
+            // 
+            this.labelX12.AutoSize = true;
+            this.labelX12.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX12.BackgroundStyle.Class = "";
+            this.labelX12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX12.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelX12.Location = new System.Drawing.Point(1, 0);
+            this.labelX12.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
+            this.labelX12.Name = "labelX12";
+            this.labelX12.Size = new System.Drawing.Size(74, 21);
+            this.labelX12.TabIndex = 3;
+            this.labelX12.Text = "採計科目：";
+            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoSize = true;
@@ -705,7 +800,7 @@
             this.labelX10.Name = "labelX10";
             this.labelX10.Size = new System.Drawing.Size(75, 23);
             this.labelX10.TabIndex = 0;
-            this.labelX10.Text = "排名年級：";
+            this.labelX10.Text = "計算年級：";
             // 
             // flowLayoutPanel2
             // 
@@ -745,7 +840,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.listViewEx1);
+            this.panel1.Controls.Add(this.lvCalcSubject);
             this.panel1.Controls.Add(this.labelX11);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 62);
@@ -754,27 +849,24 @@
             this.panel1.Size = new System.Drawing.Size(835, 107);
             this.panel1.TabIndex = 4;
             // 
-            // panel2
+            // lvCalcSubject
             // 
-            this.panel2.Controls.Add(this.listViewEx2);
-            this.panel2.Controls.Add(this.labelX12);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 208);
-            this.panel2.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(835, 107);
-            this.panel2.TabIndex = 5;
+            this.lvCalcSubject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
-            // panel3
             // 
-            this.panel3.Controls.Add(this.listViewEx3);
-            this.panel3.Controls.Add(this.labelX14);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(0, 354);
-            this.panel3.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(835, 108);
-            this.panel3.TabIndex = 6;
+            // 
+            this.lvCalcSubject.Border.Class = "ListViewBorder";
+            this.lvCalcSubject.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lvCalcSubject.CheckBoxes = true;
+            this.lvCalcSubject.HideSelection = false;
+            this.lvCalcSubject.Location = new System.Drawing.Point(1, 33);
+            this.lvCalcSubject.Name = "lvCalcSubject";
+            this.lvCalcSubject.Size = new System.Drawing.Size(834, 74);
+            this.lvCalcSubject.TabIndex = 3;
+            this.lvCalcSubject.UseCompatibleStateImageBehavior = false;
+            this.lvCalcSubject.View = System.Windows.Forms.View.List;
             // 
             // labelX11
             // 
@@ -792,91 +884,6 @@
             this.labelX11.Size = new System.Drawing.Size(101, 21);
             this.labelX11.TabIndex = 2;
             this.labelX11.Text = "參與排名科目：";
-            // 
-            // labelX12
-            // 
-            this.labelX12.AutoSize = true;
-            this.labelX12.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX12.BackgroundStyle.Class = "";
-            this.labelX12.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX12.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX12.Location = new System.Drawing.Point(1, 0);
-            this.labelX12.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
-            this.labelX12.Name = "labelX12";
-            this.labelX12.Size = new System.Drawing.Size(74, 21);
-            this.labelX12.TabIndex = 3;
-            this.labelX12.Text = "採計科目：";
-            // 
-            // labelX14
-            // 
-            this.labelX14.AutoSize = true;
-            this.labelX14.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX14.BackgroundStyle.Class = "";
-            this.labelX14.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX14.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.labelX14.Location = new System.Drawing.Point(0, 0);
-            this.labelX14.Margin = new System.Windows.Forms.Padding(0, 6, 3, 3);
-            this.labelX14.Name = "labelX14";
-            this.labelX14.Size = new System.Drawing.Size(74, 21);
-            this.labelX14.TabIndex = 4;
-            this.labelX14.Text = "採計科目：";
-            // 
-            // listViewEx1
-            // 
-            this.listViewEx1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            // 
-            // 
-            // 
-            this.listViewEx1.Border.Class = "ListViewBorder";
-            this.listViewEx1.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.listViewEx1.HideSelection = false;
-            this.listViewEx1.Location = new System.Drawing.Point(1, 33);
-            this.listViewEx1.Name = "listViewEx1";
-            this.listViewEx1.Size = new System.Drawing.Size(834, 74);
-            this.listViewEx1.TabIndex = 3;
-            this.listViewEx1.UseCompatibleStateImageBehavior = false;
-            // 
-            // listViewEx2
-            // 
-            this.listViewEx2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            // 
-            // 
-            // 
-            this.listViewEx2.Border.Class = "ListViewBorder";
-            this.listViewEx2.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.listViewEx2.HideSelection = false;
-            this.listViewEx2.Location = new System.Drawing.Point(0, 27);
-            this.listViewEx2.Name = "listViewEx2";
-            this.listViewEx2.Size = new System.Drawing.Size(834, 74);
-            this.listViewEx2.TabIndex = 4;
-            this.listViewEx2.UseCompatibleStateImageBehavior = false;
-            // 
-            // listViewEx3
-            // 
-            this.listViewEx3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            // 
-            // 
-            // 
-            this.listViewEx3.Border.Class = "ListViewBorder";
-            this.listViewEx3.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.listViewEx3.HideSelection = false;
-            this.listViewEx3.Location = new System.Drawing.Point(0, 27);
-            this.listViewEx3.Name = "listViewEx3";
-            this.listViewEx3.Size = new System.Drawing.Size(834, 74);
-            this.listViewEx3.TabIndex = 5;
-            this.listViewEx3.UseCompatibleStateImageBehavior = false;
             // 
             // CalculateRegularAssessmentRank
             // 
@@ -900,6 +907,10 @@
             this.plSetting.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
@@ -909,10 +920,6 @@
             this.flowLayoutPanel4.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -962,13 +969,13 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Panel panel3;
-        private DevComponents.DotNetBar.Controls.ListViewEx listViewEx3;
+        private DevComponents.DotNetBar.Controls.ListViewEx lvCalcSubjectTag2;
         private DevComponents.DotNetBar.LabelX labelX14;
         private System.Windows.Forms.Panel panel2;
-        private DevComponents.DotNetBar.Controls.ListViewEx listViewEx2;
+        private DevComponents.DotNetBar.Controls.ListViewEx lvCalcSubjectTag1;
         private DevComponents.DotNetBar.LabelX labelX12;
         private System.Windows.Forms.Panel panel1;
-        private DevComponents.DotNetBar.Controls.ListViewEx listViewEx1;
+        private DevComponents.DotNetBar.Controls.ListViewEx lvCalcSubject;
         private DevComponents.DotNetBar.LabelX labelX11;
     }
 }
