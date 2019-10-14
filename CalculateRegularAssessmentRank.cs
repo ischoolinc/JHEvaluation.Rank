@@ -25,6 +25,11 @@ namespace JHEvaluation.Rank
         List<CheckBox> _CheckBoxList = new List<CheckBox>();
         List<StudentRecord> _FilterStudentList = new List<StudentRecord>();
 
+        XmlElement _ConfigElement = null;
+        List<string> _FilteredSubject = new List<string>();
+        List<string> _Tag1FilteredSubject = new List<string>();
+        List<string> _Tag2FilteredSubject = new List<string>();
+
         public CalculateRegularAssessmentRank()
         {
             InitializeComponent();
@@ -41,6 +46,34 @@ namespace JHEvaluation.Rank
                 throw new Exception("資料讀取失敗", ex);
             }
 
+            string configString = K12.Data.School.Configuration["固定排名_定期評量排名計算"]["設定檔"];
+            if (configString != "")
+            {
+                //< Setting 考試名稱 = "lbExam.Text" 不排名學生類別 = "cboStudentFilter.Text" 類別一 = "cboStudentTag1.Text" 類別二 = "cboStudentTag2.Text" >
+                //    < 不採計科目 > OO </ 不採計科目 >
+                //    < 不採計科目 > OO </ 不採計科目 >
+                //    < 不採計科目 > OO </ 不採計科目 >
+                //    < 類別一不採計科目 > OO </ 類別一不採計科目 >
+                //    < 類別一不採計科目 > OO </ 類別一不採計科目 >
+                //    < 類別二不採計科目 > OO </ 類別二不採計科目 >
+                //    < 類別二不採計科目 > OO </ 類別二不採計科目 >
+                //</ Setting >
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(configString);
+                _ConfigElement = doc.DocumentElement;
+                foreach (XmlElement item in _ConfigElement.SelectNodes("不採計科目"))
+                {
+                    _FilteredSubject.Add(item.InnerText);
+                }
+                foreach (XmlElement item in _ConfigElement.SelectNodes("類別一不採計科目"))
+                {
+                    _Tag1FilteredSubject.Add(item.InnerText);
+                }
+                foreach (XmlElement item in _ConfigElement.SelectNodes("類別二不採計科目"))
+                {
+                    _Tag2FilteredSubject.Add(item.InnerText);
+                }
+            }
         }
 
         private void CacluateRegularAssessmentRank_Load(object sender, EventArgs e)
@@ -118,30 +151,58 @@ namespace JHEvaluation.Rank
             cboStudentFilter.Items.Add("");
             cboStudentTag1.Items.Add("");
             cboStudentTag2.Items.Add("");
+
+            int cboStudentFilterIndex = 0;
+            int cboStudentTag1Index = 0;
+            int cboStudentTag2Index = 0;
+            int cboExamTypeIndex = 0;
             foreach (var item in _TagConfigRecord.Select(x => x.Prefix).Distinct())
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    cboStudentFilter.Items.Add("[" + item + "]");
-                    cboStudentTag1.Items.Add("[" + item + "]");
-                    cboStudentTag2.Items.Add("[" + item + "]");
+                    var index1 = cboStudentFilter.Items.Add("[" + item + "]");
+                    var index2 = cboStudentTag1.Items.Add("[" + item + "]");
+                    var index3 = cboStudentTag2.Items.Add("[" + item + "]");
+                    //< Setting 考試名稱 = "cboExamType.Text" 不排名學生類別 = "cboStudentFilter.Text" 類別一 = "cboStudentTag1.Text" 類別二 = "cboStudentTag2.Text" >
+                    //    < 不採計科目 > OO </ 不採計科目 >
+                    //    < 不採計科目 > OO </ 不採計科目 >
+                    //    < 不採計科目 > OO </ 不採計科目 >
+                    //    < 類別一不採計科目 > OO </ 類別一不採計科目 >
+                    //    < 類別一不採計科目 > OO </ 類別一不採計科目 >
+                    //    < 類別二不採計科目 > OO </ 類別二不採計科目 >
+                    //    < 類別二不採計科目 > OO </ 類別二不採計科目 >
+                    //</ Setting >
+                    if (_ConfigElement != null && _ConfigElement.GetAttribute("不排名學生類別") == "[" + item + "]")
+                        cboStudentFilterIndex = index1;
+                    if (_ConfigElement != null && _ConfigElement.GetAttribute("類別一") == "[" + item + "]")
+                        cboStudentTag1Index = index2;
+                    if (_ConfigElement != null && _ConfigElement.GetAttribute("類別二") == "[" + item + "]")
+                        cboStudentTag2Index = index3;
                 }
             }
             foreach (string tagName in _TagConfigRecord.Where(x => string.IsNullOrEmpty(x.Prefix)).Select(x => x.Name).ToList())
             {
-                cboStudentFilter.Items.Add(tagName);
-                cboStudentTag1.Items.Add(tagName);
-                cboStudentTag2.Items.Add(tagName);
+                var index1 = cboStudentFilter.Items.Add(tagName);
+                var index2 = cboStudentTag1.Items.Add(tagName);
+                var index3 = cboStudentTag2.Items.Add(tagName);
+                if (_ConfigElement != null && _ConfigElement.GetAttribute("不排名學生類別") == tagName)
+                    cboStudentFilterIndex = index1;
+                if (_ConfigElement != null && _ConfigElement.GetAttribute("類別一") == tagName)
+                    cboStudentTag1Index = index2;
+                if (_ConfigElement != null && _ConfigElement.GetAttribute("類別二") == tagName)
+                    cboStudentTag2Index = index3;
             }
-            cboStudentFilter.SelectedIndex = 0;
-            cboStudentTag1.SelectedIndex = 0;
-            cboStudentTag2.SelectedIndex = 0;
+            cboStudentFilter.SelectedIndex = cboStudentFilterIndex;
+            cboStudentTag1.SelectedIndex = cboStudentTag1Index;
+            cboStudentTag2.SelectedIndex = cboStudentTag2Index;
 
             foreach (var item in _ExamList.Select(x => x.Name).Distinct())
             {
-                cboExamType.Items.Add(item);
+                int index = cboExamType.Items.Add(item);
+                if (_ConfigElement != null && _ConfigElement.GetAttribute("考試名稱") == item)
+                    cboExamTypeIndex = index;
             }
-            cboExamType.SelectedIndex = 0;
+            cboExamType.SelectedIndex = cboExamTypeIndex;
             #endregion
         }
 
@@ -207,9 +268,9 @@ ORDER BY
             #endregion
             foreach (DataRow row in subjectTable.Rows)
             {
-                lvCalcSubject.Items.Add("" + row["subject"]).Checked = true;
-                lvCalcSubjectTag1.Items.Add("" + row["subject"]).Checked = true;
-                lvCalcSubjectTag2.Items.Add("" + row["subject"]).Checked = true;
+                lvCalcSubject.Items.Add("" + row["subject"]).Checked = !_FilteredSubject.Contains("" + row["subject"]);
+                lvCalcSubjectTag1.Items.Add("" + row["subject"]).Checked = !_Tag1FilteredSubject.Contains("" + row["subject"]);
+                lvCalcSubjectTag2.Items.Add("" + row["subject"]).Checked = !_Tag2FilteredSubject.Contains("" + row["subject"]);
             }
         }
 
@@ -383,6 +444,78 @@ ORDER BY
 
         private void btnCacluate_Click(object sender, EventArgs e)
         {
+            #region 儲存設定
+            {
+                XmlDocument document = new XmlDocument();
+                XmlElement configEle = document.CreateElement("Setting");
+                configEle.SetAttribute("考試名稱", lbExam.Text);
+                configEle.SetAttribute("不排名學生類別", cboStudentFilter.Text);
+                configEle.SetAttribute("類別一", cboStudentTag1.Text);
+                configEle.SetAttribute("類別二", cboStudentTag2.Text);
+                foreach (ListViewItem item in lvCalcSubject.Items)
+                {
+                    if (item.Checked)
+                    {
+                        if (_FilteredSubject.Contains(item.Text))
+                            _FilteredSubject.Remove(item.Text);
+                    }
+                    else
+                    {
+                        if (!_FilteredSubject.Contains(item.Text))
+                            _FilteredSubject.Add(item.Text);
+                    }
+                }
+                foreach (ListViewItem item in lvCalcSubjectTag1.Items)
+                {
+                    if (item.Checked)
+                    {
+                        if (_Tag1FilteredSubject.Contains(item.Text))
+                            _Tag1FilteredSubject.Remove(item.Text);
+                    }
+                    else
+                    {
+                        if (!_Tag1FilteredSubject.Contains(item.Text))
+                            _Tag1FilteredSubject.Add(item.Text);
+                    }
+                }
+                foreach (ListViewItem item in lvCalcSubjectTag2.Items)
+                {
+                    if (item.Checked)
+                    {
+                        if (_Tag2FilteredSubject.Contains(item.Text))
+                            _Tag2FilteredSubject.Remove(item.Text);
+                    }
+                    else
+                    {
+                        if (!_Tag2FilteredSubject.Contains(item.Text))
+                            _Tag2FilteredSubject.Add(item.Text);
+                    }
+                }
+                foreach (var item in _FilteredSubject)
+                {
+                    var ele = document.CreateElement("不採計科目");
+                    ele.InnerText = item;
+                    configEle.AppendChild(ele);
+                }
+                foreach (var item in _Tag1FilteredSubject)
+                {
+                    var ele = document.CreateElement("類別一不採計科目");
+                    ele.InnerText = item;
+                    configEle.AppendChild(ele);
+                }
+                foreach (var item in _Tag2FilteredSubject)
+                {
+                    var ele = document.CreateElement("類別二不採計科目");
+                    ele.InnerText = item;
+                    configEle.AppendChild(ele);
+                }
+
+                var cd = K12.Data.School.Configuration["固定排名_定期評量排名計算"];
+                cd["設定檔"] = configEle.OuterXml;
+                cd.Save();
+            }
+            #endregion
+
             List<string> studentSqlList = new List<string>();
             foreach (DataGridViewRow row in dgvStudentList.Rows)
             {
