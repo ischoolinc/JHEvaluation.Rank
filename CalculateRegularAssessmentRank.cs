@@ -765,6 +765,10 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY domain_score.rank_class_name ,domain_score.domain ORDER BY domain_score.score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag1, domain_score.domain ORDER BY domain_score.score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag2, domain_score.domain ORDER BY domain_score.score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY domain_score.rank_grade_year ,domain_score.domain ORDER BY domain_score.score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY domain_score.rank_class_name ,domain_score.domain ORDER BY domain_score.score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag1, domain_score.domain ORDER BY domain_score.score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag2, domain_score.domain ORDER BY domain_score.score ASC) AS tag2_rank_reverse
 		, COUNT (domain_score.student_id) OVER(PARTITION BY domain_score.rank_grade_year ,domain_score.domain) AS grade_count
 		, COUNT (domain_score.student_id) OVER(PARTITION BY domain_score.rank_class_name, domain_score.domain) AS class_count
 		, COUNT (domain_score.student_id) OVER(PARTITION BY domain_score.rank_grade_year, domain_score.rank_tag1, domain_score.domain) AS tag1_count
@@ -781,35 +785,12 @@ WITH row AS (
 		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
 		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
 		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR(grade_defeat::DECIMAL*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR(class_defeat::DECIMAL*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR(tag1_defeat::DECIMAL*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR(tag2_defeat::DECIMAL*100::DECIMAL/tag2_count) AS tag2rank_pr
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		domain_rank_row AS s1
-        LEFT OUTER JOIN LATERAL (
-            SELECT
-                s2.student_id
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.domain = s2.domain) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.domain) 
-                    AS grade_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_class_name = s2.rank_class_name AND s1.domain = s2.domain) 
-                    OVER( PARTITION BY s1.rank_class_name, s1.domain) 
-                    AS class_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag1 = s2.rank_tag1 AND s1.domain = s2.domain) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag1, s1.domain) 
-                    AS tag1_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag2 = s2.rank_tag2 AND s1.domain = s2.domain) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag2, s1.domain) 
-                    AS tag2_defeat
-            FROM
-                domain_rank_row AS s2
-        ) AS score_defeat
-            ON score_defeat.student_id = s1.student_id
 ), subject_rank_row AS (--------計算科目排名
 	SELECT
 		exam_score.student_id
@@ -827,6 +808,10 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY exam_score.rank_class_name ,exam_score.subject ORDER BY score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject ORDER BY score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ORDER BY score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY exam_score.rank_class_name ,exam_score.subject ORDER BY score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject ORDER BY score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ) AS grade_count
 		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_class_name, exam_score.subject) AS class_count
 		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject) AS tag1_count
@@ -843,35 +828,12 @@ WITH row AS (
 		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
 		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
 		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR(grade_defeat::DECIMAL*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR(class_defeat::DECIMAL*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR(tag1_defeat::DECIMAL*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR(tag2_defeat::DECIMAL*100::DECIMAL/tag2_count) AS tag2rank_pr
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		subject_rank_row AS s1
-        LEFT OUTER JOIN LATERAL (
-            SELECT
-                s2.student_id
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.subject = s2.subject) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.subject) 
-                    AS grade_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_class_name = s2.rank_class_name AND s1.subject = s2.subject) 
-                    OVER( PARTITION BY s1.rank_class_name, s1.subject) 
-                    AS class_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag1 = s2.rank_tag1 AND s1.subject = s2.subject) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag1, s1.subject) 
-                    AS tag1_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag2 = s2.rank_tag2 AND s1.subject = s2.subject) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag2, s1.subject) 
-                    AS tag2_defeat
-            FROM
-                subject_rank_row AS s2
-        ) AS score_defeat
-            ON score_defeat.student_id = s1.student_id
 ), calc_sum_rank_row AS (-----------計算總分排名
 	SELECT 
 		calc_sum_score.student_id
@@ -889,6 +851,10 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY calc_sum_score.rank_class_name ORDER BY score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY calc_sum_score.rank_grade_year, calc_sum_score.rank_tag1 ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY calc_sum_score.rank_grade_year, calc_sum_score.rank_tag2 ORDER BY score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY calc_sum_score.rank_grade_year ORDER BY score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY calc_sum_score.rank_class_name ORDER BY score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY calc_sum_score.rank_grade_year, calc_sum_score.rank_tag1 ORDER BY score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY calc_sum_score.rank_grade_year, calc_sum_score.rank_tag2 ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (*) OVER(PARTITION BY calc_sum_score.rank_grade_year) AS grade_count
 		, COUNT (*) OVER(PARTITION BY calc_sum_score.rank_class_name) AS class_count
 		, COUNT (*) OVER(PARTITION BY calc_sum_score.rank_grade_year, calc_sum_score.rank_tag1) AS tag1_count
@@ -902,35 +868,12 @@ WITH row AS (
 		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
 		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
 		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR(grade_defeat::DECIMAL*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR(class_defeat::DECIMAL*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR(tag1_defeat::DECIMAL*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR(tag2_defeat::DECIMAL*100::DECIMAL/tag2_count) AS tag2rank_pr
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		calc_sum_rank_row AS s1
-        LEFT OUTER JOIN LATERAL (
-            SELECT
-                s2.student_id
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year) 
-                    OVER( PARTITION BY s1.rank_grade_year) 
-                    AS grade_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_class_name = s2.rank_class_name) 
-                    OVER( PARTITION BY s1.rank_class_name) 
-                    AS class_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag1 = s2.rank_tag1) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag1) 
-                    AS tag1_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag2 = s2.rank_tag2) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag2) 
-                    AS tag2_defeat
-            FROM
-                calc_sum_rank_row AS s2
-        ) AS score_defeat
-            ON score_defeat.student_id = s1.student_id
 ), calc_avg_rank_row AS (-----------計算平均排名
 	SELECT 
 		calc_avg_score.student_id
@@ -948,6 +891,10 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY calc_avg_score.rank_class_name ORDER BY score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY calc_avg_score.rank_grade_year, calc_avg_score.rank_tag1 ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY calc_avg_score.rank_grade_year, calc_avg_score.rank_tag2 ORDER BY score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY calc_avg_score.rank_grade_year ORDER BY score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY calc_avg_score.rank_class_name ORDER BY score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY calc_avg_score.rank_grade_year, calc_avg_score.rank_tag1 ORDER BY score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY calc_avg_score.rank_grade_year, calc_avg_score.rank_tag2 ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (*) OVER(PARTITION BY calc_avg_score.rank_grade_year) AS grade_count
 		, COUNT (*) OVER(PARTITION BY calc_avg_score.rank_class_name) AS class_count
 		, COUNT (*) OVER(PARTITION BY calc_avg_score.rank_grade_year, calc_avg_score.rank_tag1) AS tag1_count
@@ -961,35 +908,12 @@ WITH row AS (
 		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
 		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
 		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR(grade_defeat::DECIMAL*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR(class_defeat::DECIMAL*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR(tag1_defeat::DECIMAL*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR(tag2_defeat::DECIMAL*100::DECIMAL/tag2_count) AS tag2rank_pr
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		calc_avg_rank_row AS s1
-        LEFT OUTER JOIN LATERAL (
-            SELECT
-                s2.student_id
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year) 
-                    OVER( PARTITION BY s1.rank_grade_year) 
-                    AS grade_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_class_name = s2.rank_class_name) 
-                    OVER( PARTITION BY s1.rank_class_name) 
-                    AS class_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag1 = s2.rank_tag1) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag1) 
-                    AS tag1_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag2 = s2.rank_tag2) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag2) 
-                    AS tag2_defeat
-            FROM
-                calc_avg_rank_row AS s2
-        ) AS score_defeat
-            ON score_defeat.student_id = s1.student_id
 ), weight_sum_rank_row AS (-----------計算加權總分排名
 	SELECT 
 		weight_sum_score.student_id
@@ -1007,6 +931,10 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY weight_sum_score.rank_class_name ORDER BY score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY weight_sum_score.rank_grade_year, weight_sum_score.rank_tag1 ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY weight_sum_score.rank_grade_year, weight_sum_score.rank_tag2 ORDER BY score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY weight_sum_score.rank_grade_year ORDER BY score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY weight_sum_score.rank_class_name ORDER BY score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY weight_sum_score.rank_grade_year, weight_sum_score.rank_tag1 ORDER BY score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY weight_sum_score.rank_grade_year, weight_sum_score.rank_tag2 ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (*) OVER(PARTITION BY weight_sum_score.rank_grade_year) AS grade_count
 		, COUNT (*) OVER(PARTITION BY weight_sum_score.rank_class_name) AS class_count
 		, COUNT (*) OVER(PARTITION BY weight_sum_score.rank_grade_year, weight_sum_score.rank_tag1) AS tag1_count
@@ -1020,35 +948,12 @@ WITH row AS (
 		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
 		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
 		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR(grade_defeat::DECIMAL*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR(class_defeat::DECIMAL*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR(tag1_defeat::DECIMAL*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR(tag2_defeat::DECIMAL*100::DECIMAL/tag2_count) AS tag2rank_pr
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		weight_sum_rank_row AS s1
-        LEFT OUTER JOIN LATERAL (
-            SELECT
-                s2.student_id
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year) 
-                    OVER( PARTITION BY s1.rank_grade_year) 
-                    AS grade_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_class_name = s2.rank_class_name) 
-                    OVER( PARTITION BY s1.rank_class_name) 
-                    AS class_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag1 = s2.rank_tag1) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag1) 
-                    AS tag1_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag2 = s2.rank_tag2) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag2) 
-                    AS tag2_defeat
-            FROM
-                weight_sum_rank_row AS s2
-        ) AS score_defeat
-            ON score_defeat.student_id = s1.student_id
 ), weight_avg_rank_row AS (-----------計算加權平均排名
 	SELECT 
 		weight_avg_score.student_id
@@ -1066,6 +971,10 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY weight_avg_score.rank_class_name ORDER BY score DESC) AS class_rank
 		, RANK() OVER(PARTITION BY weight_avg_score.rank_grade_year, weight_avg_score.rank_tag1 ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY weight_avg_score.rank_grade_year, weight_avg_score.rank_tag2 ORDER BY score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY weight_avg_score.rank_grade_year ORDER BY score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY weight_avg_score.rank_class_name ORDER BY score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY weight_avg_score.rank_grade_year, weight_avg_score.rank_tag1 ORDER BY score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY weight_avg_score.rank_grade_year, weight_avg_score.rank_tag2 ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (*) OVER(PARTITION BY weight_avg_score.rank_grade_year) AS grade_count
 		, COUNT (*) OVER(PARTITION BY weight_avg_score.rank_class_name) AS class_count
 		, COUNT (*) OVER(PARTITION BY weight_avg_score.rank_grade_year, weight_avg_score.rank_tag1) AS tag1_count
@@ -1079,35 +988,12 @@ WITH row AS (
 		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
 		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
 		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR(grade_defeat::DECIMAL*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR(class_defeat::DECIMAL*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR(tag1_defeat::DECIMAL*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR(tag2_defeat::DECIMAL*100::DECIMAL/tag2_count) AS tag2rank_pr
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		weight_avg_rank_row AS s1
-        LEFT OUTER JOIN LATERAL (
-            SELECT
-                s2.student_id
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year) 
-                    OVER( PARTITION BY s1.rank_grade_year) 
-                    AS grade_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_class_name = s2.rank_class_name) 
-                    OVER( PARTITION BY s1.rank_class_name) 
-                    AS class_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag1 = s2.rank_tag1) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag1) 
-                    AS tag1_defeat
-                , COUNT(*) 
-                    FILTER(WHERE s1.score > s2.score AND s1.rank_grade_year = s2.rank_grade_year AND s1.rank_tag2 = s2.rank_tag2) 
-                    OVER( PARTITION BY s1.rank_grade_year, s1.rank_tag2) 
-                    AS tag2_defeat
-            FROM
-                weight_avg_rank_row AS s2
-        ) AS score_defeat
-            ON score_defeat.student_id = s1.student_id
 ), score_list AS (
     --1.1 領域成績 年排名
     --1.2 領域成績 班排名
