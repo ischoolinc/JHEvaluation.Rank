@@ -549,15 +549,15 @@ WITH row AS (
 		, student_row.rank_tag1
 		, student_row.rank_tag2
 		,CASE
-			WHEN  xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)) IS NULL OR array_length(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)),1) IS NULL 
-			THEN  NULL 
+			WHEN xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)) IS NULL OR array_length(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)),1) IS NULL 
+			THEN NULL 
 			ELSE 	('0'||unnest(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)))::text)::DECIMAL  
-		 END AS exam_score
+		    END AS exam_score
 		,CASE
 			WHEN	 xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)) IS NULL OR array_length(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)),1) IS NULL 
 			THEN  NULL 
-		ELSE	('0'||unnest(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)))::text)::DECIMAL 
-		END AS assignment_score	
+		    ELSE	('0'||unnest(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)))::text)::DECIMAL 
+		    END AS assignment_score	
 	FROM  sce_take
 		LEFT JOIN sc_attend 
 			ON ref_sc_attend_id = sc_attend.id
@@ -577,6 +577,11 @@ WITH row AS (
 			AND course.semester = row.rank_semester::int
 			AND student_row.rank_grade_year = row.rank_grade_year::int
 			AND exam.exam_name= row.rank_exam_name
+
+    --2.1 科目成績 年排名
+    --2.2 科目成績 班排名
+    --2.3 科目成績 類別1排名
+    --2.4 科目成績 類別2排名
 ), exam_score AS (-------結算定期評量總成績
 	SELECT	
 		score_detail_row.*
@@ -600,6 +605,56 @@ WITH row AS (
 		    exam_weight IS NOT NULL
 		    OR assignment_weight IS NOT NULL
 	    )
+), subject_rank_row AS (--------計算科目排名
+	SELECT
+		exam_score.student_id
+		, exam_score.rank_tag1
+		, exam_score.rank_tag2
+		, '定期評量/科目成績'::TEXT AS item_type
+		, exam_score.subject AS item_name
+		, exam_score.rank_school_year
+		, exam_score.rank_semester
+		, exam_score.rank_grade_year
+		, exam_score.rank_class_name
+		, exam_score.exam_id
+		, exam_score.score
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ORDER BY score DESC) AS grade_rank
+		, RANK() OVER(PARTITION BY exam_score.rank_class_name ,exam_score.subject ORDER BY score DESC) AS class_rank
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject ORDER BY score DESC) AS tag1_rank
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject ORDER BY score DESC) AS tag2_rank
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ORDER BY score ASC) AS grade_rank_reverse
+		, RANK() OVER(PARTITION BY exam_score.rank_class_name ,exam_score.subject ORDER BY score ASC) AS class_rank_reverse
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject ORDER BY score ASC) AS tag1_rank_reverse
+		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject ORDER BY score ASC) AS tag2_rank_reverse
+		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ) AS grade_count
+		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_class_name, exam_score.subject) AS class_count
+		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject) AS tag1_count
+		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject) AS tag2_count
+        , exam_score.subject
+	FROM 
+        exam_score
+	WHERE 
+        exam_score.subject IS NOT NULL
+), subject_rank AS (-----------計算科目排名排名百分比及PR
+	SELECT  
+		s1.*
+		, FLOOR((grade_rank::DECIMAL-1)*100::DECIMAL/grade_count)+1 AS graderank_percentage
+		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
+		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
+		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
+        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
+        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
+        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
+        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
+	FROM 
+		subject_rank_row AS s1
+
+
+
+    --1.1 領域成績 年排名
+    --1.2 領域成績 班排名
+    --1.3 領域成績 類別1排名
+    --1.4 領域成績 類別2排名
 ), domain_score AS (-----結算領域成績
 	SELECT 
 		student_id
@@ -631,118 +686,6 @@ WITH row AS (
         , exam_id
         , student_id
         , student_name
-        , rank_tag1
-        , rank_tag2
-), calc_sum_score AS (------算數總分排名所需成績
-	SELECT
-		student_id
-		, student_name
-		, rank_school_year
-		, rank_semester
-		, rank_grade_year
-		, rank_class_name
-		, exam_id
-		, rank_tag1
-		, rank_tag2
-		, SUM( exam_score.score::decimal ) AS score
-	FROM 
-		exam_score
-	WHERE
-		exam_score.score IS NOT NULL
-		AND exam_score.credit IS NOT NULL
-	GROUP BY 
-		student_id
-        , student_name
-        , rank_school_year
-        , rank_semester
-        , rank_grade_year
-        , rank_class_name
-        , exam_id
-        , rank_tag1
-        , rank_tag2
-), calc_avg_score AS (------算數總分排名所需成績
-	SELECT
-		student_id
-		, student_name
-		, rank_school_year
-		, rank_semester
-		, rank_grade_year
-		, rank_class_name
-		, exam_id
-		, rank_tag1
-		, rank_tag2
-		, AVG( exam_score.score::decimal ) AS score
-	FROM 
-		exam_score
-	WHERE
-		exam_score.score IS NOT NULL
-		AND exam_score.credit IS NOT NULL
-	GROUP BY 
-		student_id
-        , student_name
-        , rank_school_year
-        , rank_semester
-        , rank_grade_year
-        , rank_class_name
-        , exam_id
-        , rank_tag1
-        , rank_tag2
-), weight_sum_score AS (------加權總分排名所需成績
-	SELECT
-		student_id
-		, student_name
-		, rank_school_year
-		, rank_semester
-		, rank_grade_year
-		, rank_class_name
-		, exam_id
-		, rank_tag1
-		, rank_tag2
-		, SUM( exam_score.score::decimal * exam_score.credit::decimal ) AS score
-	FROM 
-		exam_score
-	WHERE
-		exam_score.score IS NOT NULL
-		AND exam_score.credit IS NOT NULL
-	GROUP BY 
-		student_id
-        , student_name
-        , rank_school_year
-        , rank_semester
-        , rank_grade_year
-        , rank_class_name
-        , exam_id
-        , rank_tag1
-        , rank_tag2
-), weight_avg_score AS (------加權平均排名所需成績
-	SELECT
-		student_id
-		, student_name
-		, rank_school_year
-		, rank_semester
-		, rank_grade_year
-		, rank_class_name
-		, exam_id
-		, rank_tag1
-		, rank_tag2
-		, CASE 
-            WHEN SUM(exam_score.credit) IS NULL THEN NULL::DECIMAL
-            WHEN SUM(exam_score.credit) = 0 THEN 0::DECIMAL
-            ELSE SUM(exam_score.score::DECIMAL * exam_score.credit::DECIMAL) / SUM(exam_score.credit)
-            END AS score
-	FROM 
-		exam_score
-	WHERE
-		exam_score.score IS NOT NULL
-		AND exam_score.credit IS NOT NULL
-	GROUP BY 
-		student_id
-        , student_name
-        , rank_school_year
-        , rank_semester
-        , rank_grade_year
-        , rank_class_name
-        , exam_id
         , rank_tag1
         , rank_tag2
 ), domain_rank_row AS (-------計算領域排名
@@ -788,49 +731,40 @@ WITH row AS (
         , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		domain_rank_row AS s1
-), subject_rank_row AS (--------計算科目排名
+
+
+
+    --3.1 總計成績 總分 年排名
+    --3.2 總計成績 總分 班排名
+    --3.3 總計成績 總分 類別1排名
+    --3.4 總計成績 總分 類別2排名
+), calc_sum_score AS (------算數總分排名所需成績
 	SELECT
-		exam_score.student_id
-		, exam_score.rank_tag1
-		, exam_score.rank_tag2
-		, '定期評量/科目成績'::TEXT AS item_type
-		, exam_score.subject AS item_name
-		, exam_score.rank_school_year
-		, exam_score.rank_semester
-		, exam_score.rank_grade_year
-		, exam_score.rank_class_name
-		, exam_score.exam_id
-		, exam_score.score
-		, RANK() OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ORDER BY score DESC) AS grade_rank
-		, RANK() OVER(PARTITION BY exam_score.rank_class_name ,exam_score.subject ORDER BY score DESC) AS class_rank
-		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject ORDER BY score DESC) AS tag1_rank
-		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject ORDER BY score DESC) AS tag2_rank
-		, RANK() OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ORDER BY score ASC) AS grade_rank_reverse
-		, RANK() OVER(PARTITION BY exam_score.rank_class_name ,exam_score.subject ORDER BY score ASC) AS class_rank_reverse
-		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject ORDER BY score ASC) AS tag1_rank_reverse
-		, RANK() OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject ORDER BY score ASC) AS tag2_rank_reverse
-		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year,exam_score.subject ) AS grade_count
-		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_class_name, exam_score.subject) AS class_count
-		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year, rank_tag1, exam_score.subject) AS tag1_count
-		, COUNT (exam_score.student_id) OVER(PARTITION BY exam_score.rank_grade_year, rank_tag2, exam_score.subject) AS tag2_count
-        , exam_score.subject
+		student_id
+		, student_name
+		, rank_school_year
+		, rank_semester
+		, rank_grade_year
+		, rank_class_name
+		, exam_id
+		, rank_tag1
+		, rank_tag2
+		, SUM( exam_score.score::decimal ) AS score
 	FROM 
-        exam_score
-	WHERE 
-        exam_score.subject IS NOT NULL
-), subject_rank AS (-----------計算科目排名排名百分比及PR
-	SELECT  
-		s1.*
-		, FLOOR((grade_rank::DECIMAL-1)*100::DECIMAL/grade_count)+1 AS graderank_percentage
-		, FLOOR((class_rank::DECIMAL-1)*100::DECIMAL/class_count)+1 AS classrank_percentage
-		, FLOOR((tag1_rank::DECIMAL-1)*100::DECIMAL/tag1_count)+1 AS tag1rank_percentage
-		, FLOOR((tag2_rank::DECIMAL-1)*100::DECIMAL/tag2_count)+1 AS tag2rank_percentage
-        , FLOOR((grade_rank_reverse::DECIMAL-1)*100::DECIMAL/grade_count) AS graderank_pr
-        , FLOOR((class_rank_reverse::DECIMAL-1)*100::DECIMAL/class_count) AS classrank_pr
-        , FLOOR((tag1_rank_reverse::DECIMAL-1)*100::DECIMAL/tag1_count) AS tag1rank_pr
-        , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
-	FROM 
-		subject_rank_row AS s1
+		exam_score
+	WHERE
+		exam_score.score IS NOT NULL
+		AND exam_score.credit IS NOT NULL
+	GROUP BY 
+		student_id
+        , student_name
+        , rank_school_year
+        , rank_semester
+        , rank_grade_year
+        , rank_class_name
+        , exam_id
+        , rank_tag1
+        , rank_tag2
 ), calc_sum_rank_row AS (-----------計算總分排名
 	SELECT 
 		calc_sum_score.student_id
@@ -871,6 +805,40 @@ WITH row AS (
         , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		calc_sum_rank_row AS s1
+
+
+
+    --4.1 總計成績 平均 年排名
+    --4.2 總計成績 平均 班排名
+    --4.3 總計成績 平均 類別1排名
+    --4.4 總計成績 平均 類別2排名
+), calc_avg_score AS (------算數平均排名所需成績
+	SELECT
+		student_id
+		, student_name
+		, rank_school_year
+		, rank_semester
+		, rank_grade_year
+		, rank_class_name
+		, exam_id
+		, rank_tag1
+		, rank_tag2
+		, AVG( exam_score.score::decimal ) AS score
+	FROM 
+		exam_score
+	WHERE
+		exam_score.score IS NOT NULL
+		AND exam_score.credit IS NOT NULL
+	GROUP BY 
+		student_id
+        , student_name
+        , rank_school_year
+        , rank_semester
+        , rank_grade_year
+        , rank_class_name
+        , exam_id
+        , rank_tag1
+        , rank_tag2
 ), calc_avg_rank_row AS (-----------計算平均排名
 	SELECT 
 		calc_avg_score.student_id
@@ -911,6 +879,40 @@ WITH row AS (
         , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		calc_avg_rank_row AS s1
+
+
+
+    --5.1 總計成績 加權總分 年排名
+    --5.2 總計成績 加權總分 班排名
+    --5.3 總計成績 加權總分 類別1排名
+    --5.4 總計成績 加權總分 類別2排名
+), weight_sum_score AS (------加權總分排名所需成績
+	SELECT
+		student_id
+		, student_name
+		, rank_school_year
+		, rank_semester
+		, rank_grade_year
+		, rank_class_name
+		, exam_id
+		, rank_tag1
+		, rank_tag2
+		, SUM( exam_score.score::decimal * exam_score.credit::decimal ) AS score
+	FROM 
+		exam_score
+	WHERE
+		exam_score.score IS NOT NULL
+		AND exam_score.credit IS NOT NULL
+	GROUP BY 
+		student_id
+        , student_name
+        , rank_school_year
+        , rank_semester
+        , rank_grade_year
+        , rank_class_name
+        , exam_id
+        , rank_tag1
+        , rank_tag2
 ), weight_sum_rank_row AS (-----------計算加權總分排名
 	SELECT 
 		weight_sum_score.student_id
@@ -951,6 +953,44 @@ WITH row AS (
         , FLOOR((tag2_rank_reverse::DECIMAL-1)*100::DECIMAL/tag2_count) AS tag2rank_pr
 	FROM 
 		weight_sum_rank_row AS s1
+
+
+
+    --6.1 總計成績 加權平均 年排名
+    --6.2 總計成績 加權平均 班排名
+    --6.3 總計成績 加權平均 類別1排名
+    --6.4 總計成績 加權平均 類別2排名
+), weight_avg_score AS (------加權平均排名所需成績
+	SELECT
+		student_id
+		, student_name
+		, rank_school_year
+		, rank_semester
+		, rank_grade_year
+		, rank_class_name
+		, exam_id
+		, rank_tag1
+		, rank_tag2
+		, CASE 
+            WHEN SUM(exam_score.credit) IS NULL THEN NULL::DECIMAL
+            WHEN SUM(exam_score.credit) = 0 THEN 0::DECIMAL
+            ELSE SUM(exam_score.score::DECIMAL * exam_score.credit::DECIMAL) / SUM(exam_score.credit)
+            END AS score
+	FROM 
+		exam_score
+	WHERE
+		exam_score.score IS NOT NULL
+		AND exam_score.credit IS NOT NULL
+	GROUP BY 
+		student_id
+        , student_name
+        , rank_school_year
+        , rank_semester
+        , rank_grade_year
+        , rank_class_name
+        , exam_id
+        , rank_tag1
+        , rank_tag2
 ), weight_avg_rank_row AS (-----------計算加權平均排名
 	SELECT 
 		weight_avg_score.student_id
@@ -1000,18 +1040,18 @@ WITH row AS (
     --2.2 科目成績 班排名
     --2.3 科目成績 類別1排名
     --2.4 科目成績 類別2排名
-    --3.1 總計成績 加權平均 年排名
-    --3.2 總計成績 加權平均 班排名
-    --3.3 總計成績 加權平均 類別1排名
-    --3.4 總計成績 加權平均 類別2排名
-    --4.1 總計成績 加權平均 年排名
-    --4.2 總計成績 加權平均 班排名
-    --4.3 總計成績 加權平均 類別1排名
-    --4.4 總計成績 加權平均 類別2排名
-    --5.1 總計成績 加權平均 年排名
-    --5.2 總計成績 加權平均 班排名
-    --5.3 總計成績 加權平均 類別1排名
-    --5.4 總計成績 加權平均 類別2排名
+    --3.1 總計成績 總分 年排名
+    --3.2 總計成績 總分 班排名
+    --3.3 總計成績 總分 類別1排名
+    --3.4 總計成績 總分 類別2排名
+    --4.1 總計成績 平均 年排名
+    --4.2 總計成績 平均 班排名
+    --4.3 總計成績 平均 類別1排名
+    --4.4 總計成績 平均 類別2排名
+    --5.1 總計成績 加權總分 年排名
+    --5.2 總計成績 加權總分 班排名
+    --5.3 總計成績 加權總分 類別1排名
+    --5.4 總計成績 加權總分 類別2排名
     --6.1 總計成績 加權平均 年排名
     --6.2 總計成績 加權平均 班排名
     --6.3 總計成績 加權平均 類別1排名
@@ -1342,7 +1382,7 @@ WITH row AS (
 		subject_rank.rank_tag2 IS NOT NULL
 		AND subject_rank.rank_tag2 <> ''
 	UNION ALL
-    --3.1 總計成績 平均 年排名
+    --3.1 總計成績 總分 年排名
 	SELECT
 		rank_school_year 
 		, rank_semester
@@ -1381,7 +1421,7 @@ WITH row AS (
 	FROM
 		calc_sum_rank
 	UNION ALL
-    --3.2 總計成績 平均 班排名
+    --3.2 總計成績 總分 班排名
 	SELECT
 		rank_school_year 
 		, rank_semester
@@ -1420,7 +1460,7 @@ WITH row AS (
 	FROM
 		calc_sum_rank
 	UNION ALL
-    --3.3 總計成績 平均 類別1排名
+    --3.3 總計成績 總分 類別1排名
 	SELECT
 		rank_school_year 
 		, rank_semester
@@ -1462,7 +1502,7 @@ WITH row AS (
 		calc_sum_rank.rank_tag1 IS NOT NULL
 		AND calc_sum_rank.rank_tag1 <> ''
 	UNION ALL
-    --3.4 總計成績 平均 類別2排名
+    --3.4 總計成績 總分 類別2排名
 	SELECT
 		rank_school_year 
 		, rank_semester
