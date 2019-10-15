@@ -1,4 +1,4 @@
-﻿    using FISCA;
+﻿using FISCA;
 using FISCA.Permission;
 using FISCA.Presentation;
 using System;

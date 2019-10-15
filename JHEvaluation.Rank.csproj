@@ -45,10 +45,9 @@
     <Reference Include="DevComponents.DotNetBar2, Version=9.5.0.1, Culture=neutral, PublicKeyToken=7eb7c3a35b91de04, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="FISCA, Version=2.5.1.3, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="FISCA, Version=2.1.4.8, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\FISCA.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="FISCA.Data, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

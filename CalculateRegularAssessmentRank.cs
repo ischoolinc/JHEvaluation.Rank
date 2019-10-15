@@ -522,12 +522,12 @@ ORDER BY
                 //每一筆學生先組好先加進List裡
                 studentSqlList.Add(@"
     SELECT
-        '" + row.Tag + @"'::BIGINT AS student_id
-        ,'" + row.Cells[3].Value + @"'::TEXT AS student_name
-        ,'" + ("" + row.Cells[4].Value).Trim('年', '級') + @"'::INT AS rank_grade_year
-        ,'" + "" + row.Cells[5].Value + @"'::TEXT AS rank_class_name
-        ,'" + "" + row.Cells[6].Value + @"'::TEXT AS rank_tag1
-        ,'" + "" + row.Cells[7].Value + @"'::TEXT AS rank_tag2
+        '" + ("" + row.Tag).Replace("'", "''") + @"'::BIGINT AS student_id
+        ,'" + ("" + row.Cells[3].Value).Replace("'", "''") + @"'::TEXT AS student_name
+        ,'" + ("" + row.Cells[4].Value).Trim('年', '級').Replace("'", "''") + @"'::INT AS rank_grade_year
+        ,'" + ("" + row.Cells[5].Value).Replace("'", "''") + @"'::TEXT AS rank_class_name
+        ,'" + ("" + row.Cells[6].Value).Replace("'", "''") + @"'::TEXT AS rank_tag1
+        ,'" + ("" + row.Cells[7].Value).Replace("'", "''") + @"'::TEXT AS rank_tag2
     ");
             }
 
@@ -612,11 +612,11 @@ ORDER BY
                         //每一筆row(包含GradeYear, SchoolYear, Semester, ExamName)先組好加進List
                         rowSqlList.Add(@"
 	SELECT
-		'" + gradeYearList[index] + @"'::TEXT  AS rank_grade_year
-		, '" + schoolYear + @"'::TEXT AS rank_school_year
-		, '" + semester + @"'::TEXT AS rank_semester
-        , '" + examId + @"'::TEXT AS ref_exam_id
-		, '" + examName + @"'::TEXT AS rank_exam_name
+		'" + ("" + gradeYearList[index]).Replace("'", "''") + @"'::TEXT  AS rank_grade_year
+		, '" + ("" + schoolYear).Replace("'", "''") + @"'::TEXT AS rank_school_year
+		, '" + ("" + semester).Replace("'", "''") + @"'::TEXT AS rank_semester
+        , '" + ("" + examId).Replace("'", "''") + @"'::TEXT AS ref_exam_id
+		, '" + ("" + examName).Replace("'", "''") + @"'::TEXT AS rank_exam_name
         , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting
 ");
                     }
