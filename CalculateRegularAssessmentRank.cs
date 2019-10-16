@@ -673,8 +673,8 @@ WITH row AS (
 		, course.credit
 		, exam_template.id AS template_id
 		, exam_template.name AS template_name
-		, ('0'||unnest(xpath('/Extension/ScorePercentage/text()',xmlparse(content exam_template.extension)))::text)::DECIMAL AS exam_weight
-		, 100::DECIMAL- ('0'||unnest(xpath('/Extension/ScorePercentage/text()',xmlparse(content exam_template.extension)))::text)::DECIMAL AS assignment_weight
+		, ('0'||array_to_string(xpath('/Extension/ScorePercentage/text()',xmlparse(content exam_template.extension)), ''))::DECIMAL AS exam_weight
+		, 100::DECIMAL - ('0'||array_to_string(xpath('/Extension/ScorePercentage/text()',xmlparse(content exam_template.extension)), ''))::DECIMAL AS assignment_weight
 		, exam.id AS exam_id
 		, exam.exam_name
 		, student_row.rank_class_name
@@ -682,14 +682,16 @@ WITH row AS (
 		, student_row.rank_tag1
 		, student_row.rank_tag2
 		,CASE
-			WHEN xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)) IS NULL OR array_length(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)),1) IS NULL 
-			THEN NULL 
-			ELSE 	('0'||unnest(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)))::text)::DECIMAL  
+			WHEN ( array_length(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)),1) IS NULL OR array_to_string(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)), '') = '' )
+                THEN NULL::DECIMAL
+            WHEN ( array_to_string(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)), '') = '缺' )
+                THEN -2147483648::DECIMAL
+			ELSE ('0'||array_to_string(xpath('/Extension/Score/text()',xmlparse(content sce_take.extension)), ''))::DECIMAL  
 		    END AS exam_score
 		,CASE
-			WHEN	 xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)) IS NULL OR array_length(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)),1) IS NULL 
-			THEN  NULL 
-		    ELSE	('0'||unnest(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)))::text)::DECIMAL 
+			WHEN ( array_length(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)),1) IS NULL OR array_to_string(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)), '') = '' )
+                THEN NULL 
+		    ELSE ('0'||array_to_string(xpath('/Extension/AssignmentScore/text()',xmlparse(content sce_take.extension)), ''))::DECIMAL 
 		    END AS assignment_score	
 	FROM  sce_take
 		LEFT JOIN sc_attend 
@@ -736,6 +738,7 @@ WITH row AS (
 		    exam_weight IS NOT NULL
 		    OR assignment_weight IS NOT NULL
 	    )
+        AND exam_score <> -2147483648
 ), subject_rank_row AS (--------計算科目排名
 	SELECT
 		exam_score.student_id
