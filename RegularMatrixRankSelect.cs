@@ -18,10 +18,13 @@ namespace JHEvaluation.Rank
     {
 
         bool _IsLoading = false;
-        string _RankName, _RankMatrixId;
-        Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
+        string _RankName, _RankMatrixID;
+        private string _RefStudentID;
+        private Dictionary<string, string> _DicMatrixID = new Dictionary<string, string>();
+        //Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
+        private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow = new Dictionary<string, DataGridViewRow>();
 
-        public RegularMatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
+        public RegularMatrixRankSelect(string rankMatrixId,string refStuID, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
         {
             InitializeComponent();
 
@@ -33,7 +36,10 @@ namespace JHEvaluation.Rank
             lbItemName.Text = itemName;
             lbRankType.Text = rankType;
             _RankName = rankName;
-            _RankMatrixId = rankMatrixId;
+            _RankMatrixID = rankMatrixId;
+            _RefStudentID = refStuID;
+
+
         }
 
         private void MatrixRankSelect_Load(object sender, EventArgs e)
@@ -43,39 +49,97 @@ namespace JHEvaluation.Rank
                 QueryHelper queryHelper = new QueryHelper();
 
                 #region 要顯示的資料的sql字串
-                string queryTable = @"
-SELECT
-	*
-FROM
-(
-	SELECT rank_matrix.id AS rank_matrix_id
-        , ref_batch_id
-		, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
-		, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
-		, exam.exam_name 
-		, rank_matrix.item_name 
-		, rank_matrix.rank_type
-		, rank_matrix.rank_name
-		, rank_matrix.school_year
-		, rank_matrix.semester 
-		, rank_matrix.is_alive
-		, rank_matrix.create_time
-	FROM rank_matrix 
-		LEFT OUTER JOIN 
-			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id
-		LEFT OUTER JOIN 
-			exam ON exam.id=rank_matrix.ref_exam_id
-	ORDER BY
-		create_time DESC
-) AS Rank_Table
-Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
-	AND semester = " + Convert.ToInt32(lbSemester.Text) + @"
-	AND score_type = '" + lbScoreType.Text + "'" + @"
-	AND score_category = '" + lbScoreCategory.Text + "'" + @"
-	AND exam_name = '" + lbExamName.Text + "'" + @"
-	AND item_name = '" + lbItemName.Text + "'" + @"
-	AND rank_name = '" + _RankName + "'";
+                //                string queryTable = @"
+                //SELECT
+                //	*
+                //FROM
+                //(
+                //	SELECT rank_matrix.id AS rank_matrix_id
+                //        , ref_batch_id
+                //		, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
+                //		, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
+                //		, exam.exam_name 
+                //		, rank_matrix.item_name 
+                //		, rank_matrix.rank_type
+                //		, rank_matrix.rank_name
+                //		, rank_matrix.school_year
+                //		, rank_matrix.semester 
+                //		, rank_matrix.is_alive
+                //		, rank_matrix.create_time
+                //	FROM rank_matrix 
+                //		LEFT OUTER JOIN 
+                //			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id
+                //		LEFT OUTER JOIN 
+                //			exam ON exam.id=rank_matrix.ref_exam_id
+                //	ORDER BY
+                //		create_time DESC
+                //) AS Rank_Table
+                //Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
+                //	AND semester = " + Convert.ToInt32(lbSemester.Text) + @"
+                //	AND score_type = '" + lbScoreType.Text + "'" + @"
+                //	AND score_category = '" + lbScoreCategory.Text + "'" + @"
+                //	AND exam_name = '" + lbExamName.Text + "'" + @"
+                //	AND item_name = '" + lbItemName.Text + "'" + @"
+                //	AND rank_name = '" + _RankName + "'";
                 #endregion
+                string queryTable = @"
+SELECT 
+	rank_matrix.id AS rank_matrix_id
+    , rank_matrix.ref_batch_id
+	, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
+	, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
+	, exam.exam_name 
+	, rank_matrix.item_name 
+	, rank_matrix.rank_type
+	, rank_matrix.rank_name
+	, rank_matrix.school_year
+	, rank_matrix.semester 
+	, rank_matrix.is_alive
+	, rank_matrix.create_time
+	, rank_matrix.matrix_count
+	, rank_matrix.avg_top_25
+	, rank_matrix.avg_top_50
+	, rank_matrix.avg
+	, rank_matrix.avg_bottom_50
+	, rank_matrix.avg_bottom_25
+	, rank_matrix.level_gte100
+	, rank_matrix.level_90
+	, rank_matrix.level_80
+	, rank_matrix.level_70
+	, rank_matrix.level_60
+	, rank_matrix.level_50
+	, rank_matrix.level_40
+	, rank_matrix.level_30
+	, rank_matrix.level_20
+	, rank_matrix.level_10
+	, rank_matrix.level_lt10
+FROM 
+	rank_matrix AS source
+    INNER JOIN rank_matrix
+		ON rank_matrix.school_year = source.school_year
+		AND rank_matrix.semester = source.semester
+		AND rank_matrix.item_type = source.item_type
+        AND rank_matrix.grade_year = source.grade_year
+		AND rank_matrix.ref_exam_id = source.ref_exam_id
+		AND rank_matrix.item_name = source.item_name
+		AND rank_matrix.rank_type = source.rank_type
+		AND rank_matrix.rank_name = source.rank_name
+	LEFT OUTER JOIN exam 
+        ON exam.id=rank_matrix.ref_exam_id
+WHERE
+	source.id = " + _RankMatrixID + @"::BIGINT
+    AND rank_matrix.id IN (
+        SELECT ref_matrix_id FROM rank_detail WHERE ref_student_id = " + _RefStudentID + @"::BIGINT
+    )
+ORDER BY
+	create_time DESC";
+
+
+
+            
+
+
+
 
                 DataTable dataTable = new DataTable();
                 dataTable = queryHelper.Select(queryTable);
@@ -83,20 +147,50 @@ Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
                 #region 填入編號的ComboBox
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    if (!cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）")
-                        && !cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）-目前採計"))
-                    {
-                        string isAlive = "";
-                        if (!string.IsNullOrEmpty("" + row["is_alive"]))
-                        {
-                            if (Convert.ToBoolean(row["is_alive"]) == true)
-                            {
-                                isAlive = "-目前採計";
-                            }
-                        }
-                        cboBatchId.Items.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive);
-                        _MatrixIdDic.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive, "" + row["rank_matrix_id"]);
-                    }
+                    //if (!cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）")
+                    //    && !cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）-目前採計"))
+                    //{
+                    //    string isAlive = "";
+                    //    if (!string.IsNullOrEmpty("" + row["is_alive"]))
+                    //    {
+                    //        if (Convert.ToBoolean(row["is_alive"]) == true)
+                    //        {
+                    //            isAlive = "-目前採計";
+                    //        }
+                    //    }
+                    //    cboBatchId.Items.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive);
+                    //    _MatrixIdDic.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive, "" + row["rank_matrix_id"]);
+                    //}
+
+
+                    bool tryParseBool = false;
+                    var key = "" + row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + (bool.TryParse("" + row["is_alive"], out tryParseBool) && tryParseBool ? "-目前採計" : "");
+                    var newIndex = cboBatchId.Items.Add(key);
+
+                    var newRow = dgvMatrixInfo.Rows[dgvMatrixInfo.Rows.Add(
+                        "" + row["matrix_count"]
+                        , "" + row["avg_top_25"]
+                        , "" + row["avg_top_50"]
+                        , "" + row["avg"]
+                        , "" + row["avg_bottom_50"]
+                        , "" + row["avg_bottom_25"]
+                        , "" + row["level_gte100"]
+                        , "" + row["level_90"]
+                        , "" + row["level_80"]
+                        , "" + row["level_70"]
+                        , "" + row["level_60"]
+                        , "" + row["level_50"]
+                        , "" + row["level_40"]
+                        , "" + row["level_30"]
+                        , "" + row["level_20"]
+                        , "" + row["level_10"]
+                        , "" + row["level_lt10"]
+                    )];
+                    newRow.Visible = false;
+
+                    _DicMatrixID.Add(key, "" + row["rank_matrix_id"]);
+                    _DicMatrixInfoRow.Add(key, newRow);
+
                 }
 
                 if (cboBatchId.Items.Contains("-目前採計"))
@@ -189,9 +283,23 @@ Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
             {
                 return;
             }
-
+            btnExportToExcel.Enabled = false;
+            btnExportToExcel.Text = "資料載入中";
             _IsLoading = true;
-            string matrixId = _MatrixIdDic[cboBatchId.Text];
+            // string matrixId = _MatrixIdDic[cboBatchId.Text];
+
+            //Jean
+            string matrixId = _DicMatrixID[cboBatchId.Text];
+
+            //顯示對應的母群資訊
+            foreach (DataGridViewRow row in dgvMatrixInfo.Rows)
+            {
+                if (row == _DicMatrixInfoRow[cboBatchId.Text])
+                    row.Visible = true;
+                else
+                    row.Visible = false;
+            }
+
 
             #region 要顯示的資料的sql字串
             string queryString = @"
@@ -258,11 +366,13 @@ ORDER BY rank
                 {
                     throw new Exception("資料讀取錯誤", bkwException);
                 }
-                string selectedMatrixId = _MatrixIdDic[cboBatchId.Text];
+                //  string selectedMatrixId = _MatrixIdDic[cboBatchId.Text];
+                string selectedMatrixId = _DicMatrixID[cboBatchId.Text];
                 if (matrixId != selectedMatrixId)
                 {
                     _IsLoading = false;
                     LoadRowData(null, null);
+                 
                 }
                 else
                 {
@@ -314,6 +424,8 @@ ORDER BY rank
             bkw.RunWorkerAsync();
 
             _IsLoading = false;
+            btnExportToExcel.Text = "匯出";
+            btnExportToExcel.Enabled = true;
         }
     }
 }
