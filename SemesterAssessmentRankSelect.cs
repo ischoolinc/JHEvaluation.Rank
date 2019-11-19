@@ -134,6 +134,7 @@ WHERE
                 && !string.IsNullOrEmpty(cboScoreType.Text)
                 && !string.IsNullOrEmpty(cboScoreCategory.Text))
             {
+                btnExportToExcel.Enabled = false;
                 _IsLoading = true;
                 dgvScoreRank.Rows.Clear();
                 _LoadSchoolYear = cboSchoolYear.Text;
@@ -310,7 +311,10 @@ WHERE
                         MotherForm.SetStatusBarMessage("資料讀取完成");
                         pbLoading.Visible = false;
                         _IsLoading = false;
+                        btnExportToExcel.Text = "資料載入中";
                         FillingDataGridView(null, null);
+                        btnExportToExcel.Text = "匯出";
+                        btnExportToExcel.Enabled = true;
                     }
                 };
 
@@ -345,6 +349,9 @@ WHERE
             //dgvScoreRank.Visible = true;
 
             _IsLoading = true;
+            btnExportToExcel.Enabled = false;
+            btnExportToExcel.Text = "資料載入中";
+
             dgvScoreRank.Rows.Clear();
             _FilterItemName = cboItemName.Text;
             _FilterRankType = cboRankType.Text;
@@ -413,6 +420,8 @@ WHERE
             //dgvScoreRank.ResumeLayout();
             //((ISupportInitialize)dgvScoreRank).EndInit();
             _IsLoading = false;
+            btnExportToExcel.Text = "匯出";
+            btnExportToExcel.Enabled = true;
         }
 
         private void dgvScoreRank_CellContentClick(object sender, DataGridViewCellEventArgs e)

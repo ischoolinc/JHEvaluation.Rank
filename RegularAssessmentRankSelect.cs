@@ -197,6 +197,7 @@ WHERE rank_matrix.is_alive = true
                 && !string.IsNullOrEmpty(cboScoreType.Text)
                 && !string.IsNullOrEmpty(cboScoreCategory.Text))
             {
+                btnExportToExcel.Enabled = false;
                 _IsLoading = true;
                 dgvScoreRank.Rows.Clear();
                 _LoadSchoolYear = cboSchoolYear.Text;
@@ -228,6 +229,7 @@ FROM
         , rank_matrix.school_year
         , rank_matrix.semester 
         , rank_matrix.create_time
+        , rank_detail.ref_student_id
     FROM rank_matrix 
         LEFT OUTER JOIN 
             rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
@@ -362,6 +364,7 @@ WHERE
                             gridViewRow.Cells[14].Value = Int32.TryParse("" + dt.Rows[rowIndex]["percentile"], out tryParseInt) ? (int?)tryParseInt : null;
                             gridViewRow.Cells[16].Value = "" + dt.Rows[rowIndex]["school_year"];
                             gridViewRow.Cells[17].Value = "" + dt.Rows[rowIndex]["semester"];
+                            gridViewRow.Tag = "" + dt.Rows[rowIndex]["ref_student_id"];
                             _RowCollection.Add(gridViewRow);
                         }
                         #endregion
@@ -369,7 +372,10 @@ WHERE
                         FISCA.Presentation.MotherForm.SetStatusBarMessage("資料讀取完成");
                         pbLoading.Visible = false;
                         _IsLoading = false;
+                        btnExportToExcel.Text = "資料載入中";
                         FillingDataGridView(null, null);
+                        btnExportToExcel.Text = "匯出";
+                        btnExportToExcel.Enabled = true;
                     }
                 };
 
@@ -383,6 +389,8 @@ WHERE
                 return;
 
             _IsLoading = true;
+            btnExportToExcel.Enabled = false;
+            btnExportToExcel.Text = "資料載入中";
             dgvScoreRank.Rows.Clear();
             _FilterExamName = cboExamName.Text;
             _FilterItemName = cboItemName.Text;
@@ -434,6 +442,8 @@ WHERE
 
                     {
                         _IsLoading = false;
+                        btnExportToExcel.Text = "匯出";
+                        btnExportToExcel.Enabled = true;
                         FillingDataGridView(null, null);
                         return;
                     }
@@ -468,6 +478,7 @@ WHERE
             }
 
             RegularMatrixRankSelect frm = new RegularMatrixRankSelect("" + dgvScoreRank[0, e.RowIndex].Value
+                                                      , "" + dgvScoreRank.Rows[e.RowIndex].Tag
                                                       , "" + dgvScoreRank[16, e.RowIndex].Value
                                                       , "" + dgvScoreRank[17, e.RowIndex].Value
                                                       , "" + dgvScoreRank[1, e.RowIndex].Value
