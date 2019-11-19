@@ -16,10 +16,16 @@ namespace JHEvaluation.Rank
         /// </summary>
         [MainMethod()]
         public static void Main()
-        {
+         {
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new RegularRankSelect());            
+
+
+            //參考高中寫法 
+
+
+
 
             {
                 var key = "529ABB39-A819-4E50-8BC9-9302B2E89D06";
