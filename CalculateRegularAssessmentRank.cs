@@ -713,12 +713,9 @@ WITH row AS (
 			AND course.semester = row.rank_semester::int
 			AND student_row.rank_grade_year = row.rank_grade_year::int
 			AND exam.exam_name= row.rank_exam_name
-
---Jean 缺考要如何處理
-
     --2.1 科目成績 年排名
     --2.2 科目成績 班排名
-), exam_score AS (-------結算定期評量總成績
+), exam_score AS (-------結算定期評量總成績 
 	SELECT	
 		score_detail_row.*
 		, CASE
@@ -761,7 +758,7 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY rank_class_name , subject ORDER BY score ASC) AS class_rank_reverse
 		, COUNT (exam_score.student_id) OVER(PARTITION BY rank_grade_year,exam_score.subject ) AS grade_count
 		, COUNT (exam_score.student_id) OVER(PARTITION BY rank_class_name, exam_score.subject) AS class_count
-        , subject
+        --, subject
 	FROM 
         exam_score
 	WHERE 
@@ -805,7 +802,7 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY exam_score_tag1.rank_grade_year, rank_tag1, exam_score_tag1.subject ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY exam_score_tag1.rank_grade_year, rank_tag1, exam_score_tag1.subject ORDER BY score ASC) AS tag1_rank_reverse
 		, COUNT (exam_score_tag1.student_id) OVER(PARTITION BY exam_score_tag1.rank_grade_year, rank_tag1, exam_score_tag1.subject) AS tag1_count
-        , exam_score_tag1.subject
+        -- , subject
 	FROM 
         exam_score_tag1
 	WHERE 
@@ -847,7 +844,7 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY rank_grade_year, rank_tag2, subject ORDER BY score DESC) AS tag2_rank
 		, RANK() OVER(PARTITION BY rank_grade_year, rank_tag2, subject ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (exam_score_tag2.student_id) OVER(PARTITION BY rank_grade_year, rank_tag2, subject) AS tag2_count
-        , subject
+      -- , subject
 	FROM 
         exam_score_tag2
 	WHERE 
@@ -916,7 +913,7 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY rank_class_name ,domain ORDER BY score ASC) AS class_rank_reverse
 		, COUNT (domain_score.student_id) OVER(PARTITION BY rank_grade_year ,domain) AS grade_count
 		, COUNT (domain_score.student_id) OVER(PARTITION BY rank_class_name, domain) AS class_count
-        , domain
+        --, domain
 	FROM 
 		domain_score
 	WHERE
@@ -987,7 +984,7 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY rank_grade_year, rank_tag1, domain ORDER BY score DESC) AS tag1_rank
 		, RANK() OVER(PARTITION BY rank_grade_year, rank_tag1, domain ORDER BY score ASC) AS tag1_rank_reverse
 		, COUNT (domain_score_tag1.student_id) OVER(PARTITION BY rank_grade_year, rank_tag1, domain) AS tag1_count
-        , domain_score_tag1.domain
+        --, domain
 	FROM 
 		domain_score_tag1
 	WHERE
@@ -1056,7 +1053,7 @@ WITH row AS (
 		, RANK() OVER(PARTITION BY rank_grade_year, rank_tag2, domain ORDER BY score DESC) AS tag2_rank
 		, RANK() OVER(PARTITION BY rank_grade_year, rank_tag2, domain ORDER BY score ASC) AS tag2_rank_reverse
 		, COUNT (student_id) OVER(PARTITION BY domain_score_tag2.rank_grade_year, domain_score_tag2.rank_tag2, domain_score_tag2.domain) AS tag2_count
-        , domain
+        --, domain
 	FROM 
 		domain_score_tag2
 	WHERE
@@ -1820,33 +1817,8 @@ WITH row AS (
 
 
 ), score_list AS (
-    --1.1 領域成績 年排名
-    --1.2 領域成績 班排名
-    --1.3 領域成績 類別1排名
-    --1.4 領域成績 類別2排名
-    --2.1 科目成績 年排名
-    --2.2 科目成績 班排名
-    --2.3 科目成績 類別1排名
-    --2.4 科目成績 類別2排名
-    --3.1 總計成績 總分 年排名
-    --3.2 總計成績 總分 班排名
-    --3.3 總計成績 總分 類別1排名
-    --3.4 總計成績 總分 類別2排名
-    --4.1 總計成績 平均 年排名
-    --4.2 總計成績 平均 班排名
-    --4.3 總計成績 平均 類別1排名
-    --4.4 總計成績 平均 類別2排名
-    --5.1 總計成績 加權總分 年排名
-    --5.2 總計成績 加權總分 班排名
-    --5.3 總計成績 加權總分 類別1排名
-    --5.4 總計成績 加權總分 類別2排名
-    --6.1 總計成績 加權平均 年排名
-    --6.2 總計成績 加權平均 班排名
-    --6.3 總計成績 加權平均 類別1排名
-    --6.4 總計成績 加權平均 類別2排名
 
-
-    --1.1 領域成績 年排名
+   --X.1 年排名
 	SELECT
 		rank_school_year 
 		, rank_semester
@@ -1858,207 +1830,22 @@ WITH row AS (
 		, '' || rank_grade_year || '年級'::TEXT AS rank_name
 		, true AS is_alive
 		, grade_count AS matrix_count
-		, AVG(Score::DECIMAL) FILTER(WHERE grade_rank * 4 <= grade_count ) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.item_name) AS avg_top_25
-		, AVG(Score::DECIMAL) FILTER(WHERE grade_rank * 2 <= grade_count ) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.item_name) AS avg_top_50
-		, AVG(Score::DECIMAL) OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name) AS avg
-		, AVG(Score::DECIMAL) FILTER(WHERE (grade_rank + 1 ) * 2 >=  grade_count ) OVER (PARTITION BY domain_rank.rank_grade_year, domain_rank.item_name) AS avg_bottom_50
-		, AVG(Score::DECIMAL) FILTER(WHERE (grade_rank + 1) * 4 >=  grade_count ) OVER (PARTITION BY domain_rank.rank_grade_year, domain_rank.item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL)  OVER(PARTITION BY domain_rank.rank_grade_year,domain_rank.item_name)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year,item_name)AS level_lt10 
-		, student_id
-		, score
-		, grade_rank AS rank
-		, graderank_percentage AS percentile
-		, graderank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		domain_rank
-	UNION ALL
-    --1.2 領域成績 班排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '班排名'::TEXT AS rank_type
-		, rank_class_name AS rank_name
-		, true AS is_alive
-		, class_count AS matrix_count
-		--, AVG(Score::DECIMAL) FILTER(WHERE class_rank <= TRUNC(class_count * 0.25)) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL) FILTER(WHERE class_rank <= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL) OVER(PARTITION BY rank_class_name,item_name) AS avg
-		--, AVG(Score::DECIMAL) FILTER(WHERE class_rank >= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name,item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL) FILTER(WHERE class_rank >= TRUNC(class_count * 0.75)) OVER(PARTITION BY rank_class_name,item_name) AS avg_bottom_25
- 		, AVG(Score::DECIMAL) FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_25
- 		, AVG(Score::DECIMAL) FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_50
- 		, AVG(Score::DECIMAL) OVER(PARTITION BY rank_class_name,item_name) AS avg
- 		, AVG(Score::DECIMAL) FILTER(WHERE ( class_count - class_rank + 1 ) * 2 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_bottom_50
- 		, AVG(Score::DECIMAL) FILTER(WHERE ( class_count - class_rank + 1 ) * 4 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=domain_rank.score::DECIMAL ) OVER(PARTITION BY domain_rank.rank_class_name,domain_rank.item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER (PARTITION BY rank_class_name,item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER (PARTITION BY rank_class_name,item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER (PARTITION BY rank_class_name,item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER (PARTITION BY rank_class_name,item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_lt10 
-		, student_id
-		, score
-		, class_rank AS rank
-		, classrank_percentage AS percentile
-		, classrank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		domain_rank
-	UNION ALL
-    --1.3 領域成績 類別1排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別1排名'::TEXT AS rank_type
-		, rank_tag1 AS rank_name
-		, true AS is_alive
-		, tag1_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.25)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag1, domain_rank.item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag1, domain_rank.item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1 , item_name) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag1, domain_rank.item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.75)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag1, domain_rank.item_name) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_top_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_top_50
-	    , AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg
-	    , AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_bottom_50
-	    , AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag1, domain_rank.item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER (PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_lt10 
-		, student_id
-		, score
-		, tag1_rank AS rank
-		, tag1rank_percentage AS percentile
-		, tag1rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		domain_rank_tag1 AS domain_rank
-	WHERE 
-        domain_rank.rank_tag1 IS NOT NULL
-	    AND domain_rank.rank_tag1 <> ''
-	UNION ALL
-    --1.4 領域成績 類別2排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別2排名'::TEXT AS rank_type
-		, rank_tag2 AS rank_name
-		, true AS is_alive
-		, tag2_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.25)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.75)) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name) AS avg_bottom_25
-
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_top_25
- 		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_top_50
- 		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg
- 		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_bottom_50
- 		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_bottom_25
-
-
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_10
-		, COUNT(*) FILTER (WHERE domain_rank.score<10::DECIMAL) OVER (PARTITION BY domain_rank.rank_grade_year, domain_rank.rank_tag2, domain_rank.item_name)AS level_lt10 
-		, student_id
-		, score
-		, tag2_rank AS rank
-		, tag2rank_percentage AS percentile
-		, tag2rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		domain_rank_tag2 AS domain_rank
-	WHERE 
-		domain_rank.rank_tag2 IS NOT NULL
-	    AND domain_rank.rank_tag2 <> ''
-	UNION ALL
-    --2.1 科目成績 年排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '年排名'::TEXT AS rank_type
-		, '' || rank_grade_year || '年級'::TEXT AS rank_name
-		, true AS is_alive
-		, grade_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.25)) OVER(PARTITION BY rank_grade_year,subject_rank.item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year,subject_rank.item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY subject_rank.rank_grade_year,subject_rank.item_name) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year,subject_rank.item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.75)) OVER(PARTITION BY rank_grade_year,subject_rank.item_name) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name) AS avg_top_25
+		, AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name) AS avg_top_25
 		, AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 2 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name) AS avg_top_50
 		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year,item_name) AS avg
 		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 2 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name) AS avg_bottom_50
 		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 4 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year,subject_rank.item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER (PARTITION BY rank_grade_year ,item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL)  OVER (PARTITION BY rank_grade_year ,item_name) AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY  rank_grade_year, item_name )AS level_lt10
+		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year,item_name)AS level_gte100 
+		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)  OVER(PARTITION BY rank_grade_year,item_name) AS level_90
+		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)  OVER(PARTITION BY rank_grade_year,item_name) AS level_80
+		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND  score <80::DECIMAL)  OVER(PARTITION BY rank_grade_year,item_name)AS level_70
+		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year,item_name) AS level_60
+		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)  OVER (PARTITION BY rank_grade_year,item_name)AS level_50
+		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER (PARTITION BY rank_grade_year,item_name)AS level_40
+		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL)   OVER (PARTITION BY rank_grade_year,item_name)AS level_30
+		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL)  OVER (PARTITION BY rank_grade_year,item_name) AS level_20
+		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL)   OVER (PARTITION BY rank_grade_year,item_name)AS level_10
+		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year,item_name)AS level_lt10
 		, student_id
 		, score
 		, grade_rank AS rank
@@ -2068,9 +1855,21 @@ WITH row AS (
 		, rank_tag1
 		, rank_tag2
 	FROM
-		subject_rank
+		(
+		    SELECT * FROM domain_rank--1.1 領域成績 年排名
+		    UNION ALL
+            SELECT * FROM subject_rank--2.1 科目成績 年排名
+            UNION ALL
+            SELECT * FROM calc_sum_rank--3.1 總計成績 總分 年排名
+            UNION ALL
+            SELECT * FROM calc_avg_rank--4.1 總計成績 平均 年排名
+            UNION ALL
+            SELECT * FROM weight_sum_rank--5.1 總計成績 加權總分 年排名
+            UNION ALL
+            SELECT * FROM weight_avg_rank--6.1 總計成績 加權平均 年排名
+        ) AS data
 	UNION ALL
-    --2.2 科目成績 班排名
+    --X.2 班排名
 	SELECT
 		rank_school_year 
 		, rank_semester
@@ -2082,26 +1881,21 @@ WITH row AS (
 		, rank_class_name AS rank_name
 		, true AS is_alive
 		, class_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.25)) OVER(PARTITION BY subject_rank.rank_class_name,subject_rank.item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.5)) OVER(PARTITION BY subject_rank.rank_class_name,subject_rank.item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY subject_rank.rank_class_name,subject_rank.item_name) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.5)) OVER(PARTITION BY subject_rank.rank_class_name,subject_rank.item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.75)) OVER(PARTITION BY subject_rank.rank_class_name,subject_rank.item_name) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_25
+		, AVG(Score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_25
 		, AVG(Score::DECIMAL)FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_top_50
 		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_class_name,item_name) AS avg
 		, AVG(Score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 2 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_bottom_50
 		, AVG(Score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 4 <= class_count) OVER(PARTITION BY rank_class_name,item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER (PARTITION BY rank_class_name,subject_rank. item_name) AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER (PARTITION BY rank_class_name, item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL)  OVER (PARTITION BY rank_class_name, item_name) AS level_10
+		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_class_name,item_name)AS level_gte100 
+		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)  OVER(PARTITION BY rank_class_name,item_name) AS level_90
+		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)  OVER(PARTITION BY rank_class_name,item_name) AS level_80
+		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)  OVER(PARTITION BY rank_class_name,item_name)AS level_70
+		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_class_name,item_name) AS level_60
+		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)  OVER (PARTITION BY rank_class_name,item_name)AS level_50
+		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_40
+		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL)   OVER (PARTITION BY rank_class_name,item_name)AS level_30
+		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL)  OVER (PARTITION BY rank_class_name,item_name) AS level_20
+		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL)   OVER (PARTITION BY rank_class_name,item_name)AS level_10
 		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_class_name,item_name)AS level_lt10 
 		, student_id
 		, score
@@ -2112,10 +1906,23 @@ WITH row AS (
 		, rank_tag1
 		, rank_tag2
 	FROM
-		subject_rank
+		(
+		    SELECT * FROM domain_rank--1.2 領域成績 班排名
+	        UNION ALL
+            SELECT * FROM subject_rank--2.2 科目成績 班排名
+            UNION ALL
+            SELECT * FROM calc_sum_rank--3.2 總計成績 總分 班排名
+            UNION ALL
+            SELECT * FROM calc_avg_rank--4.2 總計成績 平均 班排名
+            UNION ALL
+            SELECT * FROM weight_sum_rank--5.2 總計成績 加權總分 班排名
+            UNION ALL
+            SELECT * FROM weight_avg_rank--6.2 總計成績 加權平均 班排名
+        ) AS data
 	UNION ALL
-    --2.3 科目成績 類別1排名
-	SELECT
+  			
+    --X.3 類別1排名
+    SELECT
 		rank_school_year 
 		, rank_semester
 		, rank_grade_year
@@ -2126,26 +1933,21 @@ WITH row AS (
 		, rank_tag1 AS rank_name
 		, true AS is_alive
 		, tag1_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.25)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.75)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_top_25
+		, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_top_25
 		, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_top_50
 		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg
 		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_bottom_50
 		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag1, subject_rank.item_name)AS level_10
+		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_gte100 
+		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_90
+		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_80
+		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_70
+		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_60
+		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_50
+		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_40
+		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_30
+		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS level_20
+		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_10
 		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1, item_name)AS level_lt10
 		, student_id
 		, score
@@ -2156,12 +1958,24 @@ WITH row AS (
 		, rank_tag1
 		, rank_tag2
 	FROM
-		subject_rank_tag1 AS subject_rank
+		(
+		    SELECT * FROM domain_rank_tag1--1.3 領域成績 類別1排名
+         	UNION ALL
+            SELECT * FROM subject_rank_tag1--2.3 科目成績 類別1排名
+            UNION ALL
+            SELECT * FROM calc_sum_rank_tag1--3.3 總計成績 總分 類別1排名
+            UNION ALL
+            SELECT * FROM calc_avg_rank_tag1--4.3 總計成績 平均 類別1排名
+            UNION ALL
+            SELECT * FROM weight_sum_rank_tag1--5.3 總計成績 加權總分 類別1排名
+            UNION ALL
+            SELECT * FROM weight_avg_rank_tag1--6.3 總計成績 加權平均 類別1排名
+        ) AS data
 	WHERE
-		subject_rank.rank_tag1 IS NOT NULL
-		AND subject_rank.rank_tag1 <> ''
+		rank_tag1 IS NOT NULL
+		AND rank_tag1 <> ''
 	UNION ALL
-    --2.4 科目成績 類別2排名
+    --X.4 類別2排名
 	SELECT
 		rank_school_year 
 		, rank_semester
@@ -2173,27 +1987,22 @@ WITH row AS (
 		, rank_tag2 AS rank_name
 		, true AS is_alive
 		, tag2_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.25)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag2, subject_rank.item_name) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag2, subject_rank.item_name) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag2, subject_rank.item_name) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag2, subject_rank.item_name) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.75)) OVER(PARTITION BY subject_rank.rank_grade_year, subject_rank.rank_tag2, subject_rank.item_name) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_top_25
+		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_top_25
 		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_top_50
 		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg
 		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_bottom_50
 		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY subject_rank.rank_grade_year, rank_tag2, item_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER( PARTITION  BY rank_grade_year,  rank_tag2,  item_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER( PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_10
-		, COUNT(*) FILTER (WHERE subject_rank.score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_lt10
+		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_gte100 
+		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_90
+		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_80
+		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_70
+		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_60
+		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_50
+		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_40
+		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_30
+		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS level_20
+		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_10
+		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2, item_name)AS level_lt10
 		, student_id
 		, score
 		, tag2_rank AS rank
@@ -2203,739 +2012,23 @@ WITH row AS (
 		, rank_tag1
 		, rank_tag2
 	FROM
-		subject_rank_tag2 AS subject_rank
-	WHERE
-		subject_rank.rank_tag2 IS NOT NULL
-		AND subject_rank.rank_tag2 <> ''
-	UNION ALL
-    --3.1 總計成績 總分 年排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '年排名'::TEXT AS rank_type
-		, '' || rank_grade_year || '年級'::TEXT AS rank_name
-		, true AS is_alive
-		, grade_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.25)) OVER(PARTITION BY  rank_grade_year) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY calc_sum_rank.rank_grade_year) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.5)) OVER (PARTITION BY rank_grade_year) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.75)) OVER (PARTITION BY rank_grade_year) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)   OVER (PARTITION BY rank_grade_year) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)   OVER (PARTITION BY rank_grade_year) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL)   OVER (PARTITION BY rank_grade_year) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)   OVER (PARTITION BY rank_grade_year) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND calc_sum_rank.score <50::DECIMAL)   OVER (PARTITION BY rank_grade_year)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND calc_sum_rank.score <40::DECIMAL)   OVER (PARTITION BY rank_grade_year)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND calc_sum_rank.score <30::DECIMAL)   OVER (PARTITION BY rank_grade_year) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND calc_sum_rank.score <20::DECIMAL)   OVER (PARTITION BY rank_grade_year)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year )AS level_lt10
-		, student_id
-		, score
-		, grade_rank AS rank
-		, graderank_percentage AS percentile
-		, graderank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_sum_rank
-	UNION ALL
-    --3.2 總計成績 總分 班排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '班排名'::TEXT AS rank_type
-		, rank_class_name AS rank_name
-		, true AS is_alive
-		, class_count AS matrix_count
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.25)) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name)  AS avg_top_50
-		--, AVG(score::DECIMAL)OVER(PARTITION BY calc_sum_rank.rank_class_name) AS avg
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name)  AS avg_bottom_50
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.75)) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-		, AVG(score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		, AVG(score::DECIMAL)FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		, AVG(score::DECIMAL)OVER(PARTITION BY rank_class_name) AS avg
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_50
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY calc_sum_rank.rank_class_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_class_name) AS level_lt10 
-		, student_id
-		, score
-		, class_rank AS rank
-		, classrank_percentage AS percentile
-		, classrank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_sum_rank
-	UNION ALL
-    --3.3 總計成績 總分 類別1排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別1排名'::TEXT AS rank_type
-		, rank_tag1 AS rank_name
-		, true AS is_alive
-		, tag1_count AS matrix_count
-		--, AVG(calc_sum_rank.Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.25)) OVER(PARTITION BY rank_grade_year, calc_sum_rank.rank_tag1) AS avg_top_25
-		--, AVG(calc_sum_rank.Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY rank_grade_year, calc_sum_rank.rank_tag1) AS avg_top_50
-		--, AVG(calc_sum_rank.Score::DECIMAL)OVER(PARTITION BY calc_sum_rank.rank_grade_year, calc_sum_rank.rank_tag1) AS avg
-		--, AVG(calc_sum_rank.Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY rank_grade_year, calc_sum_rank.rank_tag1) AS avg_bottom_50
-		--, AVG(calc_sum_rank.Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.75)) OVER(PARTITION BY rank_grade_year, calc_sum_rank.rank_tag1) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY calc_sum_rank.rank_grade_year, calc_sum_rank.rank_tag1)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<= score AND calc_sum_rank.score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<= score AND calc_sum_rank.score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<= score AND calc_sum_rank.score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<= score AND calc_sum_rank.score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<= score AND calc_sum_rank.score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<= score AND calc_sum_rank.score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<= score AND calc_sum_rank.score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<= score AND calc_sum_rank.score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<= score AND calc_sum_rank.score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_10
-		, COUNT(*) FILTER (WHERE calc_sum_rank.score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1)AS level_lt10
-		, student_id
-		, score
-		, tag1_rank AS rank
-		, tag1rank_percentage AS percentile
-		, tag1rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_sum_rank_tag1 AS calc_sum_rank
-	WHERE
-		rank_tag1 IS NOT NULL
-		AND rank_tag1 <> ''
-	UNION ALL
-    --3.4 總計成績 總分 類別2排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別2排名'::TEXT AS rank_type
-		, rank_tag2 AS rank_name
-		, true AS is_alive
-		, tag2_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.25)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.75)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY calc_sum_rank.rank_grade_year, calc_sum_rank.rank_tag2)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2)AS level_10
-		, COUNT(*) FILTER (WHERE calc_sum_rank.score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2)AS level_lt10
-		, student_id
-		, score
-		, tag2_rank AS rank
-		, tag2rank_percentage AS percentile
-		, tag2rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_sum_rank_tag2 AS calc_sum_rank
+		(
+			SELECT * FROM domain_rank_tag2--1.4 領域成績 類別2排名
+       		UNION ALL
+            SELECT * FROM subject_rank_tag2--2.4 科目成績 類別2排名
+            UNION ALL
+            SELECT * FROM calc_sum_rank_tag2--3.4 總計成績 總分 類別2排名
+            UNION ALL
+            SELECT * FROM calc_avg_rank_tag2--4.4 總計成績 平均 類別2排名
+            UNION ALL
+            SELECT * FROM weight_sum_rank_tag2--5.4 總計成績 加權總分 類別2排名
+            UNION ALL
+            SELECT * FROM weight_avg_rank_tag2--6.4 總計成績 加權平均 類別2排名
+        ) AS data
 	WHERE
 		rank_tag2 IS NOT NULL
 		AND rank_tag2 <> ''
-	UNION ALL
-    --4.1 總計成績 平均 年排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '年排名'::TEXT AS rank_type
-		, '' || rank_grade_year || '年級'::TEXT AS rank_name
-		, true AS is_alive
-		, grade_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.25)) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY calc_avg_rank.rank_grade_year) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.75)) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=calc_avg_rank.score::DECIMAL ) OVER(PARTITION BY rank_grade_year)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <100::DECIMAL) OVER (PARTITION BY rank_grade_year) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <90::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <80::DECIMAL)  OVER (PARTITION BY rank_grade_year)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <70::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <60::DECIMAL)  OVER (PARTITION BY rank_grade_year)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <50::DECIMAL)  OVER (PARTITION BY rank_grade_year)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <40::DECIMAL)  OVER (PARTITION BY rank_grade_year)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <30::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=calc_avg_rank.score AND calc_avg_rank.score <20::DECIMAL)  OVER (PARTITION BY rank_grade_year)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year)AS level_lt10
-		, student_id
-		, score
-		, grade_rank AS rank
-		, graderank_percentage AS percentile
-		, graderank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_avg_rank
-	UNION ALL
-    --4.2 總計成績 平均 班排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '班排名'::TEXT AS rank_type
-		, rank_class_name AS rank_name
-		, true AS is_alive
-		, class_count AS matrix_count
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.25)) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		--, AVG(score::DECIMAL)OVER(PARTITION BY calc_avg_rank.rank_class_name) AS avg
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.5)) OVER(PARTITION BY calc_avg_rank.rank_class_name) AS avg_bottom_50
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.75)) OVER(PARTITION BY calc_avg_rank.rank_class_name) AS avg_bottom_25
-        , AVG(score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		, AVG(score::DECIMAL)FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		, AVG(score::DECIMAL)OVER(PARTITION BY rank_class_name) AS avg
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_50
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_class_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND calc_avg_rank.score <100::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND calc_avg_rank.score <90::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND calc_avg_rank.score <80::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND calc_avg_rank.score <70::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND calc_avg_rank.score <60::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND calc_avg_rank.score <50::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND calc_avg_rank.score <40::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND calc_avg_rank.score <30::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND calc_avg_rank.score <20::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_class_name)AS level_lt10 
-		, student_id
-		, score
-		, class_rank AS rank
-		, classrank_percentage AS percentile
-		, classrank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_avg_rank
-	UNION ALL
-    --4.3 總計成績 平均 類別1排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別1排名'::TEXT AS rank_type
-		, rank_tag1 AS rank_name
-		, true AS is_alive
-		, tag1_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.25)) OVER(PARTITION BY rank_grade_year , rank_tag1) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY rank_grade_year ,  rank_tag1) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY calc_avg_rank.rank_grade_year, calc_avg_rank.rank_tag1) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.75)) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1)AS level_lt10
-		, student_id
-		, score
-		, tag1_rank AS rank
-		, tag1rank_percentage AS percentile
-		, tag1rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_avg_rank_tag1 AS calc_avg_rank
-	WHERE
-		rank_tag1 IS NOT NULL
-		AND rank_tag1 <> ''
-	UNION ALL
-    --4.4 總計成績 平均 類別2排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別2排名'::TEXT AS rank_type
-		, rank_tag2 AS rank_name
-		, true AS is_alive
-		, tag2_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.25)) OVER(PARTITION BY rank_grade_year ,rank_tag2) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY calc_avg_rank.rank_grade_year, calc_avg_rank.rank_tag2) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.75)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY calc_avg_rank.rank_grade_year, calc_avg_rank.rank_tag2)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND calc_avg_rank.score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND calc_avg_rank.score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND calc_avg_rank.score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND calc_avg_rank.score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND calc_avg_rank.score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND calc_avg_rank.score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND calc_avg_rank.score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND calc_avg_rank.score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND calc_avg_rank.score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, calc_avg_rank.rank_tag2)AS level_lt10
-		, student_id
-		, score
-		, tag2_rank AS rank
-		, tag2rank_percentage AS percentile
-		, tag2rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		calc_avg_rank_tag2 AS calc_avg_rank
-	WHERE
-		calc_avg_rank.rank_tag2 IS NOT NULL
-		AND calc_avg_rank.rank_tag2 <> ''
-	UNION ALL
-    --5.1 總計成績 加權平均 年排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '年排名'::TEXT AS rank_type
-		, '' || rank_grade_year || '年級'::TEXT AS rank_name
-		, true AS is_alive
-		, grade_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.25)) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY weight_sum_rank.rank_grade_year) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.75)) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY weight_sum_rank.rank_grade_year)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)  OVER( PARTITION BY rank_grade_year) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL)   OVER( PARTITION BY rank_grade_year) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL)  OVER( PARTITION BY rank_grade_year)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL)   OVER( PARTITION BY rank_grade_year) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL)   OVER( PARTITION BY rank_grade_year)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL)   OVER( PARTITION BY rank_grade_year)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND  score <40::DECIMAL)   OVER (PARTITION BY rank_grade_year)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL)   OVER (PARTITION BY rank_grade_year) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL)   OVER (PARTITION BY rank_grade_year)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year)AS level_lt10
-		, student_id
-		, score
-		, grade_rank AS rank
-		, graderank_percentage AS percentile
-		, graderank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_sum_rank
-	UNION ALL
-    --5.2 總計成績 加權平均 班排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '班排名'::TEXT AS rank_type
-		, rank_class_name AS rank_name
-		, true AS is_alive
-		, class_count AS matrix_count
-		--, AVG(weight_sum_rank.score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.25)) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		--, AVG(weight_sum_rank.score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		--, AVG(weight_sum_rank.score::DECIMAL)OVER(PARTITION BY weight_sum_rank.rank_class_name) AS avg
-		--, AVG(weight_sum_rank.score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name) AS avg_bottom_50
-		--, AVG(weight_sum_rank.score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.75)) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-        , AVG(score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		, AVG(score::DECIMAL)FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		, AVG(score::DECIMAL)OVER(PARTITION BY rank_class_name) AS avg
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_50
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<= score::DECIMAL ) OVER(PARTITION BY rank_class_name)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<= score AND score <100::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<= score AND score <90::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<= score AND score <80::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<= score AND score <70::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<= score AND score <60::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<= score AND score <50::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<= score AND score <40::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<= score AND score <30::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<= score AND score <20::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_class_name)AS level_lt10 
-		, student_id
-		, score
-		, class_rank AS rank
-		, classrank_percentage AS percentile
-		, classrank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_sum_rank
-	UNION ALL
-    --5.3 總計成績 加權平均 類別1排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別1排名'::TEXT AS rank_type
-		, rank_tag1 AS rank_name
-		, true AS is_alive
-		, tag1_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.25)) OVER( PARTITION BY rank_grade_year, rank_tag1) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.5))  OVER( PARTITION BY rank_grade_year,  rank_tag1) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.75)) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_25
-        , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1)AS level_lt10
-		, student_id
-		, score
-		, tag1_rank AS rank
-		, tag1rank_percentage AS percentile
-		, tag1rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_sum_rank_tag1 AS weight_sum_rank
-	WHERE
-		rank_tag1 IS NOT NULL
-		AND rank_tag1 <> ''
-	UNION ALL
-    --5.4 總計成績 加權平均 類別2排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別2排名'::TEXT AS rank_type
-		, rank_tag2 AS rank_name
-		, true AS is_alive
-		, tag2_count AS matrix_count
-		--, AVG(weight_sum_rank.Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.25)) OVER(PARTITION BY rank_grade_year , rank_tag2) AS avg_top_25
-		--, AVG(weight_sum_rank.Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.5))  OVER(PARTITION BY rank_grade_year , rank_tag2) AS avg_top_50
-		--, AVG(weight_sum_rank.Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg
-		--, AVG(weight_sum_rank.Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		--, AVG(weight_sum_rank.Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.75)) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY weight_sum_rank.rank_grade_year, weight_sum_rank.rank_tag2)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND weight_sum_rank.score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND weight_sum_rank.score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND weight_sum_rank.score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND weight_sum_rank.score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND weight_sum_rank.score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND weight_sum_rank.score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND weight_sum_rank.score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND weight_sum_rank.score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND weight_sum_rank.score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2)AS level_lt10
-		, student_id
-		, score
-		, tag2_rank AS rank
-		, tag2rank_percentage AS percentile
-		, tag2rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_sum_rank_tag2 AS weight_sum_rank
-	WHERE
-		rank_tag2 IS NOT NULL
-		AND rank_tag2 <> ''
-	UNION ALL
-    --6.1 總計成績 加權平均 年排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '年排名'::TEXT AS rank_type
-		, '' || rank_grade_year || '年級'::TEXT AS rank_name
-		, true AS is_alive
-		, grade_count AS matrix_count
-		--, AVG(weight_avg_rank.Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.25)) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		--, AVG(weight_avg_rank.Score::DECIMAL)FILTER(WHERE grade_rank <= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		--, AVG(weight_avg_rank.Score::DECIMAL)OVER(PARTITION BY weight_avg_rank.rank_grade_year) AS avg
-		--, AVG(weight_avg_rank.Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.5)) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		--, AVG(weight_avg_rank.Score::DECIMAL)FILTER(WHERE grade_rank >= TRUNC(grade_count * 0.75)) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 2 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( grade_count - grade_rank + 1 ) * 4 <= grade_count) OVER(PARTITION BY rank_grade_year) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY weight_avg_rank.rank_grade_year)AS level_gte100
-		, COUNT(*) FILTER (WHERE 90::DECIMAL <=score AND score <100::DECIMAL) OVER (PARTITION BY rank_grade_year) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL <=score AND score <90::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL <=score AND score <80::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL <=score AND score <70::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL <=score AND score <60::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL <=score AND score <50::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL <=score AND score <40::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL <=score AND score <30::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL <=score AND score <20::DECIMAL)  OVER (PARTITION BY rank_grade_year) AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year)AS level_lt10
-		, student_id
-		, score
-		, grade_rank AS rank
-		, graderank_percentage AS percentile
-		, graderank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_avg_rank
-	UNION ALL
-    --6.2 總計成績 加權平均 班排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '班排名'::TEXT AS rank_type
-		, rank_class_name AS rank_name
-		, true AS is_alive
-		, class_count AS matrix_count
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.25)) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank <= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		--, AVG(score::DECIMAL)OVER(PARTITION BY weight_avg_rank.rank_class_name) AS avg
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.5)) OVER(PARTITION BY rank_class_name) AS avg_bottom_50
-		--, AVG(score::DECIMAL)FILTER(WHERE class_rank >= TRUNC(class_count * 0.75)) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-	    , AVG(score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_25
-		, AVG(score::DECIMAL)FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_top_50
-		, AVG(score::DECIMAL)OVER(PARTITION BY rank_class_name) AS avg
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 2 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_50
-		, AVG(score::DECIMAL)FILTER(WHERE ( class_count - class_rank + 1 ) * 4 <= class_count) OVER(PARTITION BY rank_class_name) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY rank_class_name)AS level_gte100
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_class_name) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_class_name)AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_class_name)AS level_lt10 
-		, student_id
-		, score
-		, class_rank AS rank
-		, classrank_percentage AS percentile
-		, classrank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_avg_rank
-	UNION ALL
-    --6.3 總計成績 加權平均 類別1排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別1排名'::TEXT AS rank_type
-		, rank_tag1 AS rank_name
-		, true AS is_alive
-		, tag1_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.25)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag1) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank <= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag1) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag1) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.5)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag1) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank >= TRUNC(tag1_count * 0.75)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag1) AS avg_bottom_25
-	    , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag1_count - tag1_rank + 1 ) * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<= score::DECIMAL ) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag1)AS level_gte100
 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<= score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<= score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<= score AND score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<= score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<= score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<= score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<= score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<= score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<= score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag1)AS level_10
-		, COUNT(*) FILTER (WHERE  score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag1)AS level_lt10
-		, student_id
-		, score
-		, tag1_rank AS rank
-		, tag1rank_percentage AS percentile
-		, tag1rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_avg_rank_tag1 AS weight_avg_rank
-	WHERE
-		rank_tag1 IS NOT NULL
-		AND  rank_tag1 <> ''
-	UNION ALL
-    --6.4 總計成績 加權平均 類別2排名
-	SELECT
-		rank_school_year 
-		, rank_semester
-		, rank_grade_year
-		, item_type
-		, exam_id AS ref_exam_id
-		, item_name
-		, '類別2排名'::TEXT AS rank_type
-		, rank_tag2 AS rank_name
-		, true AS is_alive
-		, tag2_count AS matrix_count
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.25)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag2) AS avg_top_25
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank <= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag2) AS avg_top_50
-		--, AVG(Score::DECIMAL)OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag2) AS avg
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.5)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag2) AS avg_bottom_50
-		--, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank >= TRUNC(tag2_count * 0.75)) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag2) AS avg_bottom_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_25
-		, AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_top_50
-		, AVG(Score::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_50
-		, AVG(Score::DECIMAL)FILTER(WHERE ( tag2_count - tag2_rank + 1 ) * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2) AS avg_bottom_25
-		, COUNT(*) FILTER (WHERE 100::DECIMAL<=score::DECIMAL ) OVER(PARTITION BY weight_avg_rank.rank_grade_year, weight_avg_rank.rank_tag2)AS level_gte100 
-		, COUNT(*) FILTER (WHERE 90::DECIMAL<=score AND score <100::DECIMAL)OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_90
-		, COUNT(*) FILTER (WHERE 80::DECIMAL<=score AND score <90::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_80
-		, COUNT(*) FILTER (WHERE 70::DECIMAL<=score AND score <80::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_70
-		, COUNT(*) FILTER (WHERE 60::DECIMAL<=score AND score <70::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_60
-		, COUNT(*) FILTER (WHERE 50::DECIMAL<=score AND score <60::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_50
-		, COUNT(*) FILTER (WHERE 40::DECIMAL<=score AND score <50::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_40
-		, COUNT(*) FILTER (WHERE 30::DECIMAL<=score AND score <40::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_30
-		, COUNT(*) FILTER (WHERE 20::DECIMAL<=score AND score <30::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_20
-		, COUNT(*) FILTER (WHERE 10::DECIMAL<=score AND score <20::DECIMAL) OVER(PARTITION BY rank_grade_year, rank_tag2) AS level_10
-		, COUNT(*) FILTER (WHERE score<10::DECIMAL) OVER (PARTITION BY rank_grade_year, rank_tag2)AS level_lt10
-		, student_id
-		, score
-		, tag2_rank AS rank
-		, tag2rank_percentage AS percentile
-		, tag2rank_pr AS pr
-		, rank_class_name
-		, rank_tag1
-		, rank_tag2
-	FROM
-		weight_avg_rank_tag2 AS weight_avg_rank
-	WHERE
-		rank_tag2 IS NOT NULL
-		AND rank_tag2 <> ''
 ), update_data AS (
 	UPDATE
 		rank_matrix
