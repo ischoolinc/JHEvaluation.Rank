@@ -389,7 +389,17 @@ ORDER BY rank
                             DataGridViewRow gridViewRow = new DataGridViewRow();
                             gridViewRow.CreateCells(dgvScoreRank);
                             gridViewRow.Cells[0].Value = "" + dt.Rows[row]["rank_matrix_id"];
-                            gridViewRow.Cells[1].Value = "" + dt.Rows[row]["score_type"];
+                            string scoreType;
+                            if ("" + dt.Rows[row]["score_type"] == "定期評量")
+                            {
+                                scoreType = "定期評量_定期加平時";
+                            }
+                            else
+                            {
+                                scoreType = "" + dt.Rows[row]["score_type"];
+                            }
+
+                            gridViewRow.Cells[1].Value = scoreType;
                             gridViewRow.Cells[2].Value = "" + dt.Rows[row]["score_category"];
                             gridViewRow.Cells[3].Value = "" + dt.Rows[row]["exam_name"];
                             gridViewRow.Cells[4].Value = "" + dt.Rows[row]["item_name"];

@@ -1,6 +1,7 @@
 ﻿using Aspose.Cells;
 using FISCA.Data;
 using FISCA.Presentation.Controls;
+using JHEvaluation.Rank.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -96,14 +97,29 @@ WHERE rank_matrix.is_alive = true
             }
 
             //類型ComboBox
+            List<ItemTypeMapping> itemTypeMappings = new List<ItemTypeMapping>();
             foreach (DataRow row in dt.Rows)
             {
                 string value = "" + row[2];
-                if (!cboScoreType.Items.Contains(value))
+                string name = value;
+                string displayName = value;
+                if (value == "定期評量")
                 {
-                    cboScoreType.Items.Add(value);
+                    displayName = "定期評量_定期加平時";
+                }
+
+                if (!itemTypeMappings.Any(x => x.Name == name))
+                {
+                    ItemTypeMapping itemTypeMapping = new ItemTypeMapping(name, displayName);
+                    itemTypeMappings.Add(itemTypeMapping);
                 }
             }
+
+
+            //顯示於類型ComboBox
+
+            cboScoreType.Items.AddRange(itemTypeMappings.ToArray());
+
             cboScoreType.SelectedIndex = 0;
 
             //類別ComboBox
@@ -194,7 +210,7 @@ WHERE rank_matrix.is_alive = true
 
             if (!string.IsNullOrEmpty(cboSchoolYear.Text)
                 && !string.IsNullOrEmpty(cboSemester.Text)
-                && !string.IsNullOrEmpty(cboScoreType.Text)
+                && ((ItemTypeMapping)cboScoreType.SelectedItem) != null
                 && !string.IsNullOrEmpty(cboScoreCategory.Text))
             {
                 btnExportToExcel.Enabled = false;
@@ -202,7 +218,7 @@ WHERE rank_matrix.is_alive = true
                 dgvScoreRank.Rows.Clear();
                 _LoadSchoolYear = cboSchoolYear.Text;
                 _LoadSemester = cboSemester.Text;
-                _LoadScoreType = cboScoreType.Text;
+                _LoadScoreType = ((ItemTypeMapping)cboScoreType.SelectedItem).Name;
                 _LoadScoreCategory = cboScoreCategory.Text;
 
                 #region 要顯示的資料的sql字串
@@ -289,7 +305,7 @@ WHERE
                     if (
                         _LoadSchoolYear != cboSchoolYear.Text
                         || _LoadSemester != cboSemester.Text
-                        || _LoadScoreType != cboScoreType.Text
+                        || _LoadScoreType != ((ItemTypeMapping)cboScoreType.SelectedItem).Name
                         || _LoadScoreCategory != cboScoreCategory.Text
                     )
                     {
@@ -348,7 +364,19 @@ WHERE
                             DataGridViewRow gridViewRow = new DataGridViewRow();
                             gridViewRow.CreateCells(dgvScoreRank);
                             gridViewRow.Cells[0].Value = "" + dt.Rows[rowIndex]["rank_matrix_id"];
-                            gridViewRow.Cells[1].Value = "" + dt.Rows[rowIndex]["score_type"];
+
+                            string scoreType;
+
+                            if ("" + dt.Rows[rowIndex]["score_type"] == "定期評量")
+                            {
+                                scoreType = "定期評量_定期加平時";
+                            }
+                            else
+                            {
+                                scoreType = "" + dt.Rows[rowIndex]["score_type"];
+
+                            }
+                            gridViewRow.Cells[1].Value = scoreType;
                             gridViewRow.Cells[2].Value = "" + dt.Rows[rowIndex]["score_category"];
                             gridViewRow.Cells[3].Value = "" + dt.Rows[rowIndex]["exam_name"];
                             gridViewRow.Cells[4].Value = "" + dt.Rows[rowIndex]["item_name"];
@@ -427,7 +455,7 @@ WHERE
 
                     if (cboSchoolYear.Text != _LoadSchoolYear
                         || cboSemester.Text != _LoadSemester
-                        || cboScoreType.Text != _LoadScoreType
+                        || ((ItemTypeMapping)cboScoreType.SelectedItem).Name != _LoadScoreType
                         || cboScoreCategory.Text != _LoadScoreCategory)
                     {
                         _IsLoading = false;
@@ -442,8 +470,7 @@ WHERE
 
                     {
                         _IsLoading = false;
-                        btnExportToExcel.Text = "匯出";
-                        btnExportToExcel.Enabled = true;
+
                         FillingDataGridView(null, null);
                         return;
                     }
@@ -463,6 +490,8 @@ WHERE
             }
 
             _IsLoading = false;
+            btnExportToExcel.Text = "匯出";
+            btnExportToExcel.Enabled = true;
         }
 
         private void dgvScoreRank_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -477,11 +506,17 @@ WHERE
                 return;
             }
 
+            //處理一下用詞
+            string scoreType;
+
+
+
             RegularMatrixRankSelect frm = new RegularMatrixRankSelect("" + dgvScoreRank[0, e.RowIndex].Value
                                                       , "" + dgvScoreRank.Rows[e.RowIndex].Tag
                                                       , "" + dgvScoreRank[16, e.RowIndex].Value
                                                       , "" + dgvScoreRank[17, e.RowIndex].Value
                                                       , "" + dgvScoreRank[1, e.RowIndex].Value
+
                                                       , "" + dgvScoreRank[2, e.RowIndex].Value
                                                       , "" + dgvScoreRank[3, e.RowIndex].Value
                                                       , "" + dgvScoreRank[4, e.RowIndex].Value
@@ -500,5 +535,17 @@ WHERE
         {
             _IsClosing = true;
         }
+
+        //private string GetMappingWord(string itemType)
+        //{
+        //    string reault = itemType;
+
+        //    if (itemType == "定期評量")
+        //    {
+        //        reault = "定期評量_定期加平時";
+        //    }
+        //    return reault;
+        //}
+
     }
 }

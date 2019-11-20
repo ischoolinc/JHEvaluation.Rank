@@ -104,6 +104,7 @@
     <Compile Include="CalculateSemesterAssessmentRank.Designer.cs">
       <DependentUpon>CalculateSemesterAssessmentRank.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\ItemTypeMapping.cs" />
     <Compile Include="RegularMatrixRankSelect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,9 +113,11 @@
     </Compile>
     <Compile Include="RegularAssessmentRankSelect.cs">
       <SubType>Form</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="RegularAssessmentRankSelect.Designer.cs">
       <DependentUpon>RegularAssessmentRankSelect.cs</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -154,6 +157,7 @@
     </Compile>
     <EmbeddedResource Include="RegularAssessmentRankSelect.resx">
       <DependentUpon>RegularAssessmentRankSelect.cs</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="CalculateRegularAssessmentRank.resx">
       <DependentUpon>CalculateRegularAssessmentRank.cs</DependentUpon>
