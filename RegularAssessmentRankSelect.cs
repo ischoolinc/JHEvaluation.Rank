@@ -44,7 +44,7 @@ SELECT rank_matrix.school_year
 FROM rank_matrix LEFT OUTER JOIN 
 	exam ON exam.id=rank_matrix.ref_exam_id
 WHERE rank_matrix.is_alive = true
-	AND SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) = '定期評量'";
+	AND SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) LIKE '定期評量%'";
             #endregion
 
             QueryHelper queryHelper = new QueryHelper();
