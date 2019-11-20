@@ -2045,7 +2045,7 @@ WITH row AS (
 		AND rank_matrix.grade_year = row.rank_grade_year::INT
 		AND rank_matrix.ref_exam_id = row.ref_exam_id::INT
         --針對定期評量定期 做update
-        AND rank_matrix.rank_type LIKE '定期評量/%'
+        AND rank_matrix.item_type LIKE '定期評量/%'
 
 	RETURNING rank_matrix.*
 ), insert_batch_data AS (
@@ -3620,7 +3620,7 @@ WITH row AS (
 		AND rank_matrix.grade_year = row.rank_grade_year::INT
 		AND rank_matrix.ref_exam_id = row.ref_exam_id::INT
         --因為增加了 (定期評量_定期/XXXX)
-        AND rank_matrix.rank_type LIKE '定期評量_定期/%'
+        AND rank_matrix.item_type LIKE '定期評量_定期/%'
 
 
 	RETURNING rank_matrix.*
