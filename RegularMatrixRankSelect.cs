@@ -113,6 +113,7 @@ SELECT
 	, rank_matrix.level_20
 	, rank_matrix.level_10
 	, rank_matrix.level_lt10
+    , rank_matrix
 FROM 
 	rank_matrix AS source
     INNER JOIN rank_matrix

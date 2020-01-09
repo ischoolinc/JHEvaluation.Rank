@@ -444,7 +444,9 @@ WHERE
                                                       , "" + dgvScoreRank[2, e.RowIndex].Value
                                                       , "" + dgvScoreRank[3, e.RowIndex].Value
                                                       , "" + dgvScoreRank[4, e.RowIndex].Value
-                                                      , "" + dgvScoreRank[5, e.RowIndex].Value);
+                                                      , "" + dgvScoreRank[5, e.RowIndex].Value
+                                                      ,  "" + dgvScoreRank.Rows[e.RowIndex].Tag
+                                                      );
             frm.ShowDialog();
         }
 

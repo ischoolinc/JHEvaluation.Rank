@@ -17,9 +17,12 @@ namespace JHEvaluation.Rank
     public partial class SemesterMatrixRankSelect : BaseForm
     {
         bool _IsLoading = false;
+        private string _RefStudentID;
         string _RankName = "";
         Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
-        public SemesterMatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string itemName, string rankType, string rankName)
+        private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow = new Dictionary<string, DataGridViewRow>();
+
+        public SemesterMatrixRankSelect(string rankMatrixId, string schoolYear, string semester, string scoreType, string scoreCategory, string itemName, string rankType, string rankName, string refStuID)
         {
             InitializeComponent();
 
@@ -30,10 +33,12 @@ namespace JHEvaluation.Rank
             lbItemName.Text = itemName;
             lbRankType.Text = rankType;
             _RankName = rankName;
+            _RefStudentID = refStuID;
         }
 
         private void SemesterMatrixRankSelect_Load(object sender, EventArgs e)
         {
+
             try
             {
                 QueryHelper queryHelper = new QueryHelper();
@@ -55,6 +60,23 @@ FROM
 		, rank_matrix.semester 
 		, rank_matrix.is_alive
 		, rank_matrix.create_time
+        , rank_matrix.matrix_count
+        , rank_matrix.avg_top_25
+	    , rank_matrix.avg_top_50
+	    , rank_matrix.avg
+	    , rank_matrix.avg_bottom_50
+	    , rank_matrix.avg_bottom_25
+	    , rank_matrix.level_gte100
+	    , rank_matrix.level_90
+	    , rank_matrix.level_80
+	    , rank_matrix.level_70
+	    , rank_matrix.level_60
+	    , rank_matrix.level_50
+	    , rank_matrix.level_40
+	    , rank_matrix.level_30
+	    , rank_matrix.level_20
+	    , rank_matrix.level_10
+	    , rank_matrix.level_lt10
 	FROM rank_matrix 
 		LEFT OUTER JOIN 
 			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
@@ -75,20 +97,61 @@ Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
                 #region 填入編號的ComboBox
                 foreach (DataRow row in dataTable.Rows)
                 {
+                    //if (!cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）")
+                    //    && !cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）-目前採計"))
+                    //{
+                    //    string isAlive = "";
+                    //    if (!string.IsNullOrEmpty("" + row["is_alive"]))
+                    //    {
+                    //        if (Convert.ToBoolean(row["is_alive"]) == true)
+                    //        {
+                    //            isAlive = "-目前採計";
+                    //        }
+                    //    }
+                    //    cboBatchId.Items.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive);
+                    //    _MatrixIdDic.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive, "" + row["rank_matrix_id"]);
+                    //}
+
+                    bool tryParseBool = false;
+                    var key = "" + row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + (bool.TryParse("" + row["is_alive"], out tryParseBool) && tryParseBool ? "-目前採計" : "");
+
                     if (!cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）")
                         && !cboBatchId.Items.Contains(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）-目前採計"))
                     {
-                        string isAlive = "";
-                        if (!string.IsNullOrEmpty("" + row["is_alive"]))
-                        {
-                            if (Convert.ToBoolean(row["is_alive"]) == true)
-                            {
-                                isAlive = "-目前採計";
-                            }
-                        }
-                        cboBatchId.Items.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive);
-                        _MatrixIdDic.Add(row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + isAlive, "" + row["rank_matrix_id"]);
+                        var newIndex = cboBatchId.Items.Add(key);
                     }
+
+                    var newRow = dgvMatrixInfo.Rows[dgvMatrixInfo.Rows.Add(
+                       "" + row["matrix_count"]
+                       , "" + row["avg_top_25"]
+                       , "" + row["avg_top_50"]
+                       , "" + row["avg"]
+                       , "" + row["avg_bottom_50"]
+                       , "" + row["avg_bottom_25"]
+                       , "" + row["level_gte100"]
+                       , "" + row["level_90"]
+                       , "" + row["level_80"]
+                       , "" + row["level_70"]
+                       , "" + row["level_60"]
+                       , "" + row["level_50"]
+                       , "" + row["level_40"]
+                       , "" + row["level_30"]
+                       , "" + row["level_20"]
+                       , "" + row["level_10"]
+                       , "" + row["level_lt10"]
+                   )];
+                    newRow.Visible = false;
+
+                    if (!_MatrixIdDic.ContainsKey(key))
+                    {
+                        this._MatrixIdDic.Add(key, "" + row["rank_matrix_id"]);
+
+                    }
+                    if (!_DicMatrixInfoRow.ContainsKey(key))
+                    {
+                        _DicMatrixInfoRow.Add(key, newRow);
+                    }
+
                 }
 
                 if (cboBatchId.Items.Contains("-目前採計"))
@@ -116,6 +179,20 @@ Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
 
             _IsLoading = true;
             string matrixId = _MatrixIdDic[cboBatchId.Text];
+
+
+
+
+            //顯示對應的母群資訊
+            foreach (DataGridViewRow row in dgvMatrixInfo.Rows)
+            {
+                if (row == _DicMatrixInfoRow[cboBatchId.Text])
+                    row.Visible = true;
+                else
+                    row.Visible = false;
+            }
+
+
 
             #region 要顯示的資料的sql字串
             string queryString = @"
@@ -245,6 +322,8 @@ ORDER BY
 
             _IsLoading = false;
         }
+
+
 
         private void btnExit_Click(object sender, EventArgs e)
         {
