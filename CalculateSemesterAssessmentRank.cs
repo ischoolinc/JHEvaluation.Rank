@@ -2324,6 +2324,7 @@ FROM
 		AND insert_matrix_data.item_name = score_list.item_name
 		AND insert_matrix_data.rank_type = score_list.rank_type
 		AND insert_matrix_data.rank_name = score_list.rank_name
+LIMIT 1 -- 看來之後資料沒有用，就先限制一筆，以免 Java OutOfMemory。
 ";
                     #endregion
 
