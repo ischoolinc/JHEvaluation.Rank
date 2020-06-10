@@ -516,20 +516,43 @@ ORDER BY
             }
             #endregion
 
-            List<string> studentSqlList = new List<string>();
+            #region 將畫面上學生依年級分批 
+            Dictionary<string, List<string>> gradeStudentDict = new Dictionary<string, List<string>>();
             foreach (DataGridViewRow row in dgvStudentList.Rows)
             {
-                //每一筆學生先組好先加進List裡
-                studentSqlList.Add(@"
-    SELECT
+                string gr = row.Cells[4].Value.ToString();
+
+                string studStr = @"  SELECT
         '" + ("" + row.Tag).Replace("'", "''") + @"'::BIGINT AS student_id
         ,'" + ("" + row.Cells[3].Value).Replace("'", "''") + @"'::TEXT AS student_name
         ,'" + ("" + row.Cells[4].Value).Trim('年', '級').Replace("'", "''") + @"'::INT AS rank_grade_year
         ,'" + ("" + row.Cells[5].Value).Replace("'", "''") + @"'::TEXT AS rank_class_name
         ,'" + ("" + row.Cells[6].Value).Replace("'", "''") + @"'::TEXT AS rank_tag1
         ,'" + ("" + row.Cells[7].Value).Replace("'", "''") + @"'::TEXT AS rank_tag2
-    ");
+    ";
+                if (!gradeStudentDict.ContainsKey(gr))
+                    gradeStudentDict.Add(gr, new List<string>());
+                gradeStudentDict[gr].Add(studStr);
             }
+
+            #endregion
+
+
+
+            //        List<string> studentSqlList = new List<string>();
+            //        foreach (DataGridViewRow row in dgvStudentList.Rows)
+            //        {
+            //            //每一筆學生先組好先加進List裡
+            //            studentSqlList.Add(@"
+            //SELECT
+            //    '" + ("" + row.Tag).Replace("'", "''") + @"'::BIGINT AS student_id
+            //    ,'" + ("" + row.Cells[3].Value).Replace("'", "''") + @"'::TEXT AS student_name
+            //    ,'" + ("" + row.Cells[4].Value).Trim('年', '級').Replace("'", "''") + @"'::INT AS rank_grade_year
+            //    ,'" + ("" + row.Cells[5].Value).Replace("'", "''") + @"'::TEXT AS rank_class_name
+            //    ,'" + ("" + row.Cells[6].Value).Replace("'", "''") + @"'::TEXT AS rank_tag1
+            //    ,'" + ("" + row.Cells[7].Value).Replace("'", "''") + @"'::TEXT AS rank_tag2
+            //");
+            //        }
 
             btnCacluate.Enabled = false;
             btnPrevious.Enabled = false;
@@ -540,6 +563,8 @@ ORDER BY
             string tag1 = cboStudentTag1.Text.Trim('[', ']');
             string tag2 = cboStudentTag2.Text.Trim('[', ']');
             string studentFilter = cboStudentFilter.Text.Trim('[', ']');
+
+
             List<int> gradeYearList = new List<int>();
             foreach (CheckBox checkBox in _CheckBoxList)
             {
@@ -555,12 +580,12 @@ ORDER BY
             settingEle.SetAttribute("不排名學生類別", "" + studentFilter);
             settingEle.SetAttribute("類別一", "" + tag1);
             settingEle.SetAttribute("類別二", "" + tag2);
-            foreach (var gradeYear in gradeYearList)
-            {
-                var gradeYearEle = doc.CreateElement("年級");
-                gradeYearEle.InnerText = "" + gradeYear;
-                settingEle.AppendChild(gradeYearEle);
-            }
+            //foreach (var gradeYear in gradeYearList)
+            //{
+            //    var gradeYearEle = doc.CreateElement("年級");
+            //    gradeYearEle.InnerText = "" + gradeYear;
+            //    settingEle.AppendChild(gradeYearEle);
+            //}
             foreach (ListViewItem item in lvCalcSubject.Items)
             {
                 if (item.Checked)
@@ -605,28 +630,53 @@ ORDER BY
                 try
                 {
                     bkw.ReportProgress(1);
-                    List<string> rowSqlList = new List<string>();
 
-                    for (int index = 0; index < gradeYearList.Count; index++)
+                    QueryHelper queryHelper = new QueryHelper();
+
+                    //                    List<string> rowSqlList = new List<string>();
+
+                    //                    for (int index = 0; index < gradeYearList.Count; index++)
+                    //                    {
+                    //                        //每一筆row(包含GradeYear, SchoolYear, Semester, ExamName)先組好加進List
+                    //                        rowSqlList.Add(@"
+                    //	SELECT
+                    //		'" + ("" + gradeYearList[index]).Replace("'", "''") + @"'::TEXT  AS rank_grade_year
+                    //		, '" + ("" + schoolYear).Replace("'", "''") + @"'::TEXT AS rank_school_year
+                    //		, '" + ("" + semester).Replace("'", "''") + @"'::TEXT AS rank_semester
+                    //        , '" + ("" + examId).Replace("'", "''") + @"'::TEXT AS ref_exam_id
+                    //		, '" + ("" + examName).Replace("'", "''") + @"'::TEXT AS rank_exam_name
+                    //        , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting
+                    //");
+                    //                    }
+
+                    bkw.ReportProgress(10);
+
+                    // 依畫面上所選年級分批計算
+                    foreach (string gr in gradeStudentDict.Keys)
                     {
+                        List<string> rowSqlList = new List<string>();
+
+                            var gradeYearEle = doc.CreateElement("年級");
+                            gradeYearEle.InnerText = "" + gr.Trim('年', '級');
+                            settingEle.AppendChild(gradeYearEle);
+                        
                         //每一筆row(包含GradeYear, SchoolYear, Semester, ExamName)先組好加進List
-                        rowSqlList.Add(@"
-	SELECT
-		'" + ("" + gradeYearList[index]).Replace("'", "''") + @"'::TEXT  AS rank_grade_year
+                        string rowStr = @"SELECT
+		'" + gr.Trim('年', '級') + @"'::TEXT  AS rank_grade_year
 		, '" + ("" + schoolYear).Replace("'", "''") + @"'::TEXT AS rank_school_year
 		, '" + ("" + semester).Replace("'", "''") + @"'::TEXT AS rank_semester
         , '" + ("" + examId).Replace("'", "''") + @"'::TEXT AS ref_exam_id
 		, '" + ("" + examName).Replace("'", "''") + @"'::TEXT AS rank_exam_name
-        , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting
-");
-                    }
+        , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting";
+                        
+                        rowSqlList.Add(rowStr);
 
-                    bkw.ReportProgress(20);
 
-                    #region 1. 計算排名的SQL (原本)
 
-                    // 20191118 根據高中 commit "清理程式碼" > 精簡程式碼
-                    string insertRankSql = @"
+                        #region 1. 計算排名的SQL (原本)
+
+                        // 20191118 根據高中 commit "清理程式碼" > 精簡程式碼
+                        string insertRankSql = @"
 WITH row AS (
 " + string.Join(@"
     UNION ALL
@@ -634,7 +684,7 @@ WITH row AS (
 ), student_row AS (
 " + string.Join(@"
     UNION ALL
-", studentSqlList) + @"
+", gradeStudentDict[gr]) + @"
 ), calc_subject AS ( --採計科目
     SELECT
         array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
@@ -716,7 +766,7 @@ WITH row AS (
 			AND exam.exam_name= row.rank_exam_name
     --2.1 科目成績 年排名
     --2.2 科目成績 班排名
-"+@"), exam_score AS (-------結算定期評量總成績 
+" + @"), exam_score AS (-------結算定期評量總成績 
 	SELECT	
 		score_detail_row.*
 		, CASE
@@ -740,7 +790,7 @@ WITH row AS (
 		    OR assignment_weight IS NOT NULL
 	    )
         AND exam_score <> -2147483648
-"+ @"
+" + @"
 ), subject_rank_row AS (--------計算科目排名 
 	SELECT
 		student_id
@@ -2178,40 +2228,82 @@ WITH row AS (
 			AND insert_matrix_data.rank_type = score_list.rank_type
 			AND insert_matrix_data.rank_name = score_list.rank_name
 )
-SELECT
-	score_list.rank_school_year
-	, score_list.rank_semester
-	, score_list.rank_grade_year
-	, score_list.item_type
-	, score_list.ref_exam_id
-	, score_list.item_name
-	, score_list.rank_type
-	, score_list.rank_name
-	, score_list.student_id
-FROM 
-	score_list
-	LEFT OUTER JOIN insert_matrix_data
-		ON insert_matrix_data.school_year = score_list.rank_school_year
-		AND insert_matrix_data.semester = score_list.rank_semester
-		AND insert_matrix_data.grade_year = score_list.rank_grade_year
-		AND insert_matrix_data.item_type = score_list.item_type
-		AND insert_matrix_data.ref_exam_id = score_list.ref_exam_id
-		AND insert_matrix_data.item_name = score_list.item_name
-		AND insert_matrix_data.rank_type = score_list.rank_type
-		AND insert_matrix_data.rank_name = score_list.rank_name
-";
-                    #endregion
+SELECT count(*) FROM score_list";
+
+//SELECT
+//	score_list.rank_school_year
+//	, score_list.rank_semester
+//	, score_list.rank_grade_year
+//	, score_list.item_type
+//	, score_list.ref_exam_id
+//	, score_list.item_name
+//	, score_list.rank_type
+//	, score_list.rank_name
+//	, score_list.student_id
+//FROM 
+//	score_list
+//	LEFT OUTER JOIN insert_matrix_data
+//		ON insert_matrix_data.school_year = score_list.rank_school_year
+//		AND insert_matrix_data.semester = score_list.rank_semester
+//		AND insert_matrix_data.grade_year = score_list.rank_grade_year
+//		AND insert_matrix_data.item_type = score_list.item_type
+//		AND insert_matrix_data.ref_exam_id = score_list.ref_exam_id
+//		AND insert_matrix_data.item_name = score_list.item_name
+//		AND insert_matrix_data.rank_type = score_list.rank_type
+//		AND insert_matrix_data.rank_name = score_list.rank_name
+//";
+                        #endregion
+
+
+                        // debug
+                        try
+                        {
+                        
+                            DataTable dtq = queryHelper.Select(insertRankSql);
+                            //if (dtq.Rows.Count > 0)
+                            //{
+                            //    string fiPath1 = Application.StartupPath + @"\debug.txt";
+                            //    using (System.IO.StreamWriter fi = new System.IO.StreamWriter(fiPath1, true))
+                            //    {
+                            //        fi.WriteLine(gr + "年級_筆數：" + dtq.Rows[0][0].ToString());
+                            //    }
+                            //}
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }                    
+
+                    }
+
 
                     bkw.ReportProgress(50);
-                    
-                    QueryHelper queryHelper = new QueryHelper();
-                    queryHelper.Select(insertRankSql);
 
 
-                    #region 2. 計算排名的SQL (增加 單純定期(實際考試) 的排名)
+                    // 依畫面上所選年級分批計算
+                    foreach (string gr in gradeStudentDict.Keys)
+                    {
+                        List<string> rowSqlList = new List<string>();
 
-                    // 20191118 根據高中 commit "清理程式碼" > 精簡程式碼
-                    string insertRankSql_onlyExamScore = @"
+                        var gradeYearEle = doc.CreateElement("年級");
+                        gradeYearEle.InnerText = "" + gr.Trim('年', '級');
+                        settingEle.AppendChild(gradeYearEle);
+
+                        //每一筆row(包含GradeYear, SchoolYear, Semester, ExamName)先組好加進List
+                        string rowStr = @"SELECT
+		'" + gr.Trim('年', '級') + @"'::TEXT  AS rank_grade_year
+		, '" + ("" + schoolYear).Replace("'", "''") + @"'::TEXT AS rank_school_year
+		, '" + ("" + semester).Replace("'", "''") + @"'::TEXT AS rank_semester
+        , '" + ("" + examId).Replace("'", "''") + @"'::TEXT AS ref_exam_id
+		, '" + ("" + examName).Replace("'", "''") + @"'::TEXT AS rank_exam_name
+        , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting";
+
+                        rowSqlList.Add(rowStr);
+
+                        #region 2. 計算排名的SQL (增加 單純定期(實際考試) 的排名)
+
+                        // 20191118 根據高中 commit "清理程式碼" > 精簡程式碼
+                        string insertRankSql_onlyExamScore = @"
 
 WITH row AS (
 " + string.Join(@"
@@ -2220,7 +2312,7 @@ WITH row AS (
 ), student_row AS (
 " + string.Join(@"
     UNION ALL
-", studentSqlList) + @"
+", gradeStudentDict[gr]) + @"
 ), calc_subject AS ( --採計科目
     SELECT
         array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
@@ -3754,33 +3846,61 @@ WITH row AS (
 			AND insert_matrix_data.rank_type = score_list.rank_type
 			AND insert_matrix_data.rank_name = score_list.rank_name
 )
-SELECT
-	score_list.rank_school_year
-	, score_list.rank_semester
-	, score_list.rank_grade_year
-	, score_list.item_type
-	, score_list.ref_exam_id
-	, score_list.item_name
-	, score_list.rank_type
-	, score_list.rank_name
-	, score_list.student_id
-FROM 
-	score_list
-	LEFT OUTER JOIN insert_matrix_data
-		ON insert_matrix_data.school_year = score_list.rank_school_year
-		AND insert_matrix_data.semester = score_list.rank_semester
-		AND insert_matrix_data.grade_year = score_list.rank_grade_year
-		AND insert_matrix_data.item_type = score_list.item_type
-		AND insert_matrix_data.ref_exam_id = score_list.ref_exam_id
-		AND insert_matrix_data.item_name = score_list.item_name
-		AND insert_matrix_data.rank_type = score_list.rank_type
-		AND insert_matrix_data.rank_name = score_list.rank_name
-";
-                    #endregion
-                                        
-                    //增加計算(定期評量_定期) 排名 
-                    // 原因:國中定期評量 是需要實際有考試之成績下去計算之排名，而非定期加平時之加總成績下去計算 故增加此邏輯
-                    queryHelper.Select(insertRankSql_onlyExamScore);
+SELECT count(*) FROM score_list";
+
+//SELECT
+//	score_list.rank_school_year
+//	, score_list.rank_semester
+//	, score_list.rank_grade_year
+//	, score_list.item_type
+//	, score_list.ref_exam_id
+//	, score_list.item_name
+//	, score_list.rank_type
+//	, score_list.rank_name
+//	, score_list.student_id
+//FROM 
+//	score_list
+//	LEFT OUTER JOIN insert_matrix_data
+//		ON insert_matrix_data.school_year = score_list.rank_school_year
+//		AND insert_matrix_data.semester = score_list.rank_semester
+//		AND insert_matrix_data.grade_year = score_list.rank_grade_year
+//		AND insert_matrix_data.item_type = score_list.item_type
+//		AND insert_matrix_data.ref_exam_id = score_list.ref_exam_id
+//		AND insert_matrix_data.item_name = score_list.item_name
+//		AND insert_matrix_data.rank_type = score_list.rank_type
+//		AND insert_matrix_data.rank_name = score_list.rank_name
+// LIMIT 1 -- 看來之後資料沒有用，就先限制一筆，以免 Java OutOfMemory。
+//";
+                        #endregion
+                        
+
+                        // debug
+                        try
+                        {
+                            ////增加計算(定期評量_定期) 排名 
+                            //// 原因:國中定期評量 是需要實際有考試之成績下去計算之排名，而非定期加平時之加總成績下去計算 故增加此邏輯
+                            //queryHelper.Select(insertRankSql_onlyExamScore);
+
+                            DataTable dtq = queryHelper.Select(insertRankSql_onlyExamScore);
+                            //if (dtq.Rows.Count > 0)
+                            //{
+                            //    string fiPath1 = Application.StartupPath + @"\debug.txt";
+                            //    using (System.IO.StreamWriter fi = new System.IO.StreamWriter(fiPath1, true))
+                            //    {
+                            //        fi.WriteLine(gr + "_F_年級_筆數：" + dtq.Rows[0][0].ToString());
+                            //    }
+                            //}
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+
+                    }
+
+
+
+                     
                     bkw.ReportProgress(80);
 
                     bkw.ReportProgress(100);

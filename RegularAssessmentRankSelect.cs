@@ -24,6 +24,9 @@ namespace JHEvaluation.Rank
         private string _LoadSchoolYear = "", _LoadSemester = "", _LoadScoreType = "", _LoadScoreCategory = ""
                         , _FilterExamName = "", _FilterItemName = "", _FilterRankType = "", _FilterStudentNumber = "";
 
+        // 讀取分批使用
+        List<string> gradeYearList = new List<string>();
+
         public RegularAssessmentRankSelect()
         {
             InitializeComponent();
@@ -33,6 +36,23 @@ namespace JHEvaluation.Rank
 
         private void RegularRankSelect_Load(object sender, EventArgs e)
         {
+
+            QueryHelper queryHelper = new QueryHelper();
+
+            #region 取得學生年級
+
+            gradeYearList.Clear();
+            string grQuery = "SELECT DISTINCT class.grade_year FROM class INNER JOIN student ON student.ref_class_id = class.id WHERE student.status = 1 ORDER BY class.grade_year ASC;";
+            DataTable dtG = queryHelper.Select(grQuery);
+            foreach (DataRow dr in dtG.Rows)
+            {
+                string gr = dr["grade_year"].ToString();
+                gradeYearList.Add(gr);
+            }
+
+            #endregion
+
+
             #region 要塞進前4個ComboBox的資料的sql字串
             string queryFilter = @"
 SELECT rank_matrix.school_year
@@ -48,7 +68,7 @@ WHERE rank_matrix.is_alive = true
 	AND SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) LIKE '定期評量%'";
             #endregion
 
-            QueryHelper queryHelper = new QueryHelper();
+            queryHelper = new QueryHelper();
             DataTable dt = queryHelper.Select(queryFilter);
 
             if (dt.Rows.Count == 0)
@@ -221,8 +241,29 @@ WHERE rank_matrix.is_alive = true
                 _LoadScoreType = ((ItemTypeMapping)cboScoreType.SelectedItem).Name;
                 _LoadScoreCategory = cboScoreCategory.Text;
 
-                #region 要顯示的資料的sql字串
-                string queryString = @"
+
+
+                DataTable dt = null;
+                BackgroundWorker bkw = new BackgroundWorker();
+                Exception bkwException = null;
+                bkw.WorkerReportsProgress = true;
+                pbLoading.Visible = true;
+                int pr = 20;
+
+
+                bkw.DoWork += delegate
+                {
+                    try
+                    {
+                        bkw.ReportProgress(0);
+                        bool isFirst = true;
+
+                        QueryHelper queryHelper = new QueryHelper();
+
+                        foreach (string gr in gradeYearList)
+                        {
+                            #region 要顯示的資料的sql字串
+                            string queryString = @"
 SELECT 
     *
 FROM
@@ -246,6 +287,7 @@ FROM
         , rank_matrix.semester 
         , rank_matrix.create_time
         , rank_detail.ref_student_id
+        , rank_matrix.grade_year
     FROM rank_matrix 
         LEFT OUTER JOIN 
             rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
@@ -266,22 +308,28 @@ WHERE
     school_year = " + _LoadSchoolYear + @"
     And semester = " + _LoadSemester + @"
     And score_type = '" + _LoadScoreType + @"'
-    And score_category = '" + _LoadScoreCategory + "'";
-                #endregion
+    And score_category = '" + _LoadScoreCategory + "' AND grade_year = '" + gr + "'";
+                            #endregion
 
-                DataTable dt = null;
-                BackgroundWorker bkw = new BackgroundWorker();
-                Exception bkwException = null;
-                bkw.WorkerReportsProgress = true;
-                pbLoading.Visible = true;
+                            if (isFirst)
+                            {
+                                dt = queryHelper.Select(queryString);
+                                isFirst = false;
+                            }
+                            else
+                            {
+                                DataTable dt1 = queryHelper.Select(queryString);
 
-                bkw.DoWork += delegate
-                {
-                    try
-                    {
-                        bkw.ReportProgress(0);
+                                foreach (DataRow dr in dt1.Rows)
+                                {
+                                    dt.ImportRow(dr);
+                                }
+                            }
 
-                        dt = new QueryHelper().Select(queryString);
+                            bkw.ReportProgress(pr);
+                            pr += 20;
+                        }
+
 
                         bkw.ReportProgress(100);
                     }
