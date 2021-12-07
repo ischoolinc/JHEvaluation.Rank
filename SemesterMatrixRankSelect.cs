@@ -22,6 +22,7 @@ namespace JHEvaluation.Rank
         string _RankName = "";
         Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
         private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow = new Dictionary<string, DataGridViewRow>();
+        private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow2 = new Dictionary<string, DataGridViewRow>();
 
         public SemesterMatrixRankSelect(string rankMatrixId, string refStuID, string schoolYear, string semester, string scoreType, string scoreCategory, string itemName, string rankType, string rankName)
         {
@@ -125,6 +126,12 @@ SELECT
 	, rank_matrix.level_20
 	, rank_matrix.level_10
 	, rank_matrix.level_lt10
+	, rank_matrix.std_dev_pop
+	, rank_matrix.pr_88
+	, rank_matrix.pr_75
+	, rank_matrix.pr_50
+	, rank_matrix.pr_25
+	, rank_matrix.pr_12
 FROM 
 	rank_matrix AS source
     INNER JOIN rank_matrix
@@ -174,11 +181,7 @@ ORDER BY
 
                     var newRow = dgvMatrixInfo.Rows[dgvMatrixInfo.Rows.Add(
                        "" + row["matrix_count"]
-                       , "" + row["avg_top_25"]
-                       , "" + row["avg_top_50"]
-                       , "" + row["avg"]
-                       , "" + row["avg_bottom_50"]
-                       , "" + row["avg_bottom_25"]
+                       , "" + row["std_dev_pop"]
                        , "" + row["level_gte100"]
                        , "" + row["level_90"]
                        , "" + row["level_80"]
@@ -193,6 +196,22 @@ ORDER BY
                    )];
                     newRow.Visible = false;
 
+                    var newRow2 = dgvMatrixInfo2.Rows[dgvMatrixInfo2.Rows.Add(
+                     "" + row["avg_top_25"]
+                    , "" + row["avg_top_50"]
+                    , "" + row["avg"]
+                    , "" + row["avg_bottom_50"]
+                    , "" + row["avg_bottom_25"]
+
+                    , "" + row["pr_88"]
+                    , "" + row["pr_75"]
+                    , "" + row["pr_50"]
+                    , "" + row["pr_25"]
+                    , "" + row["pr_12"]
+                )];
+                    newRow2.Visible = false;
+
+
                     if (!_MatrixIdDic.ContainsKey(key))
                     {
                         this._MatrixIdDic.Add(key, "" + row["rank_matrix_id"]);
@@ -202,7 +221,10 @@ ORDER BY
                     {
                         _DicMatrixInfoRow.Add(key, newRow);
                     }
-
+                    if (!_DicMatrixInfoRow2.ContainsKey(key))
+                    {
+                        _DicMatrixInfoRow2.Add(key, newRow2);
+                    }
                 }
 
                 if (cboBatchId.Items.Contains("-目前採計"))
@@ -242,7 +264,13 @@ ORDER BY
                 else
                     row.Visible = false;
             }
-
+            foreach (DataGridViewRow row in dgvMatrixInfo2.Rows)
+            {
+                if (row == _DicMatrixInfoRow2[cboBatchId.Text])
+                    row.Visible = true;
+                else
+                    row.Visible = false;
+            }
 
 
             #region 要顯示的資料的sql字串
@@ -442,6 +470,12 @@ ORDER BY
                     MessageBox.Show("檔案儲存失敗：" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Manual manual = new Manual();
+            manual.ShowDialog();
         }
     }
 }
