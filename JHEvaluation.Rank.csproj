@@ -104,6 +104,7 @@
     <Compile Include="CalculateSemesterAssessmentRank.Designer.cs">
       <DependentUpon>CalculateSemesterAssessmentRank.cs</DependentUpon>
     </Compile>
+    <Compile Include="ICalculateRegularAssessmentExtension.cs" />
     <Compile Include="Manual.cs">
       <SubType>Form</SubType>
     </Compile>
