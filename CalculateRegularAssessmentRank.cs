@@ -17,7 +17,8 @@ namespace JHEvaluation.Rank
 {
     public partial class CalculateRegularAssessmentRank : BaseForm
     {
-        public List<ICalculateRegularAssessmentExtension> _ExtensionList = new List<ICalculateRegularAssessmentExtension>();
+        public static List<ICalculateRegularAssessmentExtension> ExtensionList { get; set; }
+            = new List<ICalculateRegularAssessmentExtension>();
 
 
         string _DefaultSchoolYear = "";
@@ -634,6 +635,8 @@ ORDER BY
                 {
                     bkw.ReportProgress(1);
 
+                    int batchID = 50;
+
                     QueryHelper queryHelper = new QueryHelper();
 
                     //                    List<string> rowSqlList = new List<string>();
@@ -659,10 +662,10 @@ ORDER BY
                     {
                         List<string> rowSqlList = new List<string>();
 
-                            var gradeYearEle = doc.CreateElement("年級");
-                            gradeYearEle.InnerText = "" + gr.Trim('年', '級');
-                            settingEle.AppendChild(gradeYearEle);
-                        
+                        var gradeYearEle = doc.CreateElement("年級");
+                        gradeYearEle.InnerText = "" + gr.Trim('年', '級');
+                        settingEle.AppendChild(gradeYearEle);
+
                         //每一筆row(包含GradeYear, SchoolYear, Semester, ExamName)先組好加進List
                         string rowStr = @"SELECT
 		'" + gr.Trim('年', '級') + @"'::TEXT  AS rank_grade_year
@@ -671,7 +674,7 @@ ORDER BY
         , '" + ("" + examId).Replace("'", "''") + @"'::TEXT AS ref_exam_id
 		, '" + ("" + examName).Replace("'", "''") + @"'::TEXT AS rank_exam_name
         , '" + settingEle.OuterXml.Replace("'", "''") + @"'::TEXT AS calculation_setting";
-                        
+
                         rowSqlList.Add(rowStr);
 
 
@@ -5583,7 +5586,7 @@ SELECT * FROM score_list
                         // debug
                         try
                         {
-                        
+
                             DataTable dtq = queryHelper.Select(insertRankSql);
                             //if (dtq.Rows.Count > 0)
                             //{
@@ -5597,7 +5600,7 @@ SELECT * FROM score_list
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
-                        }                    
+                        }
 
                     }
 
@@ -7375,10 +7378,17 @@ SELECT count(*) FROM score_list
 
                     }
 
-
-
-                     
                     bkw.ReportProgress(80);
+
+                    #region 計算延伸項目
+                    int processCount = 0;
+                    foreach (var extensionItem in ExtensionList)
+                    {
+                        extensionItem.Calculate(batchID);
+                        bkw.ReportProgress(processCount * 20 / ExtensionList.Count + 80, extensionItem.Title);
+                        processCount++;
+                    }
+                    #endregion
 
                     bkw.ReportProgress(100);
                 }
