@@ -16,6 +16,8 @@ namespace JHEvaluation.Rank
 {
     public partial class RegularMatrixRankSelect : BaseForm
     {
+        public static List<ICalculateRegularAssessmentExtension> ExtensionList { get; set; }
+    = new List<ICalculateRegularAssessmentExtension>();
 
         bool _IsLoading = false;
         string _RankName, _RankMatrixID;
@@ -24,11 +26,12 @@ namespace JHEvaluation.Rank
         //Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
         private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow = new Dictionary<string, DataGridViewRow>();
         private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow2 = new Dictionary<string, DataGridViewRow>();
+        private Dictionary<string, DataGridViewRow> _DicDegreeRow = new Dictionary<string, DataGridViewRow>();
 
-        public RegularMatrixRankSelect(string rankMatrixId,string refStuID, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
+        public RegularMatrixRankSelect(string rankMatrixId, string refStuID, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
         {
             InitializeComponent();
-
+            CheckVisble(scoreType);
             lbSchoolYear.Text = schoolYear;
             lbSemester.Text = semester;
             lbScoreType.Text = scoreType;
@@ -49,45 +52,12 @@ namespace JHEvaluation.Rank
                 QueryHelper queryHelper = new QueryHelper();
 
                 #region 要顯示的資料的sql字串
-                //                string queryTable = @"
-                //SELECT
-                //	*
-                //FROM
-                //(
-                //	SELECT rank_matrix.id AS rank_matrix_id
-                //        , ref_batch_id
-                //		, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
-                //		, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
-                //		, exam.exam_name 
-                //		, rank_matrix.item_name 
-                //		, rank_matrix.rank_type
-                //		, rank_matrix.rank_name
-                //		, rank_matrix.school_year
-                //		, rank_matrix.semester 
-                //		, rank_matrix.is_alive
-                //		, rank_matrix.create_time
-                //	FROM rank_matrix 
-                //		LEFT OUTER JOIN 
-                //			rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id
-                //		LEFT OUTER JOIN 
-                //			exam ON exam.id=rank_matrix.ref_exam_id
-                //	ORDER BY
-                //		create_time DESC
-                //) AS Rank_Table
-                //Where school_year = " + Convert.ToInt32(lbSchoolYear.Text) + @"
-                //	AND semester = " + Convert.ToInt32(lbSemester.Text) + @"
-                //	AND score_type = '" + lbScoreType.Text + "'" + @"
-                //	AND score_category = '" + lbScoreCategory.Text + "'" + @"
-                //	AND exam_name = '" + lbExamName.Text + "'" + @"
-                //	AND item_name = '" + lbItemName.Text + "'" + @"
-                //	AND rank_name = '" + _RankName + "'";
-                #endregion
-                string queryTable = @"
+                string queryTable = @"WITH data AS(
 SELECT 
 	rank_matrix.id AS rank_matrix_id
     , rank_matrix.ref_batch_id
-	, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) as score_type
-	, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) as score_category 
+	, SUBSTRING(rank_matrix.item_type, 1, position('/' in rank_matrix.item_type) - 1) AS score_type
+	, SUBSTRING(rank_matrix.item_type, position('/' in rank_matrix.item_type) + 1, LENGTH(rank_matrix.item_type)) AS score_category 
 	, exam.exam_name 
 	, rank_matrix.item_name 
 	, rank_matrix.rank_type
@@ -120,6 +90,7 @@ SELECT
     , rank_matrix.pr_50
     , rank_matrix.pr_25
     , rank_matrix.pr_12
+	, jsonb_array_elements(CASE WHEN rank_matrix.extension::TEXT = '[]' THEN '[null]'::JSONB ELSE rank_matrix.extension END) AS extension
 FROM 
 	rank_matrix AS source
     INNER JOIN rank_matrix
@@ -136,17 +107,57 @@ FROM
 WHERE
 	source.id = " + _RankMatrixID + @"::BIGINT
     AND rank_matrix.id IN (
-        SELECT ref_matrix_id FROM rank_detail WHERE ref_student_id = " + _RefStudentID + @"::BIGINT
+        SELECT ref_matrix_id FROM rank_detail WHERE ref_student_id =  " + _RefStudentID + @"::BIGINT
     )
 ORDER BY
-	create_time DESC";
-
-
-
-            
-
-
-
+	create_time DESC
+	)
+	SELECT
+		rank_matrix_id
+	    , ref_batch_id
+		,  score_type
+		, score_category 
+		, exam_name 
+		, item_name 
+		, rank_type
+		, rank_name
+		, school_year
+		, semester 
+		, is_alive
+		, create_time
+		, matrix_count
+		, avg_top_25
+		, avg_top_50
+		, avg
+		, avg_bottom_50
+		, avg_bottom_25
+		, level_gte100
+		, level_90
+		, level_80
+		, level_70
+		, level_60
+		, level_50
+		, level_40
+		, level_30
+		, level_20
+		, level_10
+		, level_lt10
+		, rank_matrix
+		, std_dev_pop
+		, pr_88
+		, pr_75
+		, pr_50
+		, pr_25
+		, pr_12
+		, data.extension->>'extension_name' AS extension_name"
++ ", data.extension->>'A++' AS \"A++\""
++ ", data.extension->> 'A+' AS \"A+\""
++ ", data.extension->> 'A' AS \"A\""
++ ", data.extension->> 'B++' AS \"B++\""
++ ", data.extension->> 'B+' AS \"B+\""
++ ", data.extension->> 'B' AS \"B\""
++ "FROM data";
+                #endregion
 
                 DataTable dataTable = new DataTable();
                 dataTable = queryHelper.Select(queryTable);
@@ -170,13 +181,14 @@ ORDER BY
                     //}
 
 
+
                     bool tryParseBool = false;
                     var key = "" + row["ref_batch_id"] + "（計算時間：" + Convert.ToDateTime(row["create_time"]).ToString("yyyy/MM/dd HH:mm") + "）" + (bool.TryParse("" + row["is_alive"], out tryParseBool) && tryParseBool ? "-目前採計" : "");
                     var newIndex = cboBatchId.Items.Add(key);
 
                     var newRow = dgvMatrixInfo.Rows[dgvMatrixInfo.Rows.Add(
                         "" + row["matrix_count"]
-                        ,"" + row["std_dev_pop"]
+                        , "" + row["std_dev_pop"]
                         , "" + row["level_gte100"]
                         , "" + row["level_90"]
                         , "" + row["level_80"]
@@ -206,6 +218,18 @@ ORDER BY
                     )];
                     newRow2.Visible = false;
 
+
+                    var newRow3 = dgvDegree.Rows[dgvDegree.Rows.Add(
+                     "" + row["A++"]
+                    , "" + row["A+"]
+                    , "" + row["A"]
+                    , "" + row["B++"]
+                    , "" + row["B+"]
+                    , "" + row["B"]
+
+                )];
+                    newRow3.Visible = false;
+
                     if (!_DicMatrixID.ContainsKey(key))
                         _DicMatrixID.Add(key, "" + row["rank_matrix_id"]);
 
@@ -214,6 +238,9 @@ ORDER BY
 
                     if (!_DicMatrixInfoRow2.ContainsKey(key))
                         _DicMatrixInfoRow2.Add(key, newRow2);
+
+                    if (!_DicDegreeRow.ContainsKey(key))
+                        _DicDegreeRow.Add(key, newRow3);
                 }
 
                 if (cboBatchId.Items.Contains("-目前採計"))
@@ -336,6 +363,17 @@ ORDER BY
                     row.Visible = false;
             }
 
+            //計算定期評量擴充功能：計算自訂等第
+            foreach (DataGridViewRow row in dgvDegree.Rows)
+            {
+                if (row == _DicDegreeRow[cboBatchId.Text])
+                    row.Visible = true;
+                else
+                    row.Visible = false;
+            }
+
+
+
             #region 要顯示的資料的sql字串
             string queryString = @"
 Select *
@@ -407,7 +445,7 @@ ORDER BY rank
                 {
                     _IsLoading = false;
                     LoadRowData(null, null);
-                 
+
                 }
                 else
                 {
@@ -472,5 +510,21 @@ ORDER BY rank
             btnExportToExcel.Text = "匯出";
             btnExportToExcel.Enabled = true;
         }
+
+        public void CheckVisble(string scoreType)
+        {
+            foreach (var extensionItem in ExtensionList)
+            {
+                if (extensionItem.Title == "計算定期評量擴充功能：計算自訂等第")
+                {
+                    if (scoreType == "定期評量_定期")
+                        dgvDegree.Visible = true;
+                    else
+                        dgvDegree.Visible = false;
+                }
+            }
+
+        }
+
     }
 }

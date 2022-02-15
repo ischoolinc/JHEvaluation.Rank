@@ -32,8 +32,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -46,12 +44,18 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnExit = new DevComponents.DotNetBar.ButtonX();
             this.dgvScoreRank = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.MatrixId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -93,8 +97,6 @@
             this.labelX11 = new DevComponents.DotNetBar.LabelX();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.dgvMatrixInfo = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.dgvMatrixInfo2 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.colMatrixCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAvgBottom25 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGTE100 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -108,6 +110,7 @@
             this.col20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colLT10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvMatrixInfo2 = new DevComponents.DotNetBar.Controls.DataGridViewX();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -118,9 +121,18 @@
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.dgvDegree = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvScoreRank)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMatrixInfo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMatrixInfo2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDegree)).BeginInit();
             this.SuspendLayout();
             // 
             // btnExit
@@ -201,7 +213,7 @@
             this.ScoreType.MinimumWidth = 85;
             this.ScoreType.Name = "ScoreType";
             this.ScoreType.ReadOnly = true;
-            this.ScoreType.Width = 107;
+            this.ScoreType.Width = 85;
             // 
             // ScoreCategory
             // 
@@ -210,7 +222,7 @@
             this.ScoreCategory.MinimumWidth = 85;
             this.ScoreCategory.Name = "ScoreCategory";
             this.ScoreCategory.ReadOnly = true;
-            this.ScoreCategory.Width = 107;
+            this.ScoreCategory.Width = 85;
             // 
             // ExamName
             // 
@@ -219,7 +231,7 @@
             this.ExamName.MinimumWidth = 59;
             this.ExamName.Name = "ExamName";
             this.ExamName.ReadOnly = true;
-            this.ExamName.Width = 73;
+            this.ExamName.Width = 59;
             // 
             // ItemName
             // 
@@ -228,7 +240,7 @@
             this.ItemName.MinimumWidth = 59;
             this.ItemName.Name = "ItemName";
             this.ItemName.ReadOnly = true;
-            this.ItemName.Width = 73;
+            this.ItemName.Width = 59;
             // 
             // RankType
             // 
@@ -237,7 +249,7 @@
             this.RankType.MinimumWidth = 59;
             this.RankType.Name = "RankType";
             this.RankType.ReadOnly = true;
-            this.RankType.Width = 73;
+            this.RankType.Width = 59;
             // 
             // RankName
             // 
@@ -246,7 +258,7 @@
             this.RankName.MinimumWidth = 85;
             this.RankName.Name = "RankName";
             this.RankName.ReadOnly = true;
-            this.RankName.Width = 107;
+            this.RankName.Width = 85;
             // 
             // ClassName
             // 
@@ -255,7 +267,7 @@
             this.ClassName.MinimumWidth = 85;
             this.ClassName.Name = "ClassName";
             this.ClassName.ReadOnly = true;
-            this.ClassName.Width = 107;
+            this.ClassName.Width = 85;
             // 
             // SeatNo
             // 
@@ -264,7 +276,7 @@
             this.SeatNo.MinimumWidth = 59;
             this.SeatNo.Name = "SeatNo";
             this.SeatNo.ReadOnly = true;
-            this.SeatNo.Width = 73;
+            this.SeatNo.Width = 59;
             // 
             // StudentNum
             // 
@@ -273,7 +285,7 @@
             this.StudentNum.MinimumWidth = 59;
             this.StudentNum.Name = "StudentNum";
             this.StudentNum.ReadOnly = true;
-            this.StudentNum.Width = 73;
+            this.StudentNum.Width = 59;
             // 
             // StudentName
             // 
@@ -282,7 +294,7 @@
             this.StudentName.MinimumWidth = 59;
             this.StudentName.Name = "StudentName";
             this.StudentName.ReadOnly = true;
-            this.StudentName.Width = 73;
+            this.StudentName.Width = 59;
             // 
             // StudentStatus
             // 
@@ -291,7 +303,7 @@
             this.StudentStatus.MinimumWidth = 59;
             this.StudentStatus.Name = "StudentStatus";
             this.StudentStatus.ReadOnly = true;
-            this.StudentStatus.Width = 107;
+            this.StudentStatus.Width = 85;
             // 
             // score
             // 
@@ -310,7 +322,7 @@
             this.rank.MinimumWidth = 59;
             this.rank.Name = "rank";
             this.rank.ReadOnly = true;
-            this.rank.Width = 73;
+            this.rank.Width = 59;
             // 
             // pr
             // 
@@ -319,7 +331,7 @@
             this.pr.MinimumWidth = 49;
             this.pr.Name = "pr";
             this.pr.ReadOnly = true;
-            this.pr.Width = 60;
+            this.pr.Width = 49;
             // 
             // percentile
             // 
@@ -328,7 +340,7 @@
             this.percentile.MinimumWidth = 6;
             this.percentile.Name = "percentile";
             this.percentile.ReadOnly = true;
-            this.percentile.Width = 90;
+            this.percentile.Width = 72;
             // 
             // SchoolYear
             // 
@@ -360,7 +372,7 @@
             this.labelX8.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX8.Location = new System.Drawing.Point(624, 49);
             this.labelX8.Name = "labelX8";
-            this.labelX8.Size = new System.Drawing.Size(67, 30);
+            this.labelX8.Size = new System.Drawing.Size(54, 24);
             this.labelX8.TabIndex = 44;
             this.labelX8.Text = "母群：";
             // 
@@ -376,7 +388,7 @@
             this.labelX7.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX7.Location = new System.Drawing.Point(432, 49);
             this.labelX7.Name = "labelX7";
-            this.labelX7.Size = new System.Drawing.Size(67, 30);
+            this.labelX7.Size = new System.Drawing.Size(54, 24);
             this.labelX7.TabIndex = 43;
             this.labelX7.Text = "項目：";
             // 
@@ -392,7 +404,7 @@
             this.labelX6.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX6.Location = new System.Drawing.Point(232, 49);
             this.labelX6.Name = "labelX6";
-            this.labelX6.Size = new System.Drawing.Size(67, 30);
+            this.labelX6.Size = new System.Drawing.Size(54, 24);
             this.labelX6.TabIndex = 42;
             this.labelX6.Text = "試別：";
             // 
@@ -408,7 +420,7 @@
             this.labelX5.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX5.Location = new System.Drawing.Point(12, 49);
             this.labelX5.Name = "labelX5";
-            this.labelX5.Size = new System.Drawing.Size(67, 30);
+            this.labelX5.Size = new System.Drawing.Size(54, 24);
             this.labelX5.TabIndex = 41;
             this.labelX5.Text = "類別：";
             // 
@@ -424,7 +436,7 @@
             this.labelX3.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX3.Location = new System.Drawing.Point(432, 12);
             this.labelX3.Name = "labelX3";
-            this.labelX3.Size = new System.Drawing.Size(67, 30);
+            this.labelX3.Size = new System.Drawing.Size(54, 24);
             this.labelX3.TabIndex = 39;
             this.labelX3.Text = "類型：";
             // 
@@ -440,7 +452,7 @@
             this.labelX2.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX2.Location = new System.Drawing.Point(232, 12);
             this.labelX2.Name = "labelX2";
-            this.labelX2.Size = new System.Drawing.Size(67, 30);
+            this.labelX2.Size = new System.Drawing.Size(54, 24);
             this.labelX2.TabIndex = 38;
             this.labelX2.Text = "學期：";
             // 
@@ -456,7 +468,7 @@
             this.labelX1.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX1.Location = new System.Drawing.Point(12, 12);
             this.labelX1.Name = "labelX1";
-            this.labelX1.Size = new System.Drawing.Size(86, 30);
+            this.labelX1.Size = new System.Drawing.Size(69, 24);
             this.labelX1.TabIndex = 37;
             this.labelX1.Text = "學年度：";
             // 
@@ -487,7 +499,7 @@
             this.lbSchoolYear.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbSchoolYear.Location = new System.Drawing.Point(84, 12);
             this.lbSchoolYear.Name = "lbSchoolYear";
-            this.lbSchoolYear.Size = new System.Drawing.Size(67, 30);
+            this.lbSchoolYear.Size = new System.Drawing.Size(54, 24);
             this.lbSchoolYear.TabIndex = 48;
             this.lbSchoolYear.Text = "學年度";
             // 
@@ -503,7 +515,7 @@
             this.lbSemester.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbSemester.Location = new System.Drawing.Point(288, 12);
             this.lbSemester.Name = "lbSemester";
-            this.lbSemester.Size = new System.Drawing.Size(47, 30);
+            this.lbSemester.Size = new System.Drawing.Size(38, 24);
             this.lbSemester.TabIndex = 49;
             this.lbSemester.Text = "學期";
             // 
@@ -519,7 +531,7 @@
             this.lbScoreType.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbScoreType.Location = new System.Drawing.Point(488, 12);
             this.lbScoreType.Name = "lbScoreType";
-            this.lbScoreType.Size = new System.Drawing.Size(47, 30);
+            this.lbScoreType.Size = new System.Drawing.Size(38, 24);
             this.lbScoreType.TabIndex = 50;
             this.lbScoreType.Text = "類別";
             // 
@@ -535,7 +547,7 @@
             this.lbScoreCategory.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbScoreCategory.Location = new System.Drawing.Point(65, 49);
             this.lbScoreCategory.Name = "lbScoreCategory";
-            this.lbScoreCategory.Size = new System.Drawing.Size(47, 30);
+            this.lbScoreCategory.Size = new System.Drawing.Size(38, 24);
             this.lbScoreCategory.TabIndex = 51;
             this.lbScoreCategory.Text = "類別";
             // 
@@ -551,7 +563,7 @@
             this.lbExamName.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbExamName.Location = new System.Drawing.Point(288, 49);
             this.lbExamName.Name = "lbExamName";
-            this.lbExamName.Size = new System.Drawing.Size(47, 30);
+            this.lbExamName.Size = new System.Drawing.Size(38, 24);
             this.lbExamName.TabIndex = 52;
             this.lbExamName.Text = "試別";
             // 
@@ -567,7 +579,7 @@
             this.lbItemName.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbItemName.Location = new System.Drawing.Point(488, 49);
             this.lbItemName.Name = "lbItemName";
-            this.lbItemName.Size = new System.Drawing.Size(47, 30);
+            this.lbItemName.Size = new System.Drawing.Size(38, 24);
             this.lbItemName.TabIndex = 53;
             this.lbItemName.Text = "項目";
             // 
@@ -583,7 +595,7 @@
             this.lbRankType.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbRankType.Location = new System.Drawing.Point(680, 49);
             this.lbRankType.Name = "lbRankType";
-            this.lbRankType.Size = new System.Drawing.Size(47, 30);
+            this.lbRankType.Size = new System.Drawing.Size(38, 24);
             this.lbRankType.TabIndex = 54;
             this.lbRankType.Text = "母群";
             // 
@@ -599,7 +611,7 @@
             this.labelX9.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX9.Location = new System.Drawing.Point(12, 88);
             this.labelX9.Name = "labelX9";
-            this.labelX9.Size = new System.Drawing.Size(67, 30);
+            this.labelX9.Size = new System.Drawing.Size(54, 24);
             this.labelX9.TabIndex = 55;
             this.labelX9.Text = "編號：";
             // 
@@ -630,7 +642,7 @@
             this.lbMemo.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.lbMemo.Location = new System.Drawing.Point(825, 49);
             this.lbMemo.Name = "lbMemo";
-            this.lbMemo.Size = new System.Drawing.Size(47, 30);
+            this.lbMemo.Size = new System.Drawing.Size(38, 24);
             this.lbMemo.TabIndex = 60;
             this.lbMemo.Text = "說明";
             this.lbMemo.Visible = false;
@@ -647,7 +659,7 @@
             this.labelX11.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelX11.Location = new System.Drawing.Point(772, 49);
             this.labelX11.Name = "labelX11";
-            this.labelX11.Size = new System.Drawing.Size(67, 30);
+            this.labelX11.Size = new System.Drawing.Size(54, 24);
             this.labelX11.TabIndex = 59;
             this.labelX11.Text = "說明：";
             this.labelX11.Visible = false;
@@ -700,65 +712,6 @@
             this.dgvMatrixInfo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgvMatrixInfo.Size = new System.Drawing.Size(1190, 53);
             this.dgvMatrixInfo.TabIndex = 84;
-            // 
-            // dgvMatrixInfo2
-            // 
-            this.dgvMatrixInfo2.AllowUserToAddRows = false;
-            this.dgvMatrixInfo2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvMatrixInfo2.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvMatrixInfo2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
-            this.dgvMatrixInfo2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMatrixInfo2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn5,
-            this.dataGridViewTextBoxColumn6});
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvMatrixInfo2.DefaultCellStyle = dataGridViewCellStyle24;
-            this.dgvMatrixInfo2.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
-            this.dgvMatrixInfo2.HighlightSelectedColumnHeaders = false;
-            this.dgvMatrixInfo2.Location = new System.Drawing.Point(12, 613);
-            this.dgvMatrixInfo2.Name = "dgvMatrixInfo2";
-            this.dgvMatrixInfo2.ReadOnly = true;
-            this.dgvMatrixInfo2.RowHeadersVisible = false;
-            this.dgvMatrixInfo2.RowHeadersWidth = 51;
-            this.dgvMatrixInfo2.RowTemplate.Height = 24;
-            this.dgvMatrixInfo2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgvMatrixInfo2.Size = new System.Drawing.Size(1190, 53);
-            this.dgvMatrixInfo2.TabIndex = 85;
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(109, 682);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(78, 22);
-            this.linkLabel1.TabIndex = 86;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "五標說明";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // colMatrixCount
             // 
@@ -901,6 +854,52 @@
             this.colLT10.ReadOnly = true;
             this.colLT10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // dgvMatrixInfo2
+            // 
+            this.dgvMatrixInfo2.AllowUserToAddRows = false;
+            this.dgvMatrixInfo2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvMatrixInfo2.BackgroundColor = System.Drawing.Color.White;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvMatrixInfo2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            this.dgvMatrixInfo2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvMatrixInfo2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.Column3,
+            this.Column4,
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6});
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvMatrixInfo2.DefaultCellStyle = dataGridViewCellStyle24;
+            this.dgvMatrixInfo2.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
+            this.dgvMatrixInfo2.HighlightSelectedColumnHeaders = false;
+            this.dgvMatrixInfo2.Location = new System.Drawing.Point(12, 613);
+            this.dgvMatrixInfo2.Name = "dgvMatrixInfo2";
+            this.dgvMatrixInfo2.ReadOnly = true;
+            this.dgvMatrixInfo2.RowHeadersVisible = false;
+            this.dgvMatrixInfo2.RowHeadersWidth = 51;
+            this.dgvMatrixInfo2.RowTemplate.Height = 24;
+            this.dgvMatrixInfo2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvMatrixInfo2.Size = new System.Drawing.Size(1190, 53);
+            this.dgvMatrixInfo2.TabIndex = 85;
+            // 
             // Column1
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -1008,11 +1007,127 @@
             this.dataGridViewTextBoxColumn6.ReadOnly = true;
             this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.linkLabel1.Location = new System.Drawing.Point(109, 682);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(60, 17);
+            this.linkLabel1.TabIndex = 86;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "五標說明";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // dgvDegree
+            // 
+            this.dgvDegree.AllowUserToAddRows = false;
+            this.dgvDegree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvDegree.BackgroundColor = System.Drawing.Color.White;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvDegree.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
+            this.dgvDegree.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDegree.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.dataGridViewTextBoxColumn9,
+            this.dataGridViewTextBoxColumn10,
+            this.dataGridViewTextBoxColumn11,
+            this.dataGridViewTextBoxColumn12});
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvDegree.DefaultCellStyle = dataGridViewCellStyle28;
+            this.dgvDegree.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
+            this.dgvDegree.HighlightSelectedColumnHeaders = false;
+            this.dgvDegree.Location = new System.Drawing.Point(371, 672);
+            this.dgvDegree.Name = "dgvDegree";
+            this.dgvDegree.ReadOnly = true;
+            this.dgvDegree.RowHeadersVisible = false;
+            this.dgvDegree.RowHeadersWidth = 51;
+            this.dgvDegree.RowTemplate.Height = 24;
+            this.dgvDegree.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvDegree.Size = new System.Drawing.Size(666, 53);
+            this.dgvDegree.TabIndex = 87;
+            this.dgvDegree.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn7.HeaderText = "A++";
+            this.dataGridViewTextBoxColumn7.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn8.HeaderText = "A+";
+            this.dataGridViewTextBoxColumn8.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            this.dataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn9.HeaderText = "A";
+            this.dataGridViewTextBoxColumn9.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            this.dataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn10.HeaderText = "B++";
+            this.dataGridViewTextBoxColumn10.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.ReadOnly = true;
+            this.dataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            this.dataGridViewTextBoxColumn11.DefaultCellStyle = dataGridViewCellStyle26;
+            this.dataGridViewTextBoxColumn11.HeaderText = "B+";
+            this.dataGridViewTextBoxColumn11.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.ReadOnly = true;
+            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
+            dataGridViewCellStyle27.BackColor = System.Drawing.Color.LightCyan;
+            this.dataGridViewTextBoxColumn12.DefaultCellStyle = dataGridViewCellStyle27;
+            this.dataGridViewTextBoxColumn12.HeaderText = "B";
+            this.dataGridViewTextBoxColumn12.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.ReadOnly = true;
+            this.dataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // RegularMatrixRankSelect
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1214, 716);
+            this.Controls.Add(this.dgvDegree);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.dgvMatrixInfo2);
             this.Controls.Add(this.dgvMatrixInfo);
@@ -1045,6 +1160,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvScoreRank)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMatrixInfo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMatrixInfo2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDegree)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1117,5 +1233,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private DevComponents.DotNetBar.Controls.DataGridViewX dgvDegree;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
     }
 }

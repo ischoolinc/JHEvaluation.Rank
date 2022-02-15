@@ -697,9 +697,6 @@ SELECT * FROM insert_batch_data
                         foreach (DataRow dr in dtq.Rows)
                         {
                             string strBatchID = dr["id"].ToString();
-                            //if(int.TryParse(strBatchID,out batchID))
-                            //batchID = dr["12"].ToString();
-
                             batchID = int.Parse(strBatchID);
                         }
                     }
