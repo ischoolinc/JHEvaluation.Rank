@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JHEvaluation.Rank
 {
@@ -11,5 +12,7 @@ namespace JHEvaluation.Rank
         string Title { get; }
 
         void Calculate(int batchID);
+
+        void AddDGVColumn(DataGridView dataGridView, string scoreType);
     }
 }

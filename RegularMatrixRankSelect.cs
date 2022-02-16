@@ -26,12 +26,11 @@ namespace JHEvaluation.Rank
         //Dictionary<string, string> _MatrixIdDic = new Dictionary<string, string>();
         private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow = new Dictionary<string, DataGridViewRow>();
         private Dictionary<string, DataGridViewRow> _DicMatrixInfoRow2 = new Dictionary<string, DataGridViewRow>();
-        private Dictionary<string, DataGridViewRow> _DicDegreeRow = new Dictionary<string, DataGridViewRow>();
 
         public RegularMatrixRankSelect(string rankMatrixId, string refStuID, string schoolYear, string semester, string scoreType, string scoreCategory, string examName, string itemName, string rankType, string rankName)
         {
             InitializeComponent();
-            CheckVisble(scoreType);
+            AddExtensionColumns(scoreType);
             lbSchoolYear.Text = schoolYear;
             lbSemester.Text = semester;
             lbScoreType.Text = scoreType;
@@ -215,20 +214,17 @@ ORDER BY
                         , "" + row["pr_50"]
                         , "" + row["pr_25"]
                         , "" + row["pr_12"]
+
+                        , "" + row["A++"]
+                        , "" + row["A+"]
+                        , "" + row["A"]
+                        , "" + row["B++"]
+                        , "" + row["B+"]
+                        , "" + row["B"]
+
                     )];
                     newRow2.Visible = false;
 
-
-                    var newRow3 = dgvDegree.Rows[dgvDegree.Rows.Add(
-                     "" + row["A++"]
-                    , "" + row["A+"]
-                    , "" + row["A"]
-                    , "" + row["B++"]
-                    , "" + row["B+"]
-                    , "" + row["B"]
-
-                )];
-                    newRow3.Visible = false;
 
                     if (!_DicMatrixID.ContainsKey(key))
                         _DicMatrixID.Add(key, "" + row["rank_matrix_id"]);
@@ -239,8 +235,8 @@ ORDER BY
                     if (!_DicMatrixInfoRow2.ContainsKey(key))
                         _DicMatrixInfoRow2.Add(key, newRow2);
 
-                    if (!_DicDegreeRow.ContainsKey(key))
-                        _DicDegreeRow.Add(key, newRow3);
+                    //if (!_DicDegreeRow.ContainsKey(key))
+                    //    _DicDegreeRow.Add(key, newRow3);
                 }
 
                 if (cboBatchId.Items.Contains("-目前採計"))
@@ -362,17 +358,6 @@ ORDER BY
                 else
                     row.Visible = false;
             }
-
-            //計算定期評量擴充功能：計算自訂等第
-            foreach (DataGridViewRow row in dgvDegree.Rows)
-            {
-                if (row == _DicDegreeRow[cboBatchId.Text])
-                    row.Visible = true;
-                else
-                    row.Visible = false;
-            }
-
-
 
             #region 要顯示的資料的sql字串
             string queryString = @"
@@ -511,17 +496,14 @@ ORDER BY rank
             btnExportToExcel.Enabled = true;
         }
 
-        public void CheckVisble(string scoreType)
+        public void AddExtensionColumns(string scoreType)
         {
             foreach (var extensionItem in ExtensionList)
             {
-                if (extensionItem.Title == "計算定期評量擴充功能：計算自訂等第")
-                {
-                    if (scoreType == "定期評量_定期")
-                        dgvDegree.Visible = true;
-                    else
-                        dgvDegree.Visible = false;
-                }
+                //if (extensionItem.Title == "計算定期評量擴充功能：計算自訂等第")
+                //{
+                    extensionItem.AddDGVColumn(dgvMatrixInfo2, scoreType);
+                //}
             }
 
         }
