@@ -226,7 +226,8 @@ WHERE rank_matrix.is_alive = true
 
         private void LoadRowData(object sender, EventArgs e)
         {
-            if (_IsLoading) return;
+            if (_IsLoading) 
+                return;
 
             if (!string.IsNullOrEmpty(cboSchoolYear.Text)
                 && !string.IsNullOrEmpty(cboSemester.Text)
@@ -287,7 +288,7 @@ FROM
         , rank_matrix.semester 
         , rank_matrix.create_time
         , rank_detail.ref_student_id
-        , rank_matrix.grade_year
+        , class.grade_year
     FROM rank_matrix 
         LEFT OUTER JOIN 
             rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 

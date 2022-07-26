@@ -209,7 +209,7 @@ FROM
         , rank_matrix.school_year
         , rank_matrix.semester 
         , rank_matrix.create_time
-        , rank_matrix.grade_year
+        , class.grade_year
     FROM rank_matrix 
         LEFT OUTER JOIN 
             rank_detail ON rank_detail.ref_matrix_id = rank_matrix.id 
