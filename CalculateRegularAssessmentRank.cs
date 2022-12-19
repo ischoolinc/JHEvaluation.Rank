@@ -3755,26 +3755,26 @@ FROM list WHERE name='評量成績缺考暨免試設定'
         , '' || rank_grade_year || '年級'::TEXT AS rank_name
         , true AS is_alive
         , grade_count AS matrix_count
-        , STDDEV_POP(score) OVER(PARTITION BY rank_grade_year, item_name) AS std_dev_pop
+        , STDDEV_POP(score) OVER(PARTITION BY rank_grade_year, item_type, item_name) AS std_dev_pop
         , CASE WHEN (grade_count*88/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*88/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*88/100=grade_row_number OR grade_count*88/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*88/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*88/100=grade_row_number OR grade_count*88/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
           END pr_88
         , CASE WHEN (grade_count*75/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*75/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*75/100=grade_row_number OR grade_count*75/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*75/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*75/100=grade_row_number OR grade_count*75/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
           END pr_75
         , CASE WHEN (grade_count*50/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*50/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*50/100=grade_row_number OR grade_count*50/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*50/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*50/100=grade_row_number OR grade_count*50/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
           END pr_50
         , CASE WHEN (grade_count*25/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*25/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*25/100=grade_row_number OR grade_count*25/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*25/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*25/100=grade_row_number OR grade_count*25/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
           END pr_25
         , CASE WHEN (grade_count*12/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*12/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*12/100=grade_row_number OR grade_count*12/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE grade_count*12/100+1=grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE grade_count*12/100=grade_row_number OR grade_count*12/100+1 = grade_row_number) OVER(PARTITION BY rank_grade_year, item_type, item_name)::DECIMAL 
           END pr_12
         , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 4 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name ,item_type) AS avg_top_25
         , AVG(Score::DECIMAL)FILTER(WHERE grade_rank * 2 <= grade_count) OVER(PARTITION BY rank_grade_year,item_name ,item_type) AS avg_top_50
@@ -3827,26 +3827,26 @@ FROM list WHERE name='評量成績缺考暨免試設定'
         , rank_class_name AS rank_name
         , true AS is_alive
         , class_count AS matrix_count
-        , STDDEV_POP(score) OVER(PARTITION BY rank_class_name, item_name) AS std_dev_pop
+        , STDDEV_POP(score) OVER(PARTITION BY rank_class_name, item_type, item_name) AS std_dev_pop
         , CASE WHEN (class_count*88/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*88/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*88/100=class_row_number OR class_count*88/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*88/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*88/100=class_row_number OR class_count*88/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
           END pr_88
         , CASE WHEN (class_count*75/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*75/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*75/100=class_row_number OR class_count*75/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*75/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*75/100=class_row_number OR class_count*75/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
           END pr_75
         , CASE WHEN (class_count*50/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*50/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*50/100=class_row_number OR class_count*50/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*50/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*50/100=class_row_number OR class_count*50/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
           END pr_50
         , CASE WHEN (class_count*25/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*25/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*25/100=class_row_number OR class_count*25/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*25/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*25/100=class_row_number OR class_count*25/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
           END pr_25
         , CASE WHEN (class_count*12/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*12/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*12/100=class_row_number OR class_count*12/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE class_count*12/100+1=class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE class_count*12/100=class_row_number OR class_count*12/100+1 = class_row_number) OVER(PARTITION BY rank_class_name, item_type, item_name)::DECIMAL 
           END pr_12
         , AVG(Score::DECIMAL)FILTER(WHERE class_rank * 4 <= class_count) OVER(PARTITION BY rank_class_name,item_name ,item_type) AS avg_top_25
         , AVG(Score::DECIMAL)FILTER(WHERE class_rank * 2 <= class_count) OVER(PARTITION BY rank_class_name,item_name ,item_type) AS avg_top_50
@@ -3900,26 +3900,26 @@ FROM list WHERE name='評量成績缺考暨免試設定'
         , rank_tag1 AS rank_name
         , true AS is_alive
         , tag1_count AS matrix_count
-        , STDDEV_POP(score) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name) AS std_dev_pop
+        , STDDEV_POP(score) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name) AS std_dev_pop
         , CASE WHEN (tag1_count*88/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*88/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*88/100=tag1_row_number OR tag1_count*88/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*88/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*88/100=tag1_row_number OR tag1_count*88/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
           END pr_88
         , CASE WHEN (tag1_count*75/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*75/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*75/100=tag1_row_number OR tag1_count*75/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*75/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*75/100=tag1_row_number OR tag1_count*75/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
           END pr_75
         , CASE WHEN (tag1_count*50/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*50/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*50/100=tag1_row_number OR tag1_count*50/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*50/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*50/100=tag1_row_number OR tag1_count*50/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
           END pr_50
         , CASE WHEN (tag1_count*25/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*25/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*25/100=tag1_row_number OR tag1_count*25/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*25/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*25/100=tag1_row_number OR tag1_count*25/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
           END pr_25
         , CASE WHEN (tag1_count*12/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*12/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*12/100=tag1_row_number OR tag1_count*12/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag1_count*12/100+1=tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag1_count*12/100=tag1_row_number OR tag1_count*12/100+1 = tag1_row_number) OVER(PARTITION BY rank_grade_year, rank_tag1, item_type, item_name)::DECIMAL 
           END pr_12
         , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 4 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name ,item_type) AS avg_top_25
         , AVG(Score::DECIMAL)FILTER(WHERE tag1_rank * 2 <= tag1_count) OVER(PARTITION BY rank_grade_year, rank_tag1, item_name ,item_type) AS avg_top_50
@@ -3975,26 +3975,26 @@ FROM list WHERE name='評量成績缺考暨免試設定'
         , rank_tag2 AS rank_name
         , true AS is_alive
         , tag2_count AS matrix_count
-        , STDDEV_POP(score) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name) AS std_dev_pop
+        , STDDEV_POP(score) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name) AS std_dev_pop
         , CASE WHEN (tag2_count*88/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*88/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*88/100=tag2_row_number OR tag2_count*88/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*88/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*88/100=tag2_row_number OR tag2_count*88/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
           END pr_88
         , CASE WHEN (tag2_count*75/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*75/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*75/100=tag2_row_number OR tag2_count*75/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*75/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*75/100=tag2_row_number OR tag2_count*75/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
           END pr_75
         , CASE WHEN (tag2_count*50/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*50/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*50/100=tag2_row_number OR tag2_count*50/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*50/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*50/100=tag2_row_number OR tag2_count*50/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
           END pr_50
         , CASE WHEN (tag2_count*25/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*25/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*25/100=tag2_row_number OR tag2_count*25/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*25/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*25/100=tag2_row_number OR tag2_count*25/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
           END pr_25
         , CASE WHEN (tag2_count*12/100::DECIMAL % 1 <> 0) 
-            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*12/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
-            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*12/100=tag2_row_number OR tag2_count*12/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name)::DECIMAL 
+            THEN AVG(score::DECIMAL)FILTER(WHERE tag2_count*12/100+1=tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
+            ELSE AVG(score::DECIMAL)FILTER(WHERE tag2_count*12/100=tag2_row_number OR tag2_count*12/100+1 = tag2_row_number) OVER(PARTITION BY rank_grade_year, rank_tag2, item_type, item_name)::DECIMAL 
           END pr_12
         , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 4 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name ,item_type) AS avg_top_25
         , AVG(Score::DECIMAL)FILTER(WHERE tag2_rank * 2 <= tag2_count) OVER(PARTITION BY rank_grade_year, rank_tag2, item_name ,item_type) AS avg_top_50
