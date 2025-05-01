@@ -748,32 +748,14 @@ WITH row AS (
     UNION ALL
 ", gradeStudentDict[gr]) + @"
 ), calc_subject AS ( --採計科目
-    SELECT
-        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
-    FROM (
-        SELECT
-            unnest(xpath('/Setting/採計科目', xmlparse(content calculation_setting))) AS eleSubject
-        FROM
-            row
-    ) as ele
+     SELECT unnest(xpath('/Setting/採計科目/text()', xmlparse(content calculation_setting)))::TEXT AS subject
+    FROM row
 ), calc_subject_tag1 AS ( --類別一採計科目
-    SELECT
-        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
-    FROM (
-        SELECT
-            unnest(xpath('/Setting/類別一採計科目', xmlparse(content calculation_setting))) AS eleSubject
-        FROM
-            row
-    ) as ele
+    SELECT unnest(xpath('/Setting/類別一採計科目/text()', xmlparse(content calculation_setting)))::TEXT AS subject
+    FROM row
 ), calc_subject_tag2 AS ( --類別二採計科目
-    SELECT
-        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
-    FROM (
-        SELECT
-            unnest(xpath('/Setting/類別二採計科目', xmlparse(content calculation_setting))) AS eleSubject
-        FROM
-            row
-    ) as ele
+    SELECT unnest(xpath('/Setting/類別二採計科目/text()', xmlparse(content calculation_setting)))::TEXT AS subject
+    FROM row
 ), score_map AS (--取得缺考、免試設定
   SELECT
   array_to_string(xpath('//UseText/text()', settings), '') AS UseText
@@ -888,18 +870,29 @@ FROM list WHERE name='評量成績缺考暨免試設定'
   from score_detail_tmp left join (select * from score_map where active::boolean=true) as s1 on s1.usevalue=score_detail_tmp.exam_score
    left join (select * from score_map where active::boolean=true) as s2 on s2.usevalue=score_detail_tmp.assignment_score
 ),  exam_score AS (-------結算定期評量總成績 
-  SELECT  score_detail_row.* 
-    , CASE
-      when (exam_weight>0 and COALESCE(exam_score,'')<>'') and (assignment_weight>0 and COALESCE(assignment_score,'')<>'') then ( exam_score::DECIMAL * exam_weight::DECIMAL + assignment_score::DECIMAL * assignment_weight::DECIMAL )/( exam_weight::DECIMAL + assignment_weight::DECIMAL )
-      when (exam_weight>0 and COALESCE(exam_score,'')<>'') and (COALESCE(assignment_score,'')='') then exam_score::DECIMAL
-      when (COALESCE(exam_score,'')='') and (assignment_weight>0 and COALESCE(assignment_score,'')<>'') then assignment_score::DECIMAL
-    END AS score
-  FROM 
-    score_detail_row
-  WHERE 
-      template_id IS NOT NULL and (COALESCE(exam_score,'')<>'' or COALESCE(assignment_score,'')<>'') 
-	  and ((COALESCE(exam_score_allowcalculation,'')='' or exam_score_allowcalculation::boolean=true) or (COALESCE(assignment_score_allowcalculation,'')='' or assignment_score_allowcalculation::boolean=true))
-
+ SELECT
+        score_detail_row.*,
+        CASE
+            WHEN exam_weight > 0 AND assignment_weight > 0 AND COALESCE(exam_score, '') <> '' AND COALESCE(assignment_score, '') <> ''
+                THEN (CAST(exam_score AS DECIMAL) * exam_weight + CAST(assignment_score AS DECIMAL) * assignment_weight) / (exam_weight + assignment_weight)
+            WHEN exam_weight > 0 AND assignment_weight = 0 AND COALESCE(exam_score, '') <> ''
+                THEN CAST(exam_score AS DECIMAL)
+            WHEN exam_weight = 0 AND assignment_weight > 0 AND COALESCE(assignment_score, '') <> ''
+                THEN CAST(assignment_score AS DECIMAL)
+            WHEN exam_weight > 0 AND COALESCE(exam_score, '') <> '' AND COALESCE(assignment_score, '') = ''
+                THEN CAST(exam_score AS DECIMAL)
+            WHEN exam_weight = 0 AND COALESCE(exam_score, '') = '' AND assignment_weight > 0 AND COALESCE(assignment_score, '') <> ''
+                THEN CAST(assignment_score AS DECIMAL)
+            ELSE NULL
+        END AS score
+    FROM score_detail_row
+    WHERE
+        template_id IS NOT NULL
+        AND (COALESCE(exam_score, '') <> '' OR COALESCE(assignment_score, '') <> '')
+        AND (
+            (COALESCE(exam_score_allowcalculation, '') = '' OR exam_score_allowcalculation::BOOLEAN = TRUE)
+            OR (COALESCE(assignment_score_allowcalculation, '') = '' OR assignment_score_allowcalculation::BOOLEAN = TRUE)
+        )
 ), subject_rank_row AS (--------計算科目排名 
   SELECT
     student_id
@@ -2491,32 +2484,14 @@ WITH row AS (
     UNION ALL
 ", gradeStudentDict[gr]) + @"
 ), calc_subject AS ( --採計科目
-    SELECT
-        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
-    FROM (
-        SELECT
-            unnest(xpath('/Setting/採計科目', xmlparse(content calculation_setting))) AS eleSubject
-        FROM
-            row
-    ) as ele
+    SELECT unnest(xpath('/Setting/採計科目/text()', xmlparse(content calculation_setting)))::TEXT AS subject
+    FROM row
 ), calc_subject_tag1 AS ( --類別一採計科目
-    SELECT
-        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
-    FROM (
-        SELECT
-            unnest(xpath('/Setting/類別一採計科目', xmlparse(content calculation_setting))) AS eleSubject
-        FROM
-            row
-    ) as ele
+    SELECT unnest(xpath('/Setting/類別一採計科目/text()', xmlparse(content calculation_setting)))::TEXT AS subject
+    FROM row
 ), calc_subject_tag2 AS ( --類別二採計科目
-    SELECT
-        array_to_string(xpath('./text()', eleSubject), '')::TEXT as subject
-    FROM (
-        SELECT
-            unnest(xpath('/Setting/類別二採計科目', xmlparse(content calculation_setting))) AS eleSubject
-        FROM
-            row
-    ) as ele
+    SELECT unnest(xpath('/Setting/類別二採計科目/text()', xmlparse(content calculation_setting)))::TEXT AS subject
+    FROM row
 ), score_map AS (--取得缺考、免試設定
   SELECT
   array_to_string(xpath('//UseText/text()', settings), '') AS UseText
